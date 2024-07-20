@@ -1,7 +1,7 @@
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)
 
-
+PythonEarthObservationGaussianProcessRegression
 Python based machine learning library to use Earth Observation data to retrieve biophysical maps using Gaussian Process Regression.
 
 ## Features
