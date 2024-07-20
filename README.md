@@ -38,7 +38,7 @@ This package currently features the following satellite sensors and biophysical 
 	
 	
 	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)
-	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via protein content
+	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content
 
 ## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
 
