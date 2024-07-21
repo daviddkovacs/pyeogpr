@@ -11,7 +11,7 @@ import pyeogpr.sensors_database as sensors_database
 
 import warnings
 
-class gpr_mapper:
+class datacube:
     
     def __init__(self,sensor:str, bounding_box: list, temporal_extent: list, cloudmask = False):
         
