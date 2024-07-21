@@ -1,0 +1,106 @@
+Metadata-Version: 2.1
+Name: cv
+Version: 1.0.0
+Summary: Check version of a Python module
+Home-page: https://github.com/mdrachuk/cv
+Author: mdrachuk
+Author-email: misha@drach.uk
+License: MIT
+Project-URL: Pipelines, https://dev.azure.com/misha-drachuk/cv
+Project-URL: Source, https://github.com/mdrachuk/cv/
+Project-URL: Issues, https://github.com/mdrachuk/cv/issues
+Keywords: python packaging version pypi ci
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Utilities
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: POSIX :: BSD
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Typing :: Typed
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+
+# cv
+[![PyPI](https://img.shields.io/pypi/v/cv)][pypi]
+[![Downloads](https://img.shields.io/pypi/dm/cv)][pypi]
+[![Build Status](https://img.shields.io/azure-devops/build/misha-drachuk/cv/9)](https://dev.azure.com/misha-drachuk/cv/_build/latest?definitionId=9&branchName=master)
+[![Test Coverage](https://img.shields.io/coveralls/github/mdrachuk/cv/master)](https://coveralls.io/github/mdrachuk/cv)
+[![Supported Python](https://img.shields.io/pypi/pyversions/cv)][pypi]
+
+Check version of a Python module.
+
+Raises an error if the `<module>.__version__`:
+- already present on PyPI or custom warehouse deployment; 
+- does not match [PEP 440](https://www.python.org/dev/peps/pep-0440);
+- or does not match specified type: alpha/beta/rc/dev/release.
+
+All of this comes in handy during CI.
+
+And one more thing: No runtime dependencies!
+
+## Installation
+Available from [PyPI][pypi]:
+```shell
+pip install cv
+```
+
+## Module Example
+With a \<module\> present on PyPI and `<module>.py` in current directory:
+```python
+__version__ = '7.7.7'
+
+...
+```
+
+Simply run:
+```shell
+cv <module>
+```
+
+If `7.7.7` version of \<module\> is on PyPI already you’ll get a `VersionExists` error:
+```plain
+__main__.VersionExists: Package "<module>" with version "7.7.7" already exists on PyPI.
+Change the "<module>.__version__" to fix this error.
+```
+
+## Package Example
+Packages work in the same way as modules except `__version__` is defined in `<module>/__init__.py`
+
+
+## Help
+```plain
+$ cv --help
+usage: cv [-h] [-w WAREHOUSE] [--alpha] [--beta] [--rc] [--dev] [--release]
+          [--dry]
+          module
+
+Check version of a Python package or module.
+
+positional arguments:
+  module                the package/module with "__version__" defined
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -w WAREHOUSE, --warehouse WAREHOUSE
+                        package index to use, default is
+                        "https://pypi.org/pypi"
+  --alpha               check that version is an alpha, e.g. 1.0.0a1
+  --beta                check that version is a beta, e.g. 1.0.0b2
+  --rc                  check that version is a release candidate, e.g.
+                        1.0.0rc
+  --dev                 check that version is in development, e.g. 1.0.0.dev3
+  --release             check that version is a release without modifiers,
+                        e.g. 1.0.0
+  --dry                 make no request to PyPI
+```
+
+[pypi]: https://pypi.org/project/cv/
+

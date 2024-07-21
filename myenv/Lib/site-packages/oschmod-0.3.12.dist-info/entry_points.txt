@@ -1,0 +1,4 @@
+[console_scripts]
+ochmod = oschmod.cli:main
+oschmod = oschmod.cli:main
+
