@@ -4,14 +4,10 @@ import scipy
 import scipy.signal
 from pyeogpr.udf.gpr import udf_gpr
 from pyeogpr.udf.sgolay import udf_sgolay
+from pyeogpr.sensors_database import sensors_dict
 
-import pyeogpr
-import pyeogpr.xyz as xyz
-import pyeogpr.sensors_database as sensors_database
 
-import warnings
-
-class datacube:
+class Datacube:
     
     def __init__(self,sensor:str, bounding_box: list, temporal_extent: list, cloudmask = False):
         
@@ -22,7 +18,7 @@ class datacube:
         self.temporal_extent = temporal_extent
         self.cloudmask = cloudmask
         self.spatial_extent = {"west": self.bounding_box[0], "south": self.bounding_box[1], "east": self.bounding_box[2], "north": self.bounding_box[3]}
-        self.sensors_dict = sensors_database.sensors_dict  
+        self.sensors_dict = sensors_dict  
         self.bands = None
         self.scale_factor = None
         self.data = None
@@ -32,7 +28,29 @@ class datacube:
 
         
     def construct_datacube(self, composite=None, method=None):
+        """
         
+
+        Parameters
+        ----------
+        composite : TYPE, string
+            Compositing temporal interval. The resulting maps will have the following temporal steps use: "hour","day","dekad","week","season","month","year"
+            for more information visit: https://processes.openeo.org/#aggregate_temporal_period
+        
+        method : TYPE, string
+            Type of reducer to use when aggregating temporal periods. A reducer to be applied for the values contained in each period. 
+            A reducer is a single process such as mean or a set of processes, which computes a single value for a list of values, see the category 'reducer' for such processes.
+
+        Raises
+        ------
+        Exception
+            DESCRIPTION.
+
+        Returns
+        -------
+        Datacube object containing user defined parameters. This will be processed into an openEO datacube.
+
+        """
         if self.sensor not in self.sensors_dict.keys():
             raise Exception("Sensor/satellite not available.")
                 
@@ -41,7 +59,7 @@ class datacube:
                                                self.temporal_extent,
                                                self.sensors_dict[self.sensor]["bandlist"]) * self.sensors_dict[self.sensor]["scale_factor"]
         self.data = data
-
+        print(self.data)
         if self.cloudmask == True and "SENTINEL2" in self.sensor:
 
             s2_cloudmask = self.connection.load_collection("SENTINEL2_L2A",self.spatial_extent, self.temporal_extent, ["SCL"])
@@ -63,7 +81,7 @@ class datacube:
             elif composite == None:
                 
                 self.masked_data = self.data.mask(mask)
-                print(f"Cloud masked, datacube constructed")
+                print("Cloud masked, datacube constructed")
                 
         elif self.cloudmask == False and "SENTINEL2" in self.sensor:
             
@@ -75,15 +93,29 @@ class datacube:
             elif composite == None:
                 
                 self.masked_data = self.data
-                print(f"Datacube constructed")
+                print("Datacube constructed")
 
         else:
             print(f"{self.sensor} can't be masked")
     
     def process_map(self, biovar, gapfill = False):
+        """
+        
 
+        Parameters
+        ----------
+        biovar : string
+            Biophysical varaiable to process. Check the available ones for your sensor/satellite of choice: https://pypi.org/project/pyeogpr/
+        gapfill : Boolen, optional
+            Set to "True" if you want to apply Savitzy Golay interpolator for cloud induced gap filling
+
+        Returns
+        -------
+        Starts the openEO based GPR processing of the biophsycal maps.
+
+        """
         if biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
-            raise Exception(f"'{biovar}' not available for this satellite/sensor. Please select from: " +  str(self.sensors_dict[sensor]["sensor_biovar"]))
+            raise Exception(f"'{biovar}' not available for this satellite/sensor. Please select from: " +  str(self.sensors_dict[self.sensor]["sensor_biovar"]))
         
         print(f"Processing {self.sensor} based {biovar}")
         

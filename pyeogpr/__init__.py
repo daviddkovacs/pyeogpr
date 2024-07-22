@@ -1,1 +1,1 @@
-from pyeogpr.functions import gpr_mapper
+from pyeogpr.functions import Datacube
