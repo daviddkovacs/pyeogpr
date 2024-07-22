@@ -7,3 +7,4 @@ dist/
 build/
 myenv/
 *.pyo
+*.toml
