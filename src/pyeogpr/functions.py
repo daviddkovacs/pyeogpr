@@ -2,9 +2,9 @@ import openeo
 import numpy as np
 import scipy
 import scipy.signal
-from pyeogpr.udf.gpr import udf_gpr
-from pyeogpr.udf.sgolay import udf_sgolay
-from pyeogpr.sensors_database import sensors_dict
+from src.pyeogpr.udf.gpr import udf_gpr
+from src.pyeogpr.udf.sgolay import udf_sgolay
+from src.pyeogpr.sensorsdatabase import sensors_dict
 
 
 class Datacube:
