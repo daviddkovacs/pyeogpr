@@ -1,1 +1,1 @@
-from pyeogpr.main import Datacube
+from src.pyeogpr.main import Datacube
