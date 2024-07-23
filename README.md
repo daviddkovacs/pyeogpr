@@ -36,7 +36,7 @@ This package currently features the following satellite sensors and biophysical 
 	 - _laiCw_ Canopy water content
 
 - **Bottom of atmosphere: Level 2A** 
-[![DOI](https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024_(under_review)-doi.svg)](https://doi.org/)    [![DOI](https://img.shields.io/badge/DOI-rs14010146/Saliner_et_al_2021-doi.svg)]([https://doi.org/10.3390/rs14010146]
+[![DOI](https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024_(under_review)-doi.svg)](https://doi.org/)    [![DOI](https://img.shields.io/badge/DOI-rs14010146/Salinero_et_al_2021-doi.svg)](https://doi.org/10.3390/rs14010146)
 
 	
 	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)
