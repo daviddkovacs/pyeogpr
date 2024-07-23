@@ -10,32 +10,30 @@ class Datacube:
     """
     
 
-    Parameters
+    Attributes
     ----------
-    sensor : "SENTINEL2_L1C", "SENTINEL2_L2A", "SENTINEL3_OLCI_L1B"
-        Satellite's sensor to process the data.
+        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B
+            Satellite's sensor to process the data with.
                     
-    biovar : Biophysical variable to process. The selected variable's map will be retrieved.
+        biovar : Biophysical variable to process. The selected variable's map will be retrieved.
     
-        Currently "built-in" variables available for each sensor:
-        
-            - SENTINEL2_L1C: "Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw"
-            - SENTINEL2_L2A: "Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw","CNC_Cab","CNC_Cprot"
-            - SENTINEL3_OLCI_L1B: "FAPAR","FVC","LAI","LCC"
+            Currently "built-in" variables available for each sensor:
             
-    bounding_box : list
-        Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
+            - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
+            - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot
+            - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC
+            
+        bounding_box : list
+            Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
+            (e.g.: [-4.55, 42.73,-4.48, 42.77])
     
-    temporal_extent : list
-        Your temporal extent to be processed.
+        temporal_extent : list
+            Your temporal extent to be processed. (e.g.: ["2021-01-01", "2021-12-31"])
     
-    cloudmask : Boolean
-        If "True" the Sentinel 2 cloud mask will be applied, with Gaussian convolution to have
-        smoother edges when masking.
+        cloudmask : Boolean
+            If "True" the Sentinel 2 cloud mask will be applied (only to S2 data), with Gaussian convolution to have
+            smoother edges when masking.
 
-    Returns
-    -------
-    Datacube object that will be passed to openEO backend.
 
     """
     def __init__(self,sensor:str, biovar: str, bounding_box: list, temporal_extent: list, cloudmask = False):
@@ -127,8 +125,7 @@ class Datacube:
 
         Parameters
         ----------
-        biovar : string
-            Biophysical varaiable to process. Check the available ones for your sensor/satellite of choice: https://pypi.org/project/pyeogpr/
+       
         gapfill : type, e.g. "Sgolay"
             To apply Savitzy Golay interpolator for cloud-induced gap filling
 

@@ -90,32 +90,30 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    </span>
 
-<span class="sd">    Parameters</span>
+<span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sensor : &quot;SENTINEL2_L1C&quot;, &quot;SENTINEL2_L2A&quot;, &quot;SENTINEL3_OLCI_L1B&quot;</span>
-<span class="sd">        Satellite&#39;s sensor to process the data.</span>
+<span class="sd">        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B</span>
+<span class="sd">            Satellite&#39;s sensor to process the data with.</span>
 <span class="sd">                    </span>
-<span class="sd">    biovar : Biophysical variable to process. The selected variable&#39;s map will be retrieved.</span>
+<span class="sd">        biovar : Biophysical variable to process. The selected variable&#39;s map will be retrieved.</span>
 <span class="sd">    </span>
-<span class="sd">        Currently &quot;built-in&quot; variables available for each sensor:</span>
-<span class="sd">        </span>
-<span class="sd">            - SENTINEL2_L1C: &quot;Cab&quot;,&quot;Cm&quot;,&quot;Cw&quot;,&quot;FVC&quot;,&quot;LAI&quot;,&quot;laiCab&quot;,&quot;laiCm&quot;,&quot;laiCw&quot;</span>
-<span class="sd">            - SENTINEL2_L2A: &quot;Cab&quot;,&quot;Cm&quot;,&quot;Cw&quot;,&quot;FVC&quot;,&quot;LAI&quot;,&quot;laiCab&quot;,&quot;laiCm&quot;,&quot;laiCw&quot;,&quot;CNC_Cab&quot;,&quot;CNC_Cprot&quot;</span>
-<span class="sd">            - SENTINEL3_OLCI_L1B: &quot;FAPAR&quot;,&quot;FVC&quot;,&quot;LAI&quot;,&quot;LCC&quot;</span>
+<span class="sd">            Currently &quot;built-in&quot; variables available for each sensor:</span>
 <span class="sd">            </span>
-<span class="sd">    bounding_box : list</span>
-<span class="sd">        Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/</span>
+<span class="sd">            - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw</span>
+<span class="sd">            - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot</span>
+<span class="sd">            - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC</span>
+<span class="sd">            </span>
+<span class="sd">        bounding_box : list</span>
+<span class="sd">            Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/</span>
+<span class="sd">            (e.g.: [-4.55, 42.73,-4.48, 42.77])</span>
 <span class="sd">    </span>
-<span class="sd">    temporal_extent : list</span>
-<span class="sd">        Your temporal extent to be processed.</span>
+<span class="sd">        temporal_extent : list</span>
+<span class="sd">            Your temporal extent to be processed. (e.g.: [&quot;2021-01-01&quot;, &quot;2021-12-31&quot;])</span>
 <span class="sd">    </span>
-<span class="sd">    cloudmask : Boolean</span>
-<span class="sd">        If &quot;True&quot; the Sentinel 2 cloud mask will be applied, with Gaussian convolution to have</span>
-<span class="sd">        smoother edges when masking.</span>
+<span class="sd">        cloudmask : Boolean</span>
+<span class="sd">            If &quot;True&quot; the Sentinel 2 cloud mask will be applied (only to S2 data), with Gaussian convolution to have</span>
+<span class="sd">            smoother edges when masking.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Datacube object that will be passed to openEO backend.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sensor</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">biovar</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bounding_box</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">temporal_extent</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">cloudmask</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
@@ -212,8 +210,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        biovar : string</span>
-<span class="sd">            Biophysical varaiable to process. Check the available ones for your sensor/satellite of choice: https://pypi.org/project/pyeogpr/</span>
+<span class="sd">       </span>
 <span class="sd">        gapfill : type, e.g. &quot;Sgolay&quot;</span>
 <span class="sd">            To apply Savitzy Golay interpolator for cloud-induced gap filling</span>
 

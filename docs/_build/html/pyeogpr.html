@@ -91,49 +91,46 @@
 <dt class="sig sig-object py" id="pyeogpr.main.Datacube">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyeogpr.main.</span></span><span class="sig-name descname"><span class="pre">Datacube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biovar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporal_extent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloudmask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/main.html#Datacube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.main.Datacube" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>sensor<span class="classifier">“SENTINEL2_L1C”, “SENTINEL2_L2A”, “SENTINEL3_OLCI_L1B”</span></dt><dd><p>Satellite’s sensor to process the data.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<blockquote>
+<div><dl class="simple">
+<dt>sensor<span class="classifier">SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B</span></dt><dd><p>Satellite’s sensor to process the data with.</p>
 </dd>
 </dl>
 <p>biovar : Biophysical variable to process. The selected variable’s map will be retrieved.</p>
 <blockquote>
 <div><p>Currently “built-in” variables available for each sensor:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>SENTINEL2_L1C: “Cab”,”Cm”,”Cw”,”FVC”,”LAI”,”laiCab”,”laiCm”,”laiCw”</p></li>
-<li><p>SENTINEL2_L2A: “Cab”,”Cm”,”Cw”,”FVC”,”LAI”,”laiCab”,”laiCm”,”laiCw”,”CNC_Cab”,”CNC_Cprot”</p></li>
-<li><p>SENTINEL3_OLCI_L1B: “FAPAR”,”FVC”,”LAI”,”LCC”</p></li>
+<ul class="simple">
+<li><p>SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw</p></li>
+<li><p>SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot</p></li>
+<li><p>SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC</p></li>
 </ul>
 </div></blockquote>
-</div></blockquote>
 <dl class="simple">
-<dt>bounding_box<span class="classifier">list</span></dt><dd><p>Your region of interest. Insert bbox as list. Can be selected from <a class="reference external" href="https://geojson.io/">https://geojson.io/</a></p>
+<dt>bounding_box<span class="classifier">list</span></dt><dd><p>Your region of interest. Insert bbox as list. Can be selected from <a class="reference external" href="https://geojson.io/">https://geojson.io/</a>
+(e.g.: [-4.55, 42.73,-4.48, 42.77])</p>
 </dd>
-<dt>temporal_extent<span class="classifier">list</span></dt><dd><p>Your temporal extent to be processed.</p>
+<dt>temporal_extent<span class="classifier">list</span></dt><dd><p>Your temporal extent to be processed. (e.g.: [“2021-01-01”, “2021-12-31”])</p>
 </dd>
-<dt>cloudmask<span class="classifier">Boolean</span></dt><dd><p>If “True” the Sentinel 2 cloud mask will be applied, with Gaussian convolution to have
+<dt>cloudmask<span class="classifier">Boolean</span></dt><dd><p>If “True” the Sentinel 2 cloud mask will be applied (only to S2 data), with Gaussian convolution to have
 smoother edges when masking.</p>
 </dd>
 </dl>
-</section>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
-<p>Datacube object that will be passed to openEO backend.</p>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyeogpr.main.Datacube.construct_datacube">
 <span class="sig-name descname"><span class="pre">construct_datacube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/main.html#Datacube.construct_datacube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.main.Datacube.construct_datacube" title="Link to this definition"></a></dt>
-<dd><section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dd><section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>composite<span class="classifier">“hour”,”day”,”dekad”,”week”,”season”,”month”,”year”</span></dt><dd><p>Compositing temporal interval. The resulting maps will have the following temporal steps. 
 For more information: <a class="reference external" href="https://processes.openeo.org/#aggregate_temporal_period">https://processes.openeo.org/#aggregate_temporal_period</a></p>
 </dd>
 </dl>
 </section>
-<section id="id2">
-<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
 <p>Datacube object containing user defined parameters and temporal compositing. This will be processed into an openEO datacube.</p>
 </section>
 </dd></dl>
@@ -141,17 +138,15 @@ For more information: <a class="reference external" href="https://processes.open
 <dl class="py method">
 <dt class="sig sig-object py" id="pyeogpr.main.Datacube.process_map">
 <span class="sig-name descname"><span class="pre">process_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gapfill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/main.html#Datacube.process_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.main.Datacube.process_map" title="Link to this definition"></a></dt>
-<dd><section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dd><section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>biovar<span class="classifier">string</span></dt><dd><p>Biophysical varaiable to process. Check the available ones for your sensor/satellite of choice: <a class="reference external" href="https://pypi.org/project/pyeogpr/">https://pypi.org/project/pyeogpr/</a></p>
-</dd>
 <dt>gapfill<span class="classifier">type, e.g. “Sgolay”</span></dt><dd><p>To apply Savitzy Golay interpolator for cloud-induced gap filling</p>
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <p>Starts the openEO based GPR processing of the biophysical maps. You will need to open the openEO
 Web Editor to download your maps.</p>
 </section>
