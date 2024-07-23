@@ -1,6 +1,6 @@
 
 Main mapping functions
--------------------
+-----------------------
 
 .. automodule:: pyeogpr.main
    :members:
