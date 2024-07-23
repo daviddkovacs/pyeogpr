@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyeogpr &mdash; pyeogpr 1.1.2 documentation</title>
+  <title>&lt;no title&gt; &mdash; pyeogpr 1.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -61,9 +61,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">pyeogpr</li>
+      <li class="breadcrumb-item active">&lt;no title&gt;</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/sensors.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -71,21 +71,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pyeogpr">
-<h1>pyeogpr<a class="headerlink" href="#pyeogpr" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="pyeogpr.html">Main mapping functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pyeogpr.html#pyeogpr.main.Datacube"><code class="docutils literal notranslate"><span class="pre">Datacube</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pyeogpr.html#pyeogpr.main.Datacube.construct_datacube"><code class="docutils literal notranslate"><span class="pre">Datacube.construct_datacube()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pyeogpr.html#pyeogpr.main.Datacube.process_map"><code class="docutils literal notranslate"><span class="pre">Datacube.process_map()</span></code></a></li>
+  <p>## Available biophysical variables</p>
+<p>This package currently features the following satellite sensors and biophysical variables for mapping:</p>
+<p>## <strong>- Sentinel 2 MultiSpectral Instrument (MSI)</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Top of atmosphere: Level 1C</strong></p></li>
 </ul>
-</li>
+<p>[![DOI](<a class="reference external" href="https://img.shields.io/badge/DOI-j.rse.2022.112958">https://img.shields.io/badge/DOI-j.rse.2022.112958</a>/Estévez_et_al_2022-doi.svg)](<a class="reference external" href="https://doi.org/10.1016/j.rse.2022.112958">https://doi.org/10.1016/j.rse.2022.112958</a>)</p>
+<blockquote>
+<div><blockquote>
+<div><p>Leaf variables:
+- _Cab_: Leaf chlorophyll content
+- _Cm_: Leaf dry matter content
+- _Cw_: Leaf water content</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Canopy variables</dt><dd><ul class="simple">
+<li><p>_FVC_: Fractional Vegetation Cover</p></li>
+<li><p>_LAI_: Leaf Area Index</p></li>
+<li><p>_laiCab_ Canopy chlorophyll content</p></li>
+<li><p>_laiCm_: Leaf dry matter content</p></li>
+<li><p>_laiCw_ Canopy water content</p></li>
 </ul>
-</li>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Bottom of atmosphere: Level 2A</strong></p></li>
 </ul>
-</div>
-</section>
+<p>[![DOI](<a class="reference external" href="https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024_(under_review)-doi.svg)](https://doi.org/">https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024_(under_review)-doi.svg)](https://doi.org/</a>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>_CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)</p></li>
+<li><p>_CNC_Cprot_: Canopy Nitrogen Content (via protein content</p></li>
+</ul>
+</div></blockquote>
+<p>## <strong>- Sentinel 3 Ocean and Land Colour Instrument (OLCI)</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Top of atmosphere: Level 1B</strong></p></li>
+</ul>
+<dl>
+<dt>[![DOI](<a class="reference external" href="https://img.shields.io/badge/DOI-rs14061347">https://img.shields.io/badge/DOI-rs14061347</a>/ReyesMuñoz_et_al_2022-doi.svg)]([<a class="reference external" href="https://doi.org/10.3390/rs14061347](https://doi.org/10.3390/rs14061347">https://doi.org/10.3390/rs14061347](https://doi.org/10.3390/rs14061347</a>))</dt><dd><p>[![DOI](<a class="reference external" href="https://img.shields.io/badge/DOI-rs15133404/D">https://img.shields.io/badge/DOI-rs15133404/D</a>.Kovács_et_al_2023-doi.svg)]([<a class="reference external" href="https://doi.org/10.3390/rs15133404](https://doi.org/10.3390/rs15133404">https://doi.org/10.3390/rs15133404](https://doi.org/10.3390/rs15133404</a>))</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>_FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation</p></li>
+<li><p>_FVC_ Fractional Vegetation Cover</p></li>
+<li><p>_LAI_: Leaf Area Index</p></li>
+<li><p>_LCC_ Leaf Chlorophyll Content</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
 
 
            </div>

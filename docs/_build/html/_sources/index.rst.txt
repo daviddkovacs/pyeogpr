@@ -74,16 +74,24 @@ Here is a basic example to get you started with pyeogpr:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Documentation:
+   :caption: Documentation
 
    pyeogpr
 
-Indices and tables
-==================
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Satellites and variables
+
+   sensors
+   
+
+Indices 
+=======
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
 
 
 .. _Access: https://documentation.dataspace.copernicus.eu/Registration.html

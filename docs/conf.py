@@ -18,11 +18,15 @@ release = '1.1.2'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.todo','sphinx.ext.viewcode','sphinx.ext.autodoc']
+extensions = ['sphinx.ext.todo','sphinx.ext.viewcode','sphinx.ext.autodoc','myst_parser']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}
 
 
 # -- Options for HTML output -------------------------------------------------
