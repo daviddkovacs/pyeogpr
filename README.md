@@ -1,3 +1,4 @@
+![erc](https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab)
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)
 
