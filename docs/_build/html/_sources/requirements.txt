@@ -1,3 +1,5 @@
 sphinx-rtd-theme
 myst_parser
 openeo
+numpy
+scipy

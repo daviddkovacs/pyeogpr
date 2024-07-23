@@ -76,7 +76,7 @@ Here is a basic example to get you started with pyeogpr:
    :maxdepth: 2
    :caption: Documentation
 
-   pyeogpr
+   modules
 
 
 
