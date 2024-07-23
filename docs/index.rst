@@ -69,17 +69,11 @@ Here is a basic example to get you started with pyeogpr:
     
     dc.process_map("laiCab")   #Starts GPR processing of the selected biophysical variable
         
-    
-
-
-
 .. toctree::
    :maxdepth: 2
    :caption: Documentation
 
    pyeogpr
-
-
 
 .. toctree::
    :maxdepth: 2
@@ -88,11 +82,10 @@ Here is a basic example to get you started with pyeogpr:
    sensors
    
 
-Indices 
+
+Contact
 =======
 
-* :ref:`genindex`
-* :ref:`modindex`
-
+Dávid D.Kovács - `daviddkovacs@gmail.com <mailto:daviddkovacs@gmail.com>`_
 
 .. _Access: https://documentation.dataspace.copernicus.eu/Registration.html
