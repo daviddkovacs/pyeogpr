@@ -2,7 +2,7 @@ sensors_dict = {"SENTINEL2_L1C":{"sensor_biovar": ["Cab","Cm","Cw","FVC","LAI","
                                   "scale_factor": 0.0001,
                                   "bandlist": ['B02','B03','B04','B05','B06','B07','B08','B8A','B11','B12']},
                  
-                "SENTINEL2_L2A":{"sensor_biovar": ["CNC_Cab","CNC_Cprot"],
+                "SENTINEL2_L2A":{"sensor_biovar": ["Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw","CNC_Cab","CNC_Cprot"],
                                  "scale_factor": 0.0001,
                                  "bandlist": ['B02','B03','B04','B05','B06','B07','B08','B8A','B11','B12']},
                 

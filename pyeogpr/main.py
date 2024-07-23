@@ -129,7 +129,7 @@ class Datacube:
             print("""----\nTo check the progress login to your openEO editor:\nhttps://openeo.dataspace.copernicus.eu/\n----""")
             self.gpr_cube.execute_batch(title=f"{self.sensor}_{biovar}",outputfile=f"{self.sensor}_{biovar}.nc",
                                         job_options = {'executor-memory': '10g','udf-dependency-archives': 
-                                                       ['https://github.com/daviddkovacs/openeo_models/raw/main/GPR_models_bulk.zip#tmp/venv']})
+                                                       ['https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv']})
         #TODO: implement Whittaker smoother
         elif gapfill == "Sgolay":
             print("Smoother: Savitzky-Golay")
@@ -137,7 +137,7 @@ class Datacube:
 
             self.gpr_cube_gapfilled.execute_batch(title=f"{self.sensor} {biovar} {gapfill}", outputfile=f"{self.sensor}_{biovar}_GF.nc",
                                                   job_options={'executor-memory': '10g', 'udf-dependency-archives': 
-                                                                ['https://github.com/daviddkovacs/openEO/raw/main/Models/GPR_models_bulk.zip#tmp/venv']})
+                                                                ['https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv']})
         else:
             raise Exception(f"'{gapfill}' is not a valid smoother")
    
