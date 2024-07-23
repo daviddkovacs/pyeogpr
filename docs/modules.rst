@@ -4,4 +4,4 @@ pyeogpr
 .. toctree::
    :maxdepth: 4
 
-   pyeogpr
+   pyeogpr.main

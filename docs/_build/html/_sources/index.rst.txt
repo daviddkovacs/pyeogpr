@@ -51,7 +51,7 @@ Here is a basic example to get you started with pyeogpr:
     #Your region of interest
     bounding_box =[
         -4.555088206458265, #West
-        42.73294534602729,  #South
+         42.73294534602729, #South
         -4.487270722962762, #East
         42.7707921305888    #North
       ]
@@ -59,15 +59,16 @@ Here is a basic example to get you started with pyeogpr:
     #Time window for processing Satellite obseravtions
     time_window = ["2021-01-01", "2021-12-31"] 
     
-    dc = pyeogpr.Datacube("SENTINEL2_L1C", # Satellite sensor
+    dc = pyeogpr.Datacube("SENTINEL2_L2A", # Satellite sensor
+                          "FVC",           # Fractional Vegetation Cover
                           bounding_box,
                           time_window,
                           cloudmask =True)
     
-    dc.construct_datacube() #Initiates openEO datacube
+    dc.construct_datacube("week") #Initiates openEO datacube
     
-    dc.process_map("FVC")   #Starts GPR processing of the selected biophysical variable
-    
+    dc.process_map("laiCab")   #Starts GPR processing of the selected biophysical variable
+        
     
 
 
@@ -76,7 +77,7 @@ Here is a basic example to get you started with pyeogpr:
    :maxdepth: 2
    :caption: Documentation
 
-   modules
+   pyeogpr
 
 
 

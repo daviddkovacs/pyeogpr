@@ -7,39 +7,39 @@ from pyeogpr.udfgpr import udf_gpr
 from pyeogpr.udfsgolay import udf_sgolay
 
 class Datacube:
+    """
     
-    def __init__(self,sensor:str, biovar: str bounding_box: list, temporal_extent: list, cloudmask = False):
-        """
-        
 
-        Parameters
-        ----------
-        sensor : "SENTINEL2_L1C", "SENTINEL2_L2A", "SENTINEL3_OLCI_L1B"
-            Satellite's sensor to process the data.
-                        
-        biovar : Biophysical variable to process. The selected variable's map will be retrieved.
+    Parameters
+    ----------
+    sensor : "SENTINEL2_L1C", "SENTINEL2_L2A", "SENTINEL3_OLCI_L1B"
+        Satellite's sensor to process the data.
+                    
+    biovar : Biophysical variable to process. The selected variable's map will be retrieved.
+    
+        Currently "built-in" variables available for each sensor:
         
-            Currently "built-in" variables available for each sensor:
+            - SENTINEL2_L1C: "Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw"
+            - SENTINEL2_L2A: "Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw","CNC_Cab","CNC_Cprot"
+            - SENTINEL3_OLCI_L1B: "FAPAR","FVC","LAI","LCC"
             
-                - SENTINEL2_L1C: "Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw"
-                - SENTINEL2_L2A: "Cab","Cm","Cw","FVC","LAI","laiCab","laiCm","laiCw","CNC_Cab","CNC_Cprot"
-                - SENTINEL3_OLCI_L1B: "FAPAR","FVC","LAI","LCC"
-                
-        bounding_box : list
-            Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
-        
-        temporal_extent : list
-            Your temporal extent to be processed.
-        
-        cloudmask : Boolean
-            If "True" the Sentinel 2 cloud mask will be applied, with Gaussian convolution to have
-            smoother edges when masking.
+    bounding_box : list
+        Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
+    
+    temporal_extent : list
+        Your temporal extent to be processed.
+    
+    cloudmask : Boolean
+        If "True" the Sentinel 2 cloud mask will be applied, with Gaussian convolution to have
+        smoother edges when masking.
 
-        Returns
-        -------
-        Datacube object that will be passed to openEO backend.
+    Returns
+    -------
+    Datacube object that will be passed to openEO backend.
 
-        """
+    """
+    def __init__(self,sensor:str, biovar: str, bounding_box: list, temporal_extent: list, cloudmask = False):
+        
         self.connection = openeo.connect("https://openeo.dataspace.copernicus.eu").authenticate_oidc()
         print("""\n\n""")
         self.sensor = sensor
@@ -134,7 +134,7 @@ class Datacube:
 
         Returns
         -------
-        Starts the openEO based GPR processing of the biophsycal maps. You will need to open the openEO
+        Starts the openEO based GPR processing of the biophysical maps. You will need to open the openEO
         Web Editor to download your maps.
 
         """

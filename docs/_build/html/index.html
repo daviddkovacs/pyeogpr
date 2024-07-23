@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyeogpr" href="modules.html" /> 
+    <link rel="next" title="Main mapping functions" href="pyeogpr.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,7 +45,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">pyeogpr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyeogpr.html">Main mapping functions</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
 <ul>
@@ -110,7 +110,7 @@
 <span class="c1">#Your region of interest</span>
 <span class="n">bounding_box</span> <span class="o">=</span><span class="p">[</span>
     <span class="o">-</span><span class="mf">4.555088206458265</span><span class="p">,</span> <span class="c1">#West</span>
-    <span class="mf">42.73294534602729</span><span class="p">,</span>  <span class="c1">#South</span>
+     <span class="mf">42.73294534602729</span><span class="p">,</span> <span class="c1">#South</span>
     <span class="o">-</span><span class="mf">4.487270722962762</span><span class="p">,</span> <span class="c1">#East</span>
     <span class="mf">42.7707921305888</span>    <span class="c1">#North</span>
   <span class="p">]</span>
@@ -118,21 +118,22 @@
 <span class="c1">#Time window for processing Satellite obseravtions</span>
 <span class="n">time_window</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2021-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2021-12-31&quot;</span><span class="p">]</span>
 
-<span class="n">dc</span> <span class="o">=</span> <span class="n">pyeogpr</span><span class="o">.</span><span class="n">Datacube</span><span class="p">(</span><span class="s2">&quot;SENTINEL2_L1C&quot;</span><span class="p">,</span> <span class="c1"># Satellite sensor</span>
+<span class="n">dc</span> <span class="o">=</span> <span class="n">pyeogpr</span><span class="o">.</span><span class="n">Datacube</span><span class="p">(</span><span class="s2">&quot;SENTINEL2_L2A&quot;</span><span class="p">,</span> <span class="c1"># Satellite sensor</span>
+                      <span class="s2">&quot;FVC&quot;</span><span class="p">,</span>           <span class="c1"># Fractional Vegetation Cover</span>
                       <span class="n">bounding_box</span><span class="p">,</span>
                       <span class="n">time_window</span><span class="p">,</span>
                       <span class="n">cloudmask</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">dc</span><span class="o">.</span><span class="n">construct_datacube</span><span class="p">()</span> <span class="c1">#Initiates openEO datacube</span>
+<span class="n">dc</span><span class="o">.</span><span class="n">construct_datacube</span><span class="p">(</span><span class="s2">&quot;week&quot;</span><span class="p">)</span> <span class="c1">#Initiates openEO datacube</span>
 
-<span class="n">dc</span><span class="o">.</span><span class="n">process_map</span><span class="p">(</span><span class="s2">&quot;FVC&quot;</span><span class="p">)</span>   <span class="c1">#Starts GPR processing of the selected biophysical variable</span>
+<span class="n">dc</span><span class="o">.</span><span class="n">process_map</span><span class="p">(</span><span class="s2">&quot;laiCab&quot;</span><span class="p">)</span>   <span class="c1">#Starts GPR processing of the selected biophysical variable</span>
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">pyeogpr</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pyeogpr.html">Main mapping functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyeogpr.html">Main mapping functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyeogpr.html#pyeogpr.main.Datacube"><code class="docutils literal notranslate"><span class="pre">Datacube</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -158,7 +159,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="pyeogpr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pyeogpr.html" class="btn btn-neutral float-right" title="Main mapping functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
