@@ -5,8 +5,6 @@
 
 Welcome to pyeogpr's documentation!
 ====================================
-.. image:: flexinel.png
-
 
 .. image:: https://img.shields.io/pypi/v/pyeogpr.svg
     :target: https://pypi.org/project/pyeogpr/
@@ -87,5 +85,7 @@ Contact
 =======
 
 Dávid D.Kovács - `daviddkovacs@gmail.com <mailto:daviddkovacs@gmail.com>`_
+
+.. image:: flexinel.png
 
 .. _Access: https://documentation.dataspace.copernicus.eu/Registration.html
