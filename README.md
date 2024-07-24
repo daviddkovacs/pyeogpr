@@ -60,7 +60,7 @@ This package currently features the following satellite sensors and biophysical 
 	 - _LAI_: Leaf Area Index
 	 - _LCC_ Leaf Chlorophyll Content
 
-## **- Supported by **
+## **- Supported by**
 
 
 ![erc](https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab)
