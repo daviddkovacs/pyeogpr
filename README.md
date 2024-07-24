@@ -1,4 +1,4 @@
-![erc](https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab)
+
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
 
@@ -59,3 +59,6 @@ This package currently features the following satellite sensors and biophysical 
 	 - _FVC_ Fractional Vegetation Cover
 	 - _LAI_: Leaf Area Index
 	 - _LCC_ Leaf Chlorophyll Content
+
+
+![erc](https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab)
