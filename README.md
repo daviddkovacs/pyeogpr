@@ -9,10 +9,44 @@ Python based machine learning library to use Earth Observation data to retrieve 
 
 - Access to openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://documentation.dataspace.copernicus.eu/Registration.html) or [here](https://docs.openeo.cloud/join/free_trial.html)
  - The package uses satellite observations and machine learning to infer biophyiscal maps.
-- Get your maps in a few lines of code: select your region, temporal domain and satellite sensor to get the maps you are looking for!	
-- Built in gap filling to avoid cloud cover
+- Built in gap filling to avoid cloud covers
 - Runs "in the cloud" with the openEO API. No local processing needed.
 - Resulting maps in .tiff or netCDF format
+- 
+# Installation
+
+You can install pyeogpr using pip:
+
+```shell
+pip install pyeogpr
+
+```shell
+
+import pyeogpr
+
+# Your region of interest
+bounding_box = [
+    -4.555088206458265,  # West
+    42.73294534602729,   # South
+    -4.487270722962762,  # East
+    42.7707921305888     # North
+]
+
+# Time window for processing Satellite observations
+time_window = ["2021-01-01", "2021-12-31"]
+
+dc = pyeogpr.Datacube(
+    "SENTINEL2_L2A",  # Satellite sensor
+    "FVC",            # Fractional Vegetation Cover
+    bounding_box,
+    time_window,
+    cloudmask=True
+)
+
+dc.construct_datacube("week")  # Initiates openEO datacube
+
+dc.process_map("laiCab")  # Starts GPR processing of the selected biophysical variable
+
 
 ## Available biophysical variables
 
