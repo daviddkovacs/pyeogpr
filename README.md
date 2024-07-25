@@ -42,9 +42,9 @@ This package currently features the following satellite sensors and biophysical 
   	 - _Cab_: Leaf chlorophyll content
 	 - _Cm_: Leaf dry matter content
 	 - _Cw_: Leaf water content
-  - 
-  	Canopy variables
-	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)
+
+  	Canopy variables:
+	 -  _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)
 	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content
 	 - _FVC_: Fractional Vegetation Cover
 	 - _LAI_: Leaf Area Index
