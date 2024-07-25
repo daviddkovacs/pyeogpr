@@ -12,7 +12,7 @@ Python based machine learning library to use Earth Observation data to retrieve 
 - Built in gap filling to avoid cloud covers
 - Runs "in the cloud" with the openEO API. No local processing needed.
 - Resulting maps in .tiff or netCDF format
-- 
+
 # Installation
 
 You can install pyeogpr using pip:
@@ -49,10 +49,7 @@ dc.construct_datacube("week")  # Initiates openEO datacube
 dc.process_map("laiCab")  # Starts GPR processing of the selected biophysical variable
 ```
 
-## Available biophysical variables
-
-This package currently features the following satellite sensors and biophysical variables for mapping:
-
+# Available biophysical variables
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
 
  - **Top of atmosphere: Level 1C** 
