@@ -3,9 +3,9 @@
 
 Python based machine learning library to use Earth Observation data to retrieve biophysical maps using Gaussian Process Regression.
 
-# Installation
+# Get started
 
-You can install pyeogpr using pip:
+You can install pyeogpr using pip. Read the [documentation](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
 
 ```shell
 pip install pyeogpr
