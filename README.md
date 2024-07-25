@@ -64,6 +64,6 @@ This package currently features the following satellite sensors and biophysical 
 	 - _LCC_ Leaf Chlorophyll Content
 
 ## 
-Supported by the European Research Council (ERC) under the ERC-2017-STG SENTIFLEX project.
+Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
 
 ![erc](https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab)
