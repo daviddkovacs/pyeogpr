@@ -19,6 +19,7 @@ You can install pyeogpr using pip:
 
 ```shell
 pip install pyeogpr
+```
 
 ```shell
 
@@ -46,7 +47,7 @@ dc = pyeogpr.Datacube(
 dc.construct_datacube("week")  # Initiates openEO datacube
 
 dc.process_map("laiCab")  # Starts GPR processing of the selected biophysical variable
-
+```
 
 ## Available biophysical variables
 
