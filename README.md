@@ -11,7 +11,7 @@ You can install pyeogpr using pip:
 pip install pyeogpr
 ```
 
-## Features
+# Features
 
 - Access to openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://documentation.dataspace.copernicus.eu/Registration.html) or [here](https://docs.openeo.cloud/join/free_trial.html)
  - The package uses satellite observations and machine learning to infer biophyiscal maps.
