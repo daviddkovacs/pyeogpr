@@ -34,7 +34,7 @@ source_suffix = {
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = []
-html_logo = "logo_50percent.png"
+html_logo = "logo_text.png"
 html_theme_options = {
     'logo_only': True,
     'display_version': False,
