@@ -6,6 +6,7 @@
    contain the root `toctree` directive.
 
 .. image:: logo.png
+   :scale: 50%
 
 Welcome to pyeogpr's documentation!
 ====================================
