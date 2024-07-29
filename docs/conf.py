@@ -34,8 +34,3 @@ source_suffix = {
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = []
-html_logo = "logo_sat.png"
-html_theme_options = {
-    'logo_only': False,
-    'display_version': False,
-}
