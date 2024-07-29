@@ -1,7 +1,11 @@
+<div style="display: flex; justify-content: center;">
+  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
+</div>
+
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
 
 
-Python based machine learning library to use Earth Observation data to retrieve biophysical maps using Gaussian Process Regression.
+Python based machine learning library to use Earth Observation data to map biophysical traits using Gaussian Process Regression (GPR) models.
 
 # Get started
 
@@ -14,9 +18,9 @@ pip install pyeogpr
 # Features
 
 - Access to openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://documentation.dataspace.copernicus.eu/Registration.html) or [here](https://docs.openeo.cloud/join/free_trial.html)
- - The package uses satellite observations and machine learning to infer biophyiscal maps.
-- Built in gap filling to avoid cloud covers
-- Runs "in the cloud" with the openEO API. No local processing needed.
+ - The package uses satellite observations and machine learning to infer maps of biophysical traits.
+- Built-in gap-filling to avoid cloud covers
+- Runs "in the cloud" with the openEO API. No local processing is needed.
 - Resulting maps in .tiff or netCDF format
 ```shell
 
