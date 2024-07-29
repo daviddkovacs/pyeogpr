@@ -92,5 +92,6 @@ Contact
 Dávid D.Kovács - `daviddkovacs@gmail.com <mailto:daviddkovacs@gmail.com>`_
 
 .. image:: flexinel.png
+   :scale: 50%
 
 .. _Access: https://documentation.dataspace.copernicus.eu/Registration.html
