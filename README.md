@@ -18,7 +18,7 @@ pip install pyeogpr
 # Features
 
 - Access to openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://documentation.dataspace.copernicus.eu/Registration.html) or [here](https://docs.openeo.cloud/join/free_trial.html)
- - The package uses satellite observations and machine learning to infer maps of biophysical traits.
+ - Hybrid retrieval methods were used: the Gaussian Process Regression retrieval algorithms were trained on biophysical trait specific radiative transfer model (RTM) simulations
 - Built-in gap-filling to avoid cloud covers
 - Runs "in the cloud" with the openEO API. No local processing is needed.
 - Resulting maps in .tiff or netCDF format
