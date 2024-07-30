@@ -1,3 +1,4 @@
+
 <div style="display: flex; justify-content: center;">
   <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
 </div>
@@ -55,7 +56,7 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
 
  - **Top of atmosphere: Level 1C** 
- [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958/Estévez_et_al_2022-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
+*Model training details:* Estévez et al. 2022 [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
  
 	 Leaf variables:
 	 - _Cab_: Leaf chlorophyll content
@@ -70,7 +71,8 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 	 - _laiCw_ Canopy water content
 
 - **Bottom of atmosphere: Level 2A** 
-[![DOI](https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024_(under_review)-doi.svg)](https://doi.org/)    [![DOI](https://img.shields.io/badge/DOI-rs14010146/Salinero_et_al_2021-doi.svg)](https://doi.org/10.3390/rs14010146)
+*Model training details:* Salinero et al. 2021 & De Clecrk et al.
+ [![DOI](https://img.shields.io/badge/DOI-rs14010146-doi.svg)](https://doi.org/10.3390/rs14010146) [![DOI](https://img.shields.io/badge/DOI-under_review-doi.svg)](https://doi.org/)   
 
 	 Leaf variables:
   	 - _Cab_: Leaf chlorophyll content
@@ -89,8 +91,8 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 ## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
 
  - **Top of atmosphere: Level 1B**
- [![DOI](https://img.shields.io/badge/DOI-rs14061347/ReyesMuñoz_et_al_2022-doi.svg)](https://doi.org/10.3390/rs14061347)
-  [![DOI](https://img.shields.io/badge/DOI-rs15133404/D.Kovács_et_al_2023-doi.svg)](https://doi.org/10.3390/rs15133404)
+*Model training details:* D.Kovács et al. 2023 & Reyes-Muñoz et al. 2022  [![DOI](https://img.shields.io/badge/DOI-rs15133404-doi.svg)](https://doi.org/10.3390/rs15133404)[![DOI](https://img.shields.io/badge/DOI-rs14061347-doi.svg)](https://doi.org/10.3390/rs14061347)
+ 
  
 	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
 	 - _FVC_ Fractional Vegetation Cover
