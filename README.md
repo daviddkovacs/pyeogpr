@@ -55,8 +55,9 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 # Available biophysical variables
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
 
- - **Top of atmosphere: Level 1C** 
-*Model training details:* Estévez et al. 2022 [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
+ - **Top of atmosphere: Level 1C**  
+ 
+	*Model training details:* Estévez et al. 2022 [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
  
 	 Leaf variables:
 	 - _Cab_: Leaf chlorophyll content
@@ -71,7 +72,8 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 	 - _laiCw_ Canopy water content
 
 - **Bottom of atmosphere: Level 2A** 
-*Model training details:* Salinero et al. 2021 & De Clecrk et al.
+
+	*Model training details:* Salinero et al. 2021 & De Clecrk et al.
  [![DOI](https://img.shields.io/badge/DOI-rs14010146-doi.svg)](https://doi.org/10.3390/rs14010146) [![DOI](https://img.shields.io/badge/DOI-under_review-doi.svg)](https://doi.org/)   
 
 	 Leaf variables:
@@ -91,7 +93,8 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 ## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
 
  - **Top of atmosphere: Level 1B**
-*Model training details:* D.Kovács et al. 2023 & Reyes-Muñoz et al. 2022  [![DOI](https://img.shields.io/badge/DOI-rs15133404-doi.svg)](https://doi.org/10.3390/rs15133404)[![DOI](https://img.shields.io/badge/DOI-rs14061347-doi.svg)](https://doi.org/10.3390/rs14061347)
+ 
+	*Model training details:* D.Kovács et al. 2023 & Reyes-Muñoz et al. 2022  [![DOI](https://img.shields.io/badge/DOI-rs15133404-doi.svg)](https://doi.org/10.3390/rs15133404)[![DOI](https://img.shields.io/badge/DOI-rs14061347-doi.svg)](https://doi.org/10.3390/rs14061347)
  
  
 	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
