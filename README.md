@@ -105,4 +105,6 @@ dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoothe
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
 
-![erc](https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab)
+<a href="https://leoipl.uv.es/flexinel/">
+  <img src="https://github.com/user-attachments/assets/940bf34f-04d3-4fb0-9d68-8d6f19c14bab" alt="ERC Logo">
+</a>
