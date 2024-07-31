@@ -26,18 +26,20 @@ pip install pyeogpr
 ```shell
 
 
+
+
 import pyeogpr
 
 # Your region of interest
 bounding_box = [
-    -4.555088206458265,  # West
-    42.73294534602729,   # South
-    -4.487270722962762,  # East
-    42.7707921305888     # North
-]
+          -0.305543150556133,
+          39.29253033906926,
+          -0.28169853763617425,
+          39.303338211248104
+        ]
 
 # Time window for processing Satellite observations
-time_window = ["2021-01-01", "2021-12-31"]
+time_window = ["2022-05-01", "2022-06-01"]
 
 dc = pyeogpr.Datacube(
     "SENTINEL2_L2A",  # Satellite sensor
@@ -47,9 +49,11 @@ dc = pyeogpr.Datacube(
     cloudmask=True
 )
 
-dc.construct_datacube("week")  # Initiates openEO datacube
+dc.construct_datacube("dekad")  # Initiates openEO datacube
 
-dc.process_map("Sgolay")  # Starts GPR processing of with Savitzky-Golay smoother
+
+
+dc.process_map()  # Starts GPR processing 
 ```
 
 # Available biophysical variables
