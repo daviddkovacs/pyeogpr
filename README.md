@@ -54,6 +54,11 @@ To download the GPR processed map go to the [openEO portal](https://openeo.datas
 
 ![download](https://github.com/user-attachments/assets/a869b60f-a420-4459-83ac-289c99758c8d)
 
+You can use [QGIS](https://qgis.org/download/) or [Panoply](https://www.giss.nasa.gov/tools/panoply/) to visualize. IMPORTANT: The data range is off, due to few pixels being outliers.
+Set the data range manually for the corresponding variable e.g. FVC--> 0 to 1.
+
+![map](https://github.com/user-attachments/assets/6f2cc18c-1568-4aa5-a3d6-e028e69e361d)
+
 
 # Available biophysical variables
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
