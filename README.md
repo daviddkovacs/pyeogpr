@@ -8,14 +8,6 @@
 
 Python based machine learning library to use Earth Observation data to map biophysical traits using Gaussian Process Regression (GPR) models.
 
-# Get started
-
-You can install pyeogpr using pip. Read the [documentation](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
-
-```shell
-pip install pyeogpr
-```
-
 # Features
 
 - Access to openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://documentation.dataspace.copernicus.eu/Registration.html) or [here](https://docs.openeo.cloud/join/free_trial.html)
@@ -23,11 +15,16 @@ pip install pyeogpr
 - Built-in gap-filling to avoid cloud covers
 - Runs "in the cloud" with the openEO API. No local processing is needed.
 - Resulting maps in .tiff or netCDF format
+
+# Get started
+
+You can install pyeogpr using pip. Read the [documentation](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
+
 ```shell
-
-
-
-
+pip install pyeogpr
+```
+Basic example:
+```shell
 import pyeogpr
 
 # Your region of interest
@@ -51,10 +48,11 @@ dc = pyeogpr.Datacube(
 
 dc.construct_datacube("dekad")  # Initiates openEO datacube
 
-
-
 dc.process_map()  # Starts GPR processing 
 ```
+To download the GPR processed map go to the [openEO portal](https://openeo.dataspace.copernicus.eu/):
+
+
 
 # Available biophysical variables
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
