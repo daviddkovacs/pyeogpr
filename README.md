@@ -52,6 +52,7 @@ dc.process_map()  # Starts GPR processing
 ```
 To download the GPR processed map go to the [openEO portal](https://openeo.dataspace.copernicus.eu/):
 
+![download](https://github.com/user-attachments/assets/a869b60f-a420-4459-83ac-289c99758c8d)
 
 
 # Available biophysical variables
