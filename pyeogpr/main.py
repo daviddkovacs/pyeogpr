@@ -152,9 +152,8 @@ class Datacube:
             self.gpr_cube.execute_batch(title=f"{self.sensor}_{self.biovar}",outputfile=f"{self.sensor}_{self.biovar}.nc",
                                         job_options = {'executor-memory': '10g','udf-dependency-archives': 
                                                        ['https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv']})
-                
-            print("""----\nTo download the map, click the download icon next to the batch job on:\nhttps://openeo.dataspace.copernicus.eu/\n----""")
-        #TODO: implement Whittaker smoother
+            print("""Click the download icon next to the batch job on: https://openeo.dataspace.copernicus.eu/""")
+
         elif gapfill == "Sgolay":
             print("Smoother: Savitzky-Golay")
             self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(process=udf_sgolay, dimension="t")
@@ -162,9 +161,8 @@ class Datacube:
             self.gpr_cube_gapfilled.execute_batch(title=f"{self.sensor} {self.biovar} {gapfill}", outputfile=f"{self.sensor}_{self.biovar}_GF.nc",
                                                   job_options={'executor-memory': '10g', 'udf-dependency-archives': 
                                                                 ['https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv']})
-             print("""----\nTo download the map, click the download icon next to the batch job on:\nhttps://openeo.dataspace.copernicus.eu/\n----""")
+            print("""Click the download icon next to the batch job on: https://openeo.dataspace.copernicus.eu/""")
 
         else:
             raise Exception(f"'{gapfill}' is not a valid smoother")
    
-        #TODO: Download local. currently giving error 403
