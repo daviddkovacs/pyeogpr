@@ -23,7 +23,7 @@ This package currently features the following satellite sensors and biophysical 
 
 
 
-	 Leaf variables:
+	 Leaf variables
 	 - _Cab_: Leaf chlorophyll content
 	 - _Cm_: Leaf dry matter content
 	 - _Cw_: Leaf water content
@@ -36,6 +36,12 @@ This package currently features the following satellite sensors and biophysical 
 	 - _laiCab_ Canopy chlorophyll content
 	 - _laiCm_: Leaf dry matter content
 	 - _laiCw_ Canopy water content
+
+	 Mangrove traits [![DOI](https://img.shields.io/badge/DOI-j.isprsjprs.2024.06.007/An Binh_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.06.007)
+	 - _mangrove_LAI_: Leaf Area Index
+	 - _mangrove_Cm_: Leaf dry matter content
+	 - _mangrove_Cw_: Leaf water content
+
 
 
 ## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
