@@ -60,55 +60,11 @@ Set the data range manually for the corresponding variable e.g. FVC--> 0 to 1.
 ![map](https://github.com/user-attachments/assets/6f2cc18c-1568-4aa5-a3d6-e028e69e361d)
 
 
-# Available biophysical variables
-## **- Sentinel 2 MultiSpectral Instrument (MSI)**
+# Satellites and biophysical variables
 
- - **Top of atmosphere: Level 1C**  
- 
-	*Model training details:* Estévez et al. 2022 [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
- 
-	 Leaf variables:
-	 - _Cab_: Leaf chlorophyll content
-	 - _Cm_: Leaf dry matter content
-	 - _Cw_: Leaf water content
-	 	 
-	Canopy variables
-	 - 	 _FVC_: Fractional Vegetation Cover
-	 - _LAI_: Leaf Area Index
-	 - _laiCab_ Canopy chlorophyll content
-	 - _laiCm_: Leaf dry matter content
-	 - _laiCw_ Canopy water content
-
-- **Bottom of atmosphere: Level 2A** 
-
-	*Model training details:* Salinero et al. 2021 & De Clerck et al.
- [![DOI](https://img.shields.io/badge/DOI-rs14010146-doi.svg)](https://doi.org/10.3390/rs14010146) [![DOI](https://img.shields.io/badge/DOI-under_review-doi.svg)](https://doi.org/)   
-
-	 Leaf variables:
-  	 - _Cab_: Leaf chlorophyll content
-	 - _Cm_: Leaf dry matter content
-	 - _Cw_: Leaf water content
-
-  	Canopy variables:
-	 -  _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)
-	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content
-	 - _FVC_: Fractional Vegetation Cover
-	 - _LAI_: Leaf Area Index
-	 - _laiCab_ Canopy chlorophyll content
-	 - _laiCm_: Leaf dry matter content
-	 - _laiCw_ Canopy water content
-
-## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
-
- - **Top of atmosphere: Level 1B**
- 
-	*Model training details:* D.Kovács et al. 2023 & Reyes-Muñoz et al. 2022  [![DOI](https://img.shields.io/badge/DOI-rs15133404-doi.svg)](https://doi.org/10.3390/rs15133404)[![DOI](https://img.shields.io/badge/DOI-rs14061347-doi.svg)](https://doi.org/10.3390/rs14061347)
- 
- 
-	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
-	 - _FVC_ Fractional Vegetation Cover
-	 - _LAI_: Leaf Area Index
-	 - _LCC_ Leaf Chlorophyll Content
+![Sentinel-2 L1C](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
+![Sentinel-2 L2A](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
+![Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
 
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
