@@ -62,9 +62,9 @@ Set the data range manually for the corresponding variable e.g. FVC--> 0 to 1.
 
 # Satellites and biophysical variables
 
-![Sentinel-2 L1C](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
-![Sentinel-2 L2A](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
-![Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
+[Sentinel-2 L1C](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
+[Sentinel-2 L2A](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
+[Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
 
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
