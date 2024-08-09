@@ -13,7 +13,7 @@ class Datacube:
     Attributes
     ----------
         sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B
-            Satellite's sensor to process the data with.
+            Satellite sensor to process the data with.
                     
         biovar : Biophysical variable to process. The selected variable's map will be retrieved.
     
