@@ -74,9 +74,7 @@ Here is a basic example to get you started with pyeogpr:
     
     dc.construct_datacube("dekad")  # Initiates openEO datacube
 
-
-
-dc.process_map()  # Starts GPR processing 
+    dc.process_map()  # Starts GPR processing 
         
 .. toctree::
    :maxdepth: 2
