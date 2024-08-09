@@ -62,8 +62,12 @@ Set the data range manually for the corresponding variable e.g. FVC--> 0 to 1.
 
 # Satellites and biophysical variables
 
+You can select from a list of trained variables developed for the following satellites:
+
 [Sentinel-2 L1C](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
+
 [Sentinel-2 L2A](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
+
 [Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
 
 ## 
