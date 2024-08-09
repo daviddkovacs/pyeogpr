@@ -20,7 +20,7 @@ This package currently features the following satellite sensors and biophysical 
 
 - **Bottom of atmosphere: Level 2A** 
 [![DOI](https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024_(under_review)-doi.svg)](https://doi.org/)    [![DOI](https://img.shields.io/badge/DOI-rs14010146/Salinero_et_al_2021-doi.svg)](https://doi.org/10.3390/rs14010146)
-[![DOI](https://img.shields.io/badge/DOI-j.isprsjprs.2024.06.007/An_Binh_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.06.007)
+
 
 
 	 Leaf variables
@@ -37,7 +37,7 @@ This package currently features the following satellite sensors and biophysical 
 	 - _laiCm_: Leaf dry matter content
 	 - _laiCw_ Canopy water content
 
-	 Mangrove traits [![DOI](https://img.shields.io/badge/DOI-j.isprsjprs.2024.06.007/An Binh_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.06.007)
+	 Mangrove traits [![DOI](https://img.shields.io/badge/DOI-j.isprsjprs.2024.06.007/An_Binh_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.06.007)
 	 - _mangrove_LAI_: Leaf Area Index
 	 - _mangrove_Cm_: Leaf dry matter content
 	 - _mangrove_Cw_: Leaf water content
