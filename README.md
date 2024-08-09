@@ -81,7 +81,7 @@ Set the data range manually for the corresponding variable e.g. FVC--> 0 to 1.
 
 - **Bottom of atmosphere: Level 2A** 
 
-	*Model training details:* Salinero et al. 2021 & De Clecrk et al.
+	*Model training details:* Salinero et al. 2021 & De Clerck et al.
  [![DOI](https://img.shields.io/badge/DOI-rs14010146-doi.svg)](https://doi.org/10.3390/rs14010146) [![DOI](https://img.shields.io/badge/DOI-under_review-doi.svg)](https://doi.org/)   
 
 	 Leaf variables:
