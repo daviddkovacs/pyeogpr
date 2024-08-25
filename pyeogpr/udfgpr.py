@@ -26,7 +26,7 @@ from pathlib import Path
 from openeo.udf.debug import inspect
 
 def broadcaster(array):
-    return np.broadcast_to(array[:, np.newaxis, np.newaxis], (10, 256, 256))
+    return np.broadcast_to(array[:, np.newaxis, np.newaxis], (10, 128, 128))
     #TODO: use function to obtain x,ydim instead of hard coding 256
 init_xr = xr.DataArray()
 def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
