@@ -71,6 +71,11 @@ You can select from a list of trained variables developed for the following sate
 
 [Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
 
+# Cite as
+
+
+Dávid D.Kovács. (2024). pyeogpr (zenodo). Zenodo. https://doi.org/10.5281/zenodo.13373838
+
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
 
