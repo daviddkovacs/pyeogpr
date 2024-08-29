@@ -3,7 +3,8 @@
   <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
 </div>
 
-# pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
+# pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html) [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-green)](https://doi.org/10.5281/zenodo.13373838)
+
 
 
 Python based machine learning library to use Earth Observation data to map biophysical traits using Gaussian Process Regression (GPR) models.
@@ -29,14 +30,14 @@ import pyeogpr
 
 # Your region of interest
 bounding_box = [
-          -0.305543150556133,
-          39.29253033906926,
-          -0.28169853763617425,
-          39.303338211248104
+         -73.98605881463239,
+          40.763066527718536,
+          -73.94617017216025,
+          40.80083669627726
         ]
 
 # Time window for processing Satellite observations
-time_window = ["2022-05-01", "2022-06-01"]
+time_window = ["2022-07-01", "2022-07-07"]
 
 dc = pyeogpr.Datacube(
     "SENTINEL2_L2A",  # Satellite sensor
@@ -48,7 +49,7 @@ dc = pyeogpr.Datacube(
 
 dc.construct_datacube("dekad")  # Initiates openEO datacube
 
-dc.process_map()  # Starts GPR processing 
+dc.process_map()  # Starts GPR processing
 ```
 To download the GPR processed map go to the [openEO portal](https://openeo.dataspace.copernicus.eu/):
 
@@ -69,6 +70,11 @@ You can select from a list of trained variables developed for the following sate
 [Sentinel-2 L2A](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
 
 [Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
+
+# Cite as
+
+
+Dávid D.Kovács. (2024). pyeogpr (zenodo). Zenodo. https://doi.org/10.5281/zenodo.13373838
 
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.

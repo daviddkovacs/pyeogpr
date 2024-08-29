@@ -26,10 +26,12 @@ import xarray as xr
 from pathlib import Path
 from openeo.udf.debug import inspect
 
+
 bands = 10
 chunks = 128
 def broadcaster(array):
     return np.broadcast_to(array[:, np.newaxis, np.newaxis], (bands, chunks, chunks))
+
 
 init_xr = xr.DataArray()
 def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
@@ -41,7 +43,9 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     hyp_ell_GREEN = broadcaster(model.hyp_ell_GREEN)
     mx_GREEN = broadcaster(model.mx_GREEN.ravel())
     sx_GREEN = broadcaster(model.sx_GREEN.ravel())
+
     XDX_pre_calc_GREEN_broadcast = np.broadcast_to(model.XDX_pre_calc_GREEN.ravel()[:,np.newaxis,np.newaxis],(model.XDX_pre_calc_GREEN.shape[0],chunks,chunks))
+
 
     pixel_spectra = (cube.values)
 

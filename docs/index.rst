@@ -21,6 +21,11 @@ Welcome to pyeogpr's documentation!
     :target: https://leoipl.uv.es/flexinel/
     :alt: Flexinel
 
+.. image:: https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-blue
+    :target: https://doi.org/10.5281/zenodo.13373838
+    :alt: Zenodo DOI
+
+
 Python based library to use Earth Observation data to retrieve biophysical maps using Gaussian Process Regression
 
 Features
