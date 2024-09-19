@@ -1,4 +1,5 @@
 import openeo
+import os
 
 test_udf = "Udf test passed"
 
@@ -153,7 +154,8 @@ def custom_model_import(user_module):
     )
 
     custom_udf = openeo.UDF(custom_gpr)
-    file_path = r"C:\Users\david\OneDrive\Desktop\output6.txt"
+    file_path = os.path.join(os.path.expanduser("~"), "Desktop")
+    file_path = os.path.join(file_path, "output6.txt")
     with open(file_path, "w") as file:
         file.write(custom_gpr)
 
