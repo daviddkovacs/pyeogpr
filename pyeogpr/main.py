@@ -143,39 +143,6 @@ class Datacube:
         if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
             raise Exception(f"'{self.biovar}' not available for this satellite/sensor. Please select from: " +  str(self.sensors_dict[self.sensor]["sensor_biovar"]))
         
-
-        # if own_model == None:
-
-        #     print(f"Processing {self.sensor} based {self.biovar}")
-            
-        #     context = {"sensor": self.sensor,"biovar":self.biovar}
-            
-        #     self.gpr_cube = self.masked_data.apply_dimension(process=udf_gpr,
-        #                                                     dimension="bands",
-        #                                                     context =context).filter_bands(bands = ["B02"])
-            
-        #     self.gpr_cube.execute_batch(title=f"{self.sensor}_{self.biovar}",outputfile=f"{self.sensor}_{self.biovar}.nc",
-        #                                 job_options = {'executor-memory': '10g','udf-dependency-archives': 
-        #                                                ['https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv']})
-        #     return
-        
-        # if own_model != None:
-            
-        #     print("Using own model")
-        #     spec = importlib.util.spec_from_file_location("user_module", own_model)
-        #     user_module = importlib.util.module_from_spec(spec)
-        #     spec.loader.exec_module(user_module)
-        #     # user_module = load_user_module(user_module_path)
-        #     custom_udf = pyeogpr.udfgpr.custom_model_import(user_module)
-        #     # context = {"sensor": self.sensor,"biovar":"user variable"}
-            
-        #     self.gpr_cube = self.masked_data.apply_dimension(process=custom_udf,
-        #                                                     dimension="bands").filter_bands(bands = ["B02"])
-            
-        #     self.gpr_cube.execute_batch(title="User defined product",
-        #                                           outputfile="user_defined_product.nc",
-        #                                           job_options={'executor-memory': '10g'})
-        #     return
         
         if gapfill == False:
             print(f"gapfill-> {str(gapfill)}")
