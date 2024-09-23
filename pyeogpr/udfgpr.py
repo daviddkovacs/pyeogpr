@@ -1,7 +1,9 @@
 import openeo
+
 test_udf = "Udf test passed"
 
-udf_gpr = openeo.UDF("""
+udf_gpr = openeo.UDF(
+    """
 
 import importlib
 import os
@@ -63,7 +65,9 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     init_xr = mean_pred
     returned = xr.DataArray(init_xr)
     return returned
-""",context={"from_parameter": "context"})
+""",
+    context={"from_parameter": "context"},
+)
 
 
 udf_gpr_customized = """
@@ -134,28 +138,23 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
 """
 
 
-
 def custom_model_import(user_module):
-
-    
     custom_gpr = udf_gpr_customized.format(
-        hyp_ell_GREEN_placeholder =repr(user_module.hyp_ell_GREEN.tolist()),
-        mx_GREEN_placeholder = repr(user_module.mx_GREEN.tolist()),
-        sx_GREEN_placeholder =repr(user_module.sx_GREEN.tolist()),
-        XDX_pre_calc_GREEN_placeholder = repr(user_module.XDX_pre_calc_GREEN.tolist()),
-        X_train_GREEN_placeholder = repr(user_module.X_train_GREEN.tolist()),
-        hyp_sig_GREEN_placeholder =repr(user_module.hyp_sig_GREEN),
-        alpha_coefficients_GREEN_placeholder =repr(user_module.alpha_coefficients_GREEN.tolist()),
-        mean_model_GREEN_placeholder = repr(user_module.mean_model_GREEN),
+        hyp_ell_GREEN_placeholder=repr(user_module.hyp_ell_GREEN.tolist()),
+        mx_GREEN_placeholder=repr(user_module.mx_GREEN.tolist()),
+        sx_GREEN_placeholder=repr(user_module.sx_GREEN.tolist()),
+        XDX_pre_calc_GREEN_placeholder=repr(user_module.XDX_pre_calc_GREEN.tolist()),
+        X_train_GREEN_placeholder=repr(user_module.X_train_GREEN.tolist()),
+        hyp_sig_GREEN_placeholder=repr(user_module.hyp_sig_GREEN),
+        alpha_coefficients_GREEN_placeholder=repr(
+            user_module.alpha_coefficients_GREEN.tolist()
+        ),
+        mean_model_GREEN_placeholder=repr(user_module.mean_model_GREEN),
     )
 
-    custom_udf = openeo.UDF(custom_gpr)    
-    file_path = r'C:\Users\david\OneDrive\Desktop\output6.txt'
-    with open(file_path, 'w') as file:
-        file.write(custom_gpr)
-        
+    custom_udf = openeo.UDF(custom_gpr)
+
     return custom_udf
 
 
-#%%
-
+# %%

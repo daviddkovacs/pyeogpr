@@ -8,47 +8,62 @@ from pyeogpr.udfgpr import udf_gpr, custom_model_import
 from pyeogpr.udfsgolay import udf_sgolay
 import pyeogpr.udfgpr
 
+
 class Datacube:
     """
-    
+
 
     Attributes
     ----------
         sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B
             Satellite sensor to process the data with.
-                    
+
         biovar : Biophysical variable to process. The selected variable's map will be retrieved.
-    
+
             Currently "built-in" variables available for each sensor:
-            
+
             - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
             - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot
             - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC
-            
+
         bounding_box : list
             Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
             (e.g.: [-4.55, 42.73,-4.48, 42.77])
-    
+
         temporal_extent : list
             Your temporal extent to be processed. (e.g.: ["2021-01-01", "2021-12-31"])
-    
+
         cloudmask : Boolean
             If "True" the Sentinel 2 cloud mask will be applied (only to S2 data), with Gaussian convolution to have
             smoother edges when masking.
 
 
     """
-    def __init__(self,sensor:str, biovar: str, bounding_box: list, temporal_extent: list, cloudmask = False):
-        
-        self.connection = openeo.connect("https://openeo.dataspace.copernicus.eu").authenticate_oidc()
+
+    def __init__(
+        self,
+        sensor: str,
+        biovar: str,
+        bounding_box: list,
+        temporal_extent: list,
+        cloudmask=False,
+    ):
+        self.connection = openeo.connect(
+            "https://openeo.dataspace.copernicus.eu"
+        ).authenticate_oidc()
         print("""\n\n""")
         self.sensor = sensor
         self.biovar = biovar
         self.bounding_box = bounding_box
         self.temporal_extent = temporal_extent
         self.cloudmask = cloudmask
-        self.spatial_extent = {"west": self.bounding_box[0], "south": self.bounding_box[1], "east": self.bounding_box[2], "north": self.bounding_box[3]}
-        self.sensors_dict = sensors_dict  
+        self.spatial_extent = {
+            "west": self.bounding_box[0],
+            "south": self.bounding_box[1],
+            "east": self.bounding_box[2],
+            "north": self.bounding_box[3],
+        }
+        self.sensors_dict = sensors_dict
         self.bands = None
         self.scale_factor = None
         self.data = None
@@ -57,17 +72,16 @@ class Datacube:
         self.gpr_cube_gapfilled = None
         self.models_url = "https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv"
 
-        
     def construct_datacube(self, composite=None):
         """
-        
+
 
         Parameters
         ----------
         composite : "hour","day","dekad","week","season","month","year"
-            Compositing temporal interval. The resulting maps will have the following temporal steps. 
+            Compositing temporal interval. The resulting maps will have the following temporal steps.
             For more information: https://processes.openeo.org/#aggregate_temporal_period
-        
+
 
 
         Returns
@@ -77,20 +91,26 @@ class Datacube:
         """
         if self.sensor not in self.sensors_dict.keys():
             raise Exception("Sensor/satellite not available.")
-                
-        data = self.connection.load_collection(self.sensor,
-                                               self.spatial_extent,
-                                               self.temporal_extent,
-                                               self.sensors_dict[self.sensor]["bandlist"]) * self.sensors_dict[self.sensor]["scale_factor"]
+
+        data = (
+            self.connection.load_collection(
+                self.sensor,
+                self.spatial_extent,
+                self.temporal_extent,
+                self.sensors_dict[self.sensor]["bandlist"],
+            )
+            * self.sensors_dict[self.sensor]["scale_factor"]
+        )
         self.data = data
         print(self.data)
         if self.cloudmask == True and "SENTINEL2" in self.sensor:
-
-            s2_cloudmask = self.connection.load_collection("SENTINEL2_L2A",self.spatial_extent, self.temporal_extent, ["SCL"])
+            s2_cloudmask = self.connection.load_collection(
+                "SENTINEL2_L2A", self.spatial_extent, self.temporal_extent, ["SCL"]
+            )
             scl = s2_cloudmask.band("SCL")
             mask = ~((scl == 4) | (scl == 5))
-            
-            #Gaussian convolution to have a smooth edged cloud mask
+
+            # Gaussian convolution to have a smooth edged cloud mask
             g = scipy.signal.windows.gaussian(11, std=1.6)
             kernel = np.outer(g, g)
             kernel = kernel / kernel.sum()
@@ -98,39 +118,75 @@ class Datacube:
             mask = mask > 0.1
 
             if composite != None:
-                
-                self.masked_data = self.data.aggregate_temporal_period(composite,"mean").mask(mask)
-                print(f"Cloud masked, temporally composited datacube constructed: {composite} by mean values.")
-                
+                self.masked_data = self.data.aggregate_temporal_period(
+                    composite, "mean"
+                ).mask(mask)
+                print(
+                    f"Cloud masked, temporally composited datacube constructed: {composite} by mean values."
+                )
+
             elif composite == None:
-                
                 self.masked_data = self.data.mask(mask)
                 print("Cloud masked, datacube constructed")
-                
+
         elif self.cloudmask == False and "SENTINEL2" in self.sensor:
-            
             if composite != None:
-                
-                self.masked_data = self.data.aggregate_temporal_period(composite,"mean")
-                print(f"Temporally composited datacube constructed: {composite} by mean values. ")
-                
+                self.masked_data = self.data.aggregate_temporal_period(
+                    composite, "mean"
+                )
+                print(
+                    f"Temporally composited datacube constructed: {composite} by mean values. "
+                )
+
             elif composite == None:
-                
                 self.masked_data = self.data
                 print("Datacube constructed")
+
+        elif self.cloudmask == True and "LANDSAT8_L2" in self.sensor:
+                
+                l8_cloudmask = self.connection.load_collection("LANDSAT8_L2",self.spatial_extent, self.temporal_extent, ["BQA"])
+                bqa = l8_cloudmask.band("BQA")
+                mask = ~(bqa == 1)
+
+                # gaussian convolution to have a smooth edged cloud mask
+                g = scipy.signal.windows.gaussian(11, std=1.6)
+                kernel = np.outer(g, g)
+                kernel = kernel / kernel.sum()
+                mask = mask.apply_kernel(kernel)
+                mask = mask > 0.1
+
+                if composite != None:
+                        
+                        self.masked_data = self.data.aggregate_temporal_period(composite,"mean").mask(mask)
+                        print(f"Cloud masked, temporally composited datacube constructed: {composite} by mean values.")
+
+                elif composite == None:
+                            
+                            self.masked_data = self.data.mask(mask)
+                            print("Cloud masked, datacube constructed")
+
+        elif self.cloudmask == False and "LANDSAT8_L2" in self.sensor:
+                
+                if composite != None:
+                        
+                        self.masked_data = self.data.aggregate_temporal_period(composite,"mean")
+                        print(f"Temporally composited datacube constructed: {composite} by mean values. ")
+                        
+                elif composite == None:
+                        
+                        self.masked_data = self.data
+                        print("Datacube constructed")
 
         else:
             print(f"{self.sensor} can't be masked")
 
-    
-    def process_map(self, gapfill = False, own_model = None):
-
+    def process_map(self, gapfill=False, own_model=None):
         """
-        
+
 
         Parameters
         ----------
-       
+
         gapfill : type, e.g. "Sgolay"
             To apply Savitzy Golay interpolator for cloud-induced gap filling
 
@@ -141,25 +197,32 @@ class Datacube:
 
         """
         if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
-            raise Exception(f"'{self.biovar}' not available for this satellite/sensor. Please select from: " +  str(self.sensors_dict[self.sensor]["sensor_biovar"]))
-        
-        
+            raise Exception(
+                f"'{self.biovar}' not available for this satellite/sensor. Please select from: "
+                + str(self.sensors_dict[self.sensor]["sensor_biovar"])
+            )
+
         if gapfill == False:
             print(f"gapfill-> {str(gapfill)}")
-            
+
             if own_model == None:
                 print(f"own_model {str(own_model)}")
-                
-                context = {"sensor": self.sensor,"biovar":self.biovar}
-                self.gpr_cube = self.masked_data.apply_dimension(process=udf_gpr,
-                                                                dimension="bands",
-                                                                context =context).filter_bands(bands = ["B02"])
-                
-                self.gpr_cube.execute_batch(title=f"{self.sensor}_{self.biovar}",outputfile=f"{self.sensor}_{self.biovar}.nc",
-                                            job_options = {'executor-memory': '10g','udf-dependency-archives': 
-                                                           [self.models_url]})
+
+                context = {"sensor": self.sensor, "biovar": self.biovar}
+                self.gpr_cube = self.masked_data.apply_dimension(
+                    process=udf_gpr, dimension="bands", context=context
+                ).filter_bands(bands=["B02"])
+
+                self.gpr_cube.execute_batch(
+                    title=f"{self.sensor}_{self.biovar}",
+                    outputfile=f"{self.sensor}_{self.biovar}.nc",
+                    job_options={
+                        "executor-memory": "10g",
+                        "udf-dependency-archives": [self.models_url],
+                    },
+                )
                 return
-            
+
             if own_model != None:
                 print(f"own_model {str(own_model)}")
 
@@ -169,34 +232,43 @@ class Datacube:
                 # user_module = load_user_module(user_module_path)
                 custom_udf = pyeogpr.udfgpr.custom_model_import(user_module)
 
-                self.gpr_cube = self.masked_data.apply_dimension(process=custom_udf,
-                                                                dimension="bands").filter_bands(bands = ["B02"])
-                
-                self.gpr_cube.execute_batch(title="User defined product",
-                                                      outputfile="user_defined_product.nc",
-                                                      job_options={'executor-memory': '10g'})
+                self.gpr_cube = self.masked_data.apply_dimension(
+                    process=custom_udf, dimension="bands"
+                ).filter_bands(bands=["B02"])
+
+                self.gpr_cube.execute_batch(
+                    title="User defined product",
+                    outputfile="user_defined_product.nc",
+                    job_options={"executor-memory": "10g"},
+                )
                 return
-            
+
         elif gapfill == True:
             print(f"gapfill-> {str(gapfill)}")
-            
+
             if own_model == None:
                 print(f"own_model {str(own_model)}")
 
-                context = {"sensor": self.sensor,"biovar":self.biovar}
-                
-                self.gpr_cube = self.masked_data.apply_dimension(process=udf_gpr,
-                                                                dimension="bands",
-                                                                context =context).filter_bands(bands = ["B02"])
-                
-                self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(process=udf_sgolay, dimension="t")
-                
-    
-                self.gpr_cube_gapfilled.execute_batch(title=f"{self.sensor} {self.biovar} gapfill->{gapfill}", outputfile=f"{self.sensor}_{self.biovar}_GF.nc",
-                                                      job_options={'executor-memory': '10g', 'udf-dependency-archives': 
-                                                                    [self.models_url]})
+                context = {"sensor": self.sensor, "biovar": self.biovar}
+
+                self.gpr_cube = self.masked_data.apply_dimension(
+                    process=udf_gpr, dimension="bands", context=context
+                ).filter_bands(bands=["B02"])
+
+                self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(
+                    process=udf_sgolay, dimension="t"
+                )
+
+                self.gpr_cube_gapfilled.execute_batch(
+                    title=f"{self.sensor} {self.biovar} gapfill->{gapfill}",
+                    outputfile=f"{self.sensor}_{self.biovar}_GF.nc",
+                    job_options={
+                        "executor-memory": "10g",
+                        "udf-dependency-archives": [self.models_url],
+                    },
+                )
                 return
-            
+
             if own_model != None:
                 print(f"own_model {str(own_model)}")
 
@@ -206,17 +278,20 @@ class Datacube:
                 # user_module = load_user_module(user_module_path)
                 custom_udf = pyeogpr.udfgpr.custom_model_import(user_module)
 
-                self.gpr_cube = self.masked_data.apply_dimension(process=custom_udf,
-                                                                dimension="bands").filter_bands(bands = ["B02"])
-                
-                self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(process=udf_sgolay, dimension="t")
-                
-                self.gpr_cube.execute_batch(title="User defined product",
-                                                      outputfile="user_defined_product.nc",
-                                                      job_options={'executor-memory': '10g'})
+                self.gpr_cube = self.masked_data.apply_dimension(
+                    process=custom_udf, dimension="bands"
+                ).filter_bands(bands=["B02"])
+
+                self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(
+                    process=udf_sgolay, dimension="t"
+                )
+
+                self.gpr_cube.execute_batch(
+                    title="User defined product",
+                    outputfile="user_defined_product.nc",
+                    job_options={"executor-memory": "10g"},
+                )
                 return
-            
-                
+
         else:
             raise Exception(f"'{gapfill}' is not a valid smoother")
-   

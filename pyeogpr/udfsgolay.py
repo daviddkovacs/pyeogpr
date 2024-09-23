@@ -1,6 +1,7 @@
 import openeo
 
-udf_sgolay = openeo.UDF("""
+udf_sgolay = openeo.UDF(
+    """
 
 import numpy as np
 import xarray as xr
@@ -20,4 +21,5 @@ def apply_datacube(cube: XarrayDataCube, context: dict) -> XarrayDataCube:
     return XarrayDataCube(
         array=xarray.DataArray(smoothed_array, dims=array.dims, coords=array.coords)
     )
-""")
+"""
+)
