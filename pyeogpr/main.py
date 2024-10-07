@@ -180,7 +180,7 @@ class Datacube:
         else:
             print(f"{self.sensor} can't be masked")
 
-    def process_map(self, gapfill=False, own_model=None):
+    def process_map(self, gapfill=False, fileformat = "nc", own_model=None):
         """
 
 
@@ -215,7 +215,7 @@ class Datacube:
 
                 self.gpr_cube.execute_batch(
                     title=f"{self.sensor}_{self.biovar}",
-                    outputfile=f"{self.sensor}_{self.biovar}.nc",
+                    outputfile=f"{self.sensor}_{self.biovar}.{fileformat}",
                     job_options={
                         "executor-memory": "10g",
                         "udf-dependency-archives": [self.models_url],
@@ -238,7 +238,7 @@ class Datacube:
 
                 self.gpr_cube.execute_batch(
                     title="User defined product",
-                    outputfile="user_defined_product.nc",
+                    outputfile="user_defined_product.{fileformat}",
                     job_options={"executor-memory": "10g"},
                 )
                 return
@@ -261,7 +261,7 @@ class Datacube:
 
                 self.gpr_cube_gapfilled.execute_batch(
                     title=f"{self.sensor} {self.biovar} gapfill->{gapfill}",
-                    outputfile=f"{self.sensor}_{self.biovar}_GF.nc",
+                    outputfile=f"{self.sensor}_{self.biovar}_GF.{fileformat}",
                     job_options={
                         "executor-memory": "10g",
                         "udf-dependency-archives": [self.models_url],
@@ -288,7 +288,7 @@ class Datacube:
 
                 self.gpr_cube.execute_batch(
                     title="User defined product",
-                    outputfile="user_defined_product.nc",
+                    outputfile=f"user_defined_product.{fileformat}",
                     job_options={"executor-memory": "10g"},
                 )
                 return
