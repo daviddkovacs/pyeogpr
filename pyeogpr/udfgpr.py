@@ -62,7 +62,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     k_star_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5)))
     mean_pred = (np.einsum('ijk,i->jk',k_star_im, model.alpha_coefficients_GREEN.ravel()) * arg1) + model.mean_model_GREEN
 
-    init_xr = mean_pred
+    init_xr = np.clip(mean_pred, a_min=0, a_max=None)
     returned = xr.DataArray(init_xr)
     return returned
 """,
