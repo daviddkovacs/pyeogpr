@@ -70,6 +70,8 @@ You can select from a list of trained variables developed for the following sate
 [Sentinel-2 L2A](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
 
 [Sentinel-3 OLCI L1B](https://pyeogpr.readthedocs.io/en/latest/sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci)
+<!-- TODO: Update Docs for Landsat 8 -->
+[Landsat8_L2](https://pyeogpr.readthedocs.io/en/latest/sensors.html#)
 
 # Cite as
 
