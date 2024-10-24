@@ -6,6 +6,7 @@ import importlib.util
 from pyeogpr.sensors import sensors_dict
 from pyeogpr.udfgpr import udf_gpr, custom_model_import
 from pyeogpr.udfsgolay import udf_sgolay
+from pyeogpr.udf_L8_qa import L8_cloud_qa
 import pyeogpr.udfgpr
 
 
@@ -143,16 +144,14 @@ class Datacube:
                 print("Datacube constructed")
 
         elif self.cloudmask == True and "LANDSAT8_L2" in self.sensor:
-                
-                l8_cloudmask = self.connection.load_collection("LANDSAT8_L2",self.spatial_extent, self.temporal_extent, ["BQA"])
-                bqa = l8_cloudmask.band("BQA")
-                mask = ~(bqa == 1)
+                l8_qa = self.connection.load_collection("LANDSAT8_L2", self.spatial_extent, self.temporal_extent, ["BQA"])
 
-                # gaussian convolution to have a smooth edged cloud mask
-                g = scipy.signal.windows.gaussian(11, std=1.6)
-                kernel = np.outer(g, g)
-                kernel = kernel / kernel.sum()
-                mask = mask.apply_kernel(kernel)
+                l8_cloudmask = l8_qa.apply(process=L8_cloud_qa)
+
+                bqa = l8_cloudmask.band("BQA")
+                mask = ~((bqa == 0))
+
+                # apply kernel to mask without smoothing
                 mask = mask > 0.1
 
                 if composite != None:
