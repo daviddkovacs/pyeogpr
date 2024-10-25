@@ -237,7 +237,7 @@ class Datacube:
 
                 self.gpr_cube.execute_batch(
                     title="User defined product",
-                    outputfile="user_defined_product.{fileformat}",
+                    outputfile=f"user_defined_product.{fileformat}",
                     job_options={"executor-memory": "10g"},
                 )
                 return
