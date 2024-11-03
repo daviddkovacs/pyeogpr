@@ -75,7 +75,7 @@ sensors_dict = {
     },
     "LANDSAT8_L2": {
         "sensor_biovar": ["LAI"],
-        "scale_factor": 0.0001,
+        "scale_factor": 0.00001,
         "bandlist": [
             "B02",
             "B03",
