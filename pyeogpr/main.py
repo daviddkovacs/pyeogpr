@@ -2,6 +2,8 @@ import openeo
 import numpy as np
 import scipy
 import scipy.signal
+import ee
+
 import importlib.util
 from pyeogpr.sensors import sensors_dict
 from pyeogpr.udfgpr import udf_gpr, custom_model_import
@@ -9,13 +11,13 @@ from pyeogpr.udfsgolay import udf_sgolay
 from pyeogpr.udf_L8_qa import L8_cloud_qa
 import pyeogpr.udfgpr
 
-
 class Datacube:
     """
 
 
     Attributes
     ----------
+
         sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B
             Satellite sensor to process the data with.
 
@@ -90,6 +92,7 @@ class Datacube:
         Datacube object containing user defined parameters and temporal compositing. This will be processed into an openEO datacube.
 
         """
+
         if self.sensor not in self.sensors_dict.keys():
             raise Exception("Sensor/satellite not available.")
 
@@ -144,42 +147,47 @@ class Datacube:
                 print("Datacube constructed")
 
         elif self.cloudmask == True and "LANDSAT8_L2" in self.sensor:
-                l8_qa = self.connection.load_collection("LANDSAT8_L2", self.spatial_extent, self.temporal_extent, ["BQA"])
+            l8_qa = self.connection.load_collection(
+                "LANDSAT8_L2", self.spatial_extent, self.temporal_extent, ["BQA"]
+            )
 
-                l8_cloudmask = l8_qa.apply(process=L8_cloud_qa)
+            l8_cloudmask = l8_qa.apply(process=L8_cloud_qa)
 
-                bqa = l8_cloudmask.band("BQA")
-                mask = ~((bqa == 0))
+            bqa = l8_cloudmask.band("BQA")
+            mask = ~((bqa == 0))
 
-                # apply kernel to mask without smoothing
-                mask = mask > 0.1
+            # apply kernel to mask without smoothing
+            mask = mask > 0.1
 
-                if composite != None:
-                        
-                        self.masked_data = self.data.aggregate_temporal_period(composite,"mean").mask(mask)
-                        print(f"Cloud masked, temporally composited datacube constructed: {composite} by mean values.")
+            if composite != None:
+                self.masked_data = self.data.aggregate_temporal_period(
+                    composite, "mean"
+                ).mask(mask)
+                print(
+                    f"Cloud masked, temporally composited datacube constructed: {composite} by mean values."
+                )
 
-                elif composite == None:
-                            
-                            self.masked_data = self.data.mask(mask)
-                            print("Cloud masked, datacube constructed")
+            elif composite == None:
+                self.masked_data = self.data.mask(mask)
+                print("Cloud masked, datacube constructed")
 
         elif self.cloudmask == False and "LANDSAT8_L2" in self.sensor:
-                
-                if composite != None:
-                        
-                        self.masked_data = self.data.aggregate_temporal_period(composite,"mean")
-                        print(f"Temporally composited datacube constructed: {composite} by mean values. ")
-                        
-                elif composite == None:
-                        
-                        self.masked_data = self.data
-                        print("Datacube constructed")
+            if composite != None:
+                self.masked_data = self.data.aggregate_temporal_period(
+                    composite, "mean"
+                )
+                print(
+                    f"Temporally composited datacube constructed: {composite} by mean values. "
+                )
+
+            elif composite == None:
+                self.masked_data = self.data
+                print("Datacube constructed")
 
         else:
             print(f"{self.sensor} can't be masked")
 
-    def process_map(self, gapfill=False, fileformat = "nc", own_model=None):
+    def process_map(self, gapfill=False, fileformat="nc", own_model=None):
         """
 
 
