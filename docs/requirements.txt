@@ -6,3 +6,4 @@ numpy
 scipy
 numpydoc
 ee
+StringIO
