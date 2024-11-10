@@ -1,17 +1,14 @@
-PyEOGPR
-========
-
-**PyEOGPR** allows you to perform Gaussian Process Regression (GPR) on biophysical trait maps, using either of two back-ends—Google Earth Engine or openEO. Select the back-end that suits your needs; both are designed with user-friendly syntax.
-
-Available Back-ends:
----------------------
-
-- **Google Earth Engine (GEE)**: `EarthEngine documentation <earthengine.html>
-- **openEO**: `openEO documentation <openeo.html>
-
+.. image:: https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577
+   :alt: Google Earth Engine Overview
+   :align: center
+   :width: 20%
+   
+   
 
 Google Earth Engine (GEE) Back-end
------------------------------------
+===================================
+
+This section covers the usage of the Google Earth Engine (GEE) back-end for Gaussian Process Regression (GPR) using PyEOGPR.
 
 .. autoclass:: pyeogpr.EarthEngine
    :members:
@@ -19,6 +16,9 @@ Google Earth Engine (GEE) Back-end
    :show-inheritance:
    :exclude-members: maploop,getInputDates,calculate_GREEN,addVariables,maskS3badPixels,sequence_GREEN
    :special-members: __init__  # This explicitly shows the constructor (__init__)
+
+Example Usage
+-------------
 
 .. code-block:: python
 
@@ -32,28 +32,37 @@ Google Earth Engine (GEE) Back-end
      ]
 
    dc = EarthEngine(projectID  = "ee-dkvcsdvd",
-                        sensor ="SENTINEL3_L1B", 
-                         biovar = "FVC",        
-                         bounding_box = bounding_box,
-                         temporal_extent =  ["2021-07-01", "2021-07-08"],
-                         spatial_resolution  = 300,
-                         cloudmask =True)
+                    sensor ="SENTINEL3_L1B", 
+                    biovar = "FVC",        
+                    bounding_box = bounding_box,
+                    temporal_extent =  ["2021-07-01", "2021-07-08"],
+                    spatial_resolution  = 300,
+                    cloudmask =True)
 
    dc.construct_datacube(composite = 4)
 
    dc.process_map(assetpath = "projects/ee-dkvcsdvd/assets/MyImageCollection") 
+
+
+.. image:: https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82
+   :alt: openEO Overview
+   :align: center
+   :width: 20%
    
-
+   
+   
 openEO Back-end
------------------
+===============
 
-.. autoclass:: pyeogpr.Datacube  
+This section covers the usage of the openEO back-end for Gaussian Process Regression (GPR) using PyEOGPR.
+
+.. autoclass:: pyeogpr.Datacube
    :members:
    :undoc-members:
    :show-inheritance:
 
-Example:
---------
+Example Usage
+-------------
 
 .. code-block:: python
 
@@ -79,7 +88,7 @@ Example:
    dc.construct_datacube("dekad") 
 
    dc.process_map(gapfill=True, fileformat="nc", own_model=None)
-
+   
 To download the GPR processed map go to the `openEO portal <https://openeo.dataspace.copernicus.eu/>`_:
 
 .. image:: https://github.com/user-attachments/assets/a869b60f-a420-4459-83ac-289c99758c8d

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyEOGPR &mdash; pyeogpr 1.1.2 documentation</title>
+  <title>Google Earth Engine (GEE) Back-end &mdash; pyeogpr 1.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -46,25 +46,22 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PyEOGPR</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#available-back-ends">Available Back-ends:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#google-earth-engine-gee-back-end">Google Earth Engine (GEE) Back-end</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyeogpr.EarthEngine"><code class="docutils literal notranslate"><span class="pre">EarthEngine</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pyeogpr.EarthEngine.construct_datacube"><code class="docutils literal notranslate"><span class="pre">EarthEngine.construct_datacube()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyeogpr.EarthEngine.process_map"><code class="docutils literal notranslate"><span class="pre">EarthEngine.process_map()</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Google Earth Engine (GEE) Back-end</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyeogpr.EarthEngine"><code class="docutils literal notranslate"><span class="pre">EarthEngine</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyeogpr.EarthEngine.construct_datacube"><code class="docutils literal notranslate"><span class="pre">EarthEngine.construct_datacube()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyeogpr.EarthEngine.process_map"><code class="docutils literal notranslate"><span class="pre">EarthEngine.process_map()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example Usage</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#openeo-back-end">openEO Back-end</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyeogpr.Datacube"><code class="docutils literal notranslate"><span class="pre">Datacube</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pyeogpr.Datacube.construct_datacube"><code class="docutils literal notranslate"><span class="pre">Datacube.construct_datacube()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyeogpr.Datacube.process_map"><code class="docutils literal notranslate"><span class="pre">Datacube.process_map()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#openeo-back-end">openEO Back-end</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyeogpr.Datacube"><code class="docutils literal notranslate"><span class="pre">Datacube</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyeogpr.Datacube.construct_datacube"><code class="docutils literal notranslate"><span class="pre">Datacube.construct_datacube()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyeogpr.Datacube.process_map"><code class="docutils literal notranslate"><span class="pre">Datacube.process_map()</span></code></a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#example">Example:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Example Usage</a></li>
 </ul>
 </li>
 </ul>
@@ -88,7 +85,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">PyEOGPR</li>
+      <li class="breadcrumb-item active">Google Earth Engine (GEE) Back-end</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/pyeogpr.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -98,18 +95,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pyeogpr">
-<h1>PyEOGPR<a class="headerlink" href="#pyeogpr" title="Link to this heading"></a></h1>
-<p><strong>PyEOGPR</strong> allows you to perform Gaussian Process Regression (GPR) on biophysical trait maps, using either of two back-ends—Google Earth Engine or openEO. Select the back-end that suits your needs; both are designed with user-friendly syntax.</p>
-<section id="available-back-ends">
-<h2>Available Back-ends:<a class="headerlink" href="#available-back-ends" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><strong>Google Earth Engine (GEE)</strong>: <a href="#id1"><span class="problematic" id="id2">`</span></a>EarthEngine documentation &lt;earthengine.html&gt;</p></li>
-<li><p><strong>openEO</strong>: <a href="#id3"><span class="problematic" id="id4">`</span></a>openEO documentation &lt;openeo.html&gt;</p></li>
-</ul>
-</section>
+  <a class="reference internal image-reference" href="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577"><img alt="Google Earth Engine Overview" class="align-center" src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" style="width: 20%;" /></a>
 <section id="google-earth-engine-gee-back-end">
-<h2>Google Earth Engine (GEE) Back-end<a class="headerlink" href="#google-earth-engine-gee-back-end" title="Link to this heading"></a></h2>
+<h1>Google Earth Engine (GEE) Back-end<a class="headerlink" href="#google-earth-engine-gee-back-end" title="Link to this heading"></a></h1>
+<p>This section covers the usage of the Google Earth Engine (GEE) back-end for Gaussian Process Regression (GPR) using PyEOGPR.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyeogpr.EarthEngine">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyeogpr.</span></span><span class="sig-name descname"><span class="pre">EarthEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biovar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporal_extent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial_resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloudmask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/gee_processing.html#EarthEngine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.EarthEngine" title="Link to this definition"></a></dt>
@@ -183,6 +172,8 @@ When you created your ImageCollection, copy its ID as a string and assign it to 
 
 </dd></dl>
 
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyeogpr</span> <span class="kn">import</span> <span class="n">EarthEngine</span>
 
 <span class="n">bounding_box</span> <span class="o">=</span> <span class="p">[</span>
@@ -193,21 +184,24 @@ When you created your ImageCollection, copy its ID as a string and assign it to 
   <span class="p">]</span>
 
 <span class="n">dc</span> <span class="o">=</span> <span class="n">EarthEngine</span><span class="p">(</span><span class="n">projectID</span>  <span class="o">=</span> <span class="s2">&quot;ee-dkvcsdvd&quot;</span><span class="p">,</span>
-                     <span class="n">sensor</span> <span class="o">=</span><span class="s2">&quot;SENTINEL3_L1B&quot;</span><span class="p">,</span>
-                      <span class="n">biovar</span> <span class="o">=</span> <span class="s2">&quot;FVC&quot;</span><span class="p">,</span>
-                      <span class="n">bounding_box</span> <span class="o">=</span> <span class="n">bounding_box</span><span class="p">,</span>
-                      <span class="n">temporal_extent</span> <span class="o">=</span>  <span class="p">[</span><span class="s2">&quot;2021-07-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2021-07-08&quot;</span><span class="p">],</span>
-                      <span class="n">spatial_resolution</span>  <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
-                      <span class="n">cloudmask</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                 <span class="n">sensor</span> <span class="o">=</span><span class="s2">&quot;SENTINEL3_L1B&quot;</span><span class="p">,</span>
+                 <span class="n">biovar</span> <span class="o">=</span> <span class="s2">&quot;FVC&quot;</span><span class="p">,</span>
+                 <span class="n">bounding_box</span> <span class="o">=</span> <span class="n">bounding_box</span><span class="p">,</span>
+                 <span class="n">temporal_extent</span> <span class="o">=</span>  <span class="p">[</span><span class="s2">&quot;2021-07-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2021-07-08&quot;</span><span class="p">],</span>
+                 <span class="n">spatial_resolution</span>  <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+                 <span class="n">cloudmask</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">dc</span><span class="o">.</span><span class="n">construct_datacube</span><span class="p">(</span><span class="n">composite</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
 
 <span class="n">dc</span><span class="o">.</span><span class="n">process_map</span><span class="p">(</span><span class="n">assetpath</span> <span class="o">=</span> <span class="s2">&quot;projects/ee-dkvcsdvd/assets/MyImageCollection&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<a class="reference internal image-reference" href="https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82"><img alt="openEO Overview" class="align-center" src="https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82" style="width: 20%;" /></a>
+</section>
 </section>
 <section id="openeo-back-end">
-<h2>openEO Back-end<a class="headerlink" href="#openeo-back-end" title="Link to this heading"></a></h2>
+<h1>openEO Back-end<a class="headerlink" href="#openeo-back-end" title="Link to this heading"></a></h1>
+<p>This section covers the usage of the openEO back-end for Gaussian Process Regression (GPR) using PyEOGPR.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyeogpr.Datacube">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyeogpr.</span></span><span class="sig-name descname"><span class="pre">Datacube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biovar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporal_extent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloudmask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/openeo_processing.html#Datacube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.Datacube" title="Link to this definition"></a></dt>
@@ -281,9 +275,8 @@ For more information: <a class="reference external" href="https://processes.open
 
 </dd></dl>
 
-</section>
-<section id="example">
-<h2>Example:<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Example Usage<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyeogpr</span> <span class="kn">import</span> <span class="n">Datacube</span>
 
 <span class="n">bounding_box</span> <span class="o">=</span> <span class="p">[</span>

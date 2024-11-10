@@ -5,3 +5,4 @@ pyeogpr
    :maxdepth: 4
 
    pyeogpr
+   setup
