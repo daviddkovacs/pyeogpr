@@ -24,42 +24,7 @@ Python based machine learning library to use Earth Observation data to map bioph
 
 # Get started
 
-You can install pyeogpr using pip. Read the [documentation](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html)
-
-```shell
-pip install pyeogpr
-```
-Basic example:
-```shell
- from pyeogpr import EarthEngine
-
- bounding_box = [
-     17.83670163256923,
-     46.55399091975397,
-     18.368529333383833,
-     46.935776495476205
-   ]
-
- dc = EarthEngine(projectID  = "ee-dkvcsdvd",
-                      sensor ="SENTINEL3_L1B", 
-                       biovar = "FVC",        
-                       bounding_box = bounding_box,
-                       temporal_extent =  ["2021-07-01", "2021-07-08"],
-                       spatial_resolution  = 300,
-                       cloudmask =True)
-
- dc.construct_datacube(composite = 4)
-
- dc.process_map(assetpath = "projects/ee-dkvcsdvd/assets/MyImageCollection") 
-```
-To download the GPR processed map go to the [openEO portal](https://openeo.dataspace.copernicus.eu/):
-
-![download](https://github.com/user-attachments/assets/a869b60f-a420-4459-83ac-289c99758c8d)
-
-You can use [QGIS](https://qgis.org/download/) or [Panoply](https://www.giss.nasa.gov/tools/panoply/) to visualize. IMPORTANT: The data range is off, due to few pixels being outliers.
-Set the data range manually for the corresponding variable e.g. FVC--> 0 to 1.
-
-![map](https://github.com/user-attachments/assets/6f2cc18c-1568-4aa5-a3d6-e028e69e361d)
+Refer to the [Documentation](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html) for instructions and examples.
 
 
 # Satellites and biophysical variables
