@@ -1,6 +1,8 @@
 sphinx-rtd-theme
+sphinx-autodoc-typehints
 myst_parser
 openeo
 numpy
 scipy
 numpydoc
+ee
