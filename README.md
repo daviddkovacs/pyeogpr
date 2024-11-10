@@ -13,7 +13,7 @@ Python based machine learning library to use Earth Observation data to map bioph
 
 # Features
 
-- Access to GEE/openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here]([https://documentation.dataspace.copernicus.eu/Registration.html](https://code.earthengine.google.com/register)) or [here](https://docs.openeo.cloud/join/free_trial.html)
+- Access to GEE/openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here]([https://documentation.dataspace.copernicus.eu/Registration.html](https://code.earthengine.google.com/register) or [here](https://docs.openeo.cloud/join/free_trial.html)
  - Hybrid retrieval methods were used: the Gaussian Process Regression retrieval algorithms were trained on biophysical trait specific radiative transfer model (RTM) simulations
 - Built-in gap-filling to avoid cloud covers
 - Runs "in the cloud" with the GEE/openEO Python API. No local processing is needed.
