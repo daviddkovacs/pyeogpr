@@ -8,6 +8,7 @@
 
 import os
 import sys
+from io import StringIO
 sys.path.insert(0, os.path.abspath(".."))
 
 project = 'pyeogpr'
