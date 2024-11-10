@@ -1,8 +1,6 @@
-
 This package currently features the following satellite sensors and biophysical variables for mapping:
 
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
-
  - **Top of atmosphere: Level 1C** 
  [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958/Estévez_et_al_2022-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
  
@@ -45,7 +43,6 @@ This package currently features the following satellite sensors and biophysical 
 
 
 ## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
-
  - **Top of atmosphere: Level 1B**
  [![DOI](https://img.shields.io/badge/DOI-rs14061347/ReyesMuñoz_et_al_2022-doi.svg)]([https://doi.org/10.3390/rs14061347](https://doi.org/10.3390/rs14061347))
   [![DOI](https://img.shields.io/badge/DOI-rs15133404/D.Kovács_et_al_2023-doi.svg)]([https://doi.org/10.3390/rs15133404](https://doi.org/10.3390/rs15133404))

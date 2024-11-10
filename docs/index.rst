@@ -50,36 +50,7 @@ You can install pyeogpr using pip:
 Usage
 -----
 
-Here is a basic example to get you started with pyeogpr:
-
-.. code-block:: python
-
-    
-
-    import pyeogpr
-    
-    # Your region of interest
-    bounding_box = [
-              -0.305543150556133,
-              39.29253033906926,
-              -0.28169853763617425,
-              39.303338211248104
-            ]
-    
-    # Time window for processing Satellite observations
-    time_window = ["2022-05-01", "2022-06-01"]
-    
-    dc = pyeogpr.Datacube(
-        "SENTINEL2_L2A",  # Satellite sensor
-        "FVC",            # Fractional Vegetation Cover
-        bounding_box,
-        time_window,
-        cloudmask=True
-    )
-    
-    dc.construct_datacube("dekad")  # Initiates openEO datacube
-
-    dc.process_map()  # Starts GPR processing 
+Please refer to the documentation to use either GEE or openEO based processing.
         
 .. toctree::
    :maxdepth: 2
@@ -101,6 +72,6 @@ Contact
 Dávid D.Kovács - `daviddkovacs@gmail.com <mailto:daviddkovacs@gmail.com>`_
 
 .. image:: flexinel.png
-s
+
 
 .. _Access: https://documentation.dataspace.copernicus.eu/Registration.html

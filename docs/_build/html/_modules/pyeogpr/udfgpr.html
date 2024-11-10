@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyeogpr.udfgpr &mdash; pyeogpr 1.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=6f037312"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyeogpr
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pyeogpr.html">pyeogpr package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sensors.html"><strong>- Sentinel 2 MultiSpectral Instrument (MSI)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci"><strong>- Sentinel 3 Ocean and Land Colour Instrument (OLCI)</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyeogpr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyeogpr.udfgpr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyeogpr.udfgpr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openeo</span>
+
+<span class="n">test_udf</span> <span class="o">=</span> <span class="s2">&quot;Udf test passed&quot;</span>
+
+<span class="n">udf_gpr</span> <span class="o">=</span> <span class="n">openeo</span><span class="o">.</span><span class="n">UDF</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">import importlib</span>
+<span class="sd">import os</span>
+<span class="sd">import sys</span>
+<span class="sd">import time</span>
+
+<span class="sd">dir_path = &#39;tmp/venv&#39;</span>
+<span class="sd">sys.path.insert(0, dir_path)</span>
+
+<span class="sd">python_files = [f[:-3] for f in os.listdir(dir_path) if f.endswith(&#39;.py&#39;) and f !=&quot;__init__.py&quot;]</span>
+
+<span class="sd">for lib in python_files:</span>
+<span class="sd">    globals()[lib] = __import__(lib)</span>
+
+<span class="sd">from configparser import ConfigParser</span>
+<span class="sd">from typing import Dict</span>
+<span class="sd">from openeo.metadata import Band, CollectionMetadata</span>
+<span class="sd">from openeo.udf import XarrayDataCube, inspect</span>
+
+<span class="sd">import numpy as np</span>
+<span class="sd">import xarray as xr</span>
+<span class="sd">from pathlib import Path</span>
+<span class="sd">from openeo.udf.debug import inspect</span>
+
+
+
+<span class="sd">chunks = 128</span>
+<span class="sd">def broadcaster(array,bands_from_model):</span>
+<span class="sd">    return np.broadcast_to(array[:, np.newaxis, np.newaxis], (bands_from_model, chunks, chunks))</span>
+
+
+<span class="sd">init_xr = xr.DataArray()</span>
+<span class="sd">def apply_datacube(cube: xarray.DataArray, context: dict) -&gt; xarray.DataArray:</span>
+
+<span class="sd">    sensor = context[&quot;sensor&quot;]</span>
+<span class="sd">    variable = context[&quot;biovar&quot;]</span>
+<span class="sd">    model = globals()[sensor + &quot;_&quot; + variable]</span>
+<span class="sd">    bands = len(model.mx_GREEN.ravel())</span>
+
+<span class="sd">    hyp_ell_GREEN = broadcaster(model.hyp_ell_GREEN,bands)</span>
+<span class="sd">    mx_GREEN = broadcaster(model.mx_GREEN.ravel(),bands)</span>
+<span class="sd">    sx_GREEN = broadcaster(model.sx_GREEN.ravel(),bands)</span>
+
+<span class="sd">    XDX_pre_calc_GREEN_broadcast = np.broadcast_to(model.XDX_pre_calc_GREEN.ravel()[:,np.newaxis,np.newaxis],(model.XDX_pre_calc_GREEN.shape[0],chunks,chunks))</span>
+
+
+<span class="sd">    pixel_spectra = (cube.values)</span>
+
+<span class="sd">    im_norm_ell2D_hypell  = ((pixel_spectra - mx_GREEN) / sx_GREEN) * hyp_ell_GREEN</span>
+<span class="sd">    im_norm_ell2D  = ((pixel_spectra - mx_GREEN) / sx_GREEN)</span>
+
+<span class="sd">    PtTPt = np.einsum(&#39;ijk,ijk-&gt;ijk&#39;, im_norm_ell2D_hypell, im_norm_ell2D) * (-0.5)</span>
+<span class="sd">    PtTDX = np.einsum(&#39;ij,jkl-&gt;ikl&#39;, model.X_train_GREEN,im_norm_ell2D_hypell)</span>
+<span class="sd">    arg1 = np.exp(PtTPt[0]) * model.hyp_sig_GREEN</span>
+
+<span class="sd">    k_star_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5)))</span>
+<span class="sd">    mean_pred = (np.einsum(&#39;ijk,i-&gt;jk&#39;,k_star_im, model.alpha_coefficients_GREEN.ravel()) * arg1) + model.mean_model_GREEN</span>
+
+<span class="sd">    init_xr = np.clip(mean_pred, a_min=0, a_max=None)</span>
+<span class="sd">    returned = xr.DataArray(init_xr)</span>
+<span class="sd">    return returned</span>
+<span class="sd">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;from_parameter&quot;</span><span class="p">:</span> <span class="s2">&quot;context&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+
+
+<span class="n">udf_gpr_customized</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">import importlib</span>
+<span class="s2">import os</span>
+<span class="s2">import sys</span>
+<span class="s2">import time</span>
+
+<span class="s2">from configparser import ConfigParser</span>
+<span class="s2">from typing import Dict</span>
+<span class="s2">from openeo.metadata import Band, CollectionMetadata</span>
+<span class="s2">from openeo.udf import XarrayDataCube, inspect</span>
+
+<span class="s2">import numpy as np</span>
+<span class="s2">import xarray as xr</span>
+<span class="s2">from pathlib import Path</span>
+<span class="s2">from openeo.udf.debug import inspect</span>
+
+<span class="s2">bands = len(np.array(</span><span class="si">{mx_GREEN_placeholder}</span><span class="s2">).ravel())</span>
+<span class="s2">chunks = 128</span>
+
+<span class="s2">def broadcaster(array):</span>
+<span class="s2">    array = np.array(array)</span>
+<span class="s2">    return np.broadcast_to(array[:, np.newaxis, np.newaxis], (bands, chunks, chunks))</span>
+
+<span class="s2">#hyperparameters that need broadcasting</span>
+
+<span class="s2">hyp_ell_GREEN = broadcaster(np.array(</span><span class="si">{hyp_ell_GREEN_placeholder}</span><span class="s2">))</span>
+<span class="s2">mx_GREEN = broadcaster(np.array(</span><span class="si">{mx_GREEN_placeholder}</span><span class="s2">).ravel())</span>
+<span class="s2">sx_GREEN = broadcaster(np.array(</span><span class="si">{sx_GREEN_placeholder}</span><span class="s2">).ravel())</span>
+<span class="s2">XDX_pre_calc_GREEN_broadcast = np.broadcast_to(np.array(</span><span class="si">{XDX_pre_calc_GREEN_placeholder}</span><span class="s2">).ravel()[:,np.newaxis,np.newaxis],</span>
+<span class="s2">                                               (np.array(</span><span class="si">{XDX_pre_calc_GREEN_placeholder}</span><span class="s2">).shape[0],chunks,chunks))</span>
+
+<span class="s2">#hyperparameters that don&#39;t need broadcasting</span>
+<span class="s2">X_train_GREEN = np.array(</span><span class="si">{X_train_GREEN_placeholder}</span><span class="s2">)</span>
+<span class="s2">hyp_sig_GREEN = np.array(</span><span class="si">{hyp_sig_GREEN_placeholder}</span><span class="s2">)</span>
+<span class="s2">alpha_coefficients_GREEN = np.array(</span><span class="si">{alpha_coefficients_GREEN_placeholder}</span><span class="s2">)</span>
+<span class="s2">mean_model_GREEN = </span><span class="si">{mean_model_GREEN_placeholder}</span>
+
+<span class="s2">init_xr = xr.DataArray()</span>
+<span class="s2">def apply_datacube(cube: xarray.DataArray, context: dict) -&gt; xarray.DataArray:</span>
+
+<span class="s2">    pixel_spectra = (cube.values)</span>
+
+<span class="s2">    im_norm_ell2D_hypell  = ((pixel_spectra - mx_GREEN) / sx_GREEN) * hyp_ell_GREEN</span>
+<span class="s2">    im_norm_ell2D  = ((pixel_spectra - mx_GREEN) / sx_GREEN)</span>
+<span class="s2">    </span>
+<span class="s2">    inspect(data=[im_norm_ell2D_hypell.dtype], message=&quot;im_norm_ell2D_hypell.dtype&quot;)</span>
+<span class="s2">    inspect(data=[im_norm_ell2D.dtype], message=&quot;im_norm_ell2D.dtype&quot;)</span>
+<span class="s2">    inspect(data=[hyp_ell_GREEN.dtype], message=&quot;hyp_ell_GREEN.dtype&quot;)</span>
+<span class="s2">    </span>
+<span class="s2">    inspect(data=[im_norm_ell2D_hypell.shape], message=&quot;im_norm_ell2D_hypell.shape&quot;)</span>
+<span class="s2">    inspect(data=[im_norm_ell2D.shape], message=&quot;im_norm_ell2D.shape&quot;)</span>
+<span class="s2">    inspect(data=[hyp_ell_GREEN.shape], message=&quot;hyp_ell_GREEN.shape&quot;)</span>
+<span class="s2">    </span>
+<span class="s2">    PtTPt = np.einsum(&#39;ijk,ijk-&gt;ijk&#39;, im_norm_ell2D_hypell.astype(np.float16), im_norm_ell2D.astype(np.float16)) * (-0.5)</span>
+<span class="s2">    inspect(data=[PtTPt.shape], message=&quot;PtTPt.shape&quot;)</span>
+<span class="s2">    PtTDX = np.einsum(&#39;ij,jkl-&gt;ikl&#39;, X_train_GREEN.astype(np.float16),im_norm_ell2D_hypell.astype(np.float16))</span>
+<span class="s2">    arg1 = np.exp(PtTPt[0]) * hyp_sig_GREEN</span>
+
+<span class="s2">    k_star_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5)))</span>
+<span class="s2">    mean_pred = (np.einsum(&#39;ijk,i-&gt;jk&#39;,k_star_im.astype(np.float16), alpha_coefficients_GREEN.ravel().astype(np.float16)) * arg1.astype(np.float16)) + mean_model_GREEN</span>
+
+<span class="s2">    init_xr = np.clip(mean_pred, a_min=0, a_max=None)</span>
+<span class="s2">    returned = xr.DataArray(init_xr)</span>
+<span class="s2">    return returned</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="custom_model_import">
+<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.udfgpr.custom_model_import">[docs]</a>
+<span class="k">def</span> <span class="nf">custom_model_import</span><span class="p">(</span><span class="n">user_module</span><span class="p">):</span>
+    <span class="n">custom_gpr</span> <span class="o">=</span> <span class="n">udf_gpr_customized</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">hyp_ell_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">hyp_ell_GREEN</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="n">mx_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">mx_GREEN</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="n">sx_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">sx_GREEN</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="n">XDX_pre_calc_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">XDX_pre_calc_GREEN</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="n">X_train_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">X_train_GREEN</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="n">hyp_sig_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">hyp_sig_GREEN</span><span class="p">),</span>
+        <span class="n">alpha_coefficients_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span>
+            <span class="n">user_module</span><span class="o">.</span><span class="n">alpha_coefficients_GREEN</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="p">),</span>
+        <span class="n">mean_model_GREEN_placeholder</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">user_module</span><span class="o">.</span><span class="n">mean_model_GREEN</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">custom_udf</span> <span class="o">=</span> <span class="n">openeo</span><span class="o">.</span><span class="n">UDF</span><span class="p">(</span><span class="n">custom_gpr</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">custom_udf</span></div>
+
+
+
+<span class="c1"># %%</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dávid D.Kovács.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

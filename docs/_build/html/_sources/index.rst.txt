@@ -1,12 +1,15 @@
+
+
 .. pyeogpr documentation master file, created by
    sphinx-quickstart on Mon Jul 23 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. image:: logo.png
+   :scale: 50%
+
 Welcome to pyeogpr's documentation!
 ====================================
-.. image:: flexinel.png
-
 
 .. image:: https://img.shields.io/pypi/v/pyeogpr.svg
     :target: https://pypi.org/project/pyeogpr/
@@ -17,6 +20,11 @@ Welcome to pyeogpr's documentation!
 .. image:: https://img.shields.io/badge/IPL-Flexinel-yellow
     :target: https://leoipl.uv.es/flexinel/
     :alt: Flexinel
+
+.. image:: https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-blue
+    :target: https://doi.org/10.5281/zenodo.13373838
+    :alt: Zenodo DOI
+
 
 Python based library to use Earth Observation data to retrieve biophysical maps using Gaussian Process Regression
 
@@ -42,32 +50,7 @@ You can install pyeogpr using pip:
 Usage
 -----
 
-Here is a basic example to get you started with pyeogpr:
-
-.. code-block:: python
-
-    import pyeogpr
-    
-    #Your region of interest
-    bounding_box =[
-        -4.555088206458265, #West
-         42.73294534602729, #South
-        -4.487270722962762, #East
-        42.7707921305888    #North
-      ]
-    
-    #Time window for processing Satellite obseravtions
-    time_window = ["2021-01-01", "2021-12-31"] 
-    
-    dc = pyeogpr.Datacube("SENTINEL2_L2A", # Satellite sensor
-                          "FVC",           # Fractional Vegetation Cover
-                          bounding_box,
-                          time_window,
-                          cloudmask =True)
-    
-    dc.construct_datacube("week") #Initiates openEO datacube
-    
-    dc.process_map("laiCab")   #Starts GPR processing of the selected biophysical variable
+Please refer to the documentation to use either GEE or openEO based processing.
         
 .. toctree::
    :maxdepth: 2
@@ -87,5 +70,8 @@ Contact
 =======
 
 Dávid D.Kovács - `daviddkovacs@gmail.com <mailto:daviddkovacs@gmail.com>`_
+
+.. image:: flexinel.png
+
 
 .. _Access: https://documentation.dataspace.copernicus.eu/Registration.html

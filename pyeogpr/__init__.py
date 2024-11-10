@@ -1,2 +1,2 @@
-from pyeogpr.main import Datacube
-from pyeogpr.gee_processing import EarthEngine
+from .openeo_processing import Datacube
+from .gee_processing import EarthEngine

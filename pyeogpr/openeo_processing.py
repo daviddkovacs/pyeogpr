@@ -15,14 +15,13 @@ class Datacube:
     """
 
 
-    Attributes
-    ----------
+    pyeogpr.Datacube
+    ----------------
 
         sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B
             Satellite sensor to process the data with.
 
         biovar : Biophysical variable to process. The selected variable's map will be retrieved.
-
             Currently "built-in" variables available for each sensor:
 
             - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
@@ -39,8 +38,8 @@ class Datacube:
         cloudmask : Boolean
             If "True" the Sentinel 2 cloud mask will be applied (only to S2 data), with Gaussian convolution to have
             smoother edges when masking.
-
-
+            
+            
     """
 
     def __init__(
@@ -195,12 +194,14 @@ class Datacube:
         ----------
 
         gapfill : type, e.g. "Sgolay"
-            To apply Savitzy Golay interpolator for cloud-induced gap filling
-
-        Returns
-        -------
-        Starts the openEO based GPR processing of the biophysical maps. You will need to open the openEO
-        Web Editor to download your maps.
+            To apply Savitzy Golay interpolator for cloud-induced gap 
+            
+        fileformat : string
+                For netCDF4: "nc", for tiff: "tiff".
+        
+        own_model : dir
+                Insert the dir of the model you developed with ARTMO. Just simply put the directory.
+            
 
         """
         if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:

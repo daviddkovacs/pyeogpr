@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyeogpr.gee_processing &mdash; pyeogpr 1.1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=6f037312"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyeogpr
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pyeogpr.html">PyEOGPR</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sensors.html"><strong>- Sentinel 2 MultiSpectral Instrument (MSI)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci"><strong>- Sentinel 3 Ocean and Land Colour Instrument (OLCI)</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyeogpr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyeogpr.gee_processing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyeogpr.gee_processing</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">ee</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<div class="viewcode-block" id="EarthEngine">
+<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.EarthEngine">[docs]</a>
+<span class="k">class</span> <span class="nc">EarthEngine</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">    pyeogpr.EarthEngine</span>
+<span class="sd">    --------------------</span>
+
+<span class="sd">        projectID : string</span>
+<span class="sd">                    Your GEE projectID. Usually starts with &quot;ee-...&quot;. You can find it next to your</span>
+<span class="sd">                    profile picture, top right corner on: https://code.earthengine.google.com</span>
+
+<span class="sd">        sensor :    string</span>
+<span class="sd">            Satellite sensor to use.</span>
+<span class="sd">            You can search for it on: https://developers.google.com/earth-engine/datasets/catalog</span>
+<span class="sd">            Insert the string, as you would find it on the GEE catalog site:</span>
+<span class="sd">            for example: &quot;COPERNICUS/S3/OLCI&quot; or &quot;LANDSAT/LC08/C02/T1_L2&quot;</span>
+
+<span class="sd">        biovar :    string</span>
+<span class="sd">            Biophysical variable to process.</span>
+
+<span class="sd">            Currently &quot;built-in&quot; variables available for each sensor:</span>
+
+<span class="sd">            - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw</span>
+<span class="sd">            - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot</span>
+<span class="sd">            - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC</span>
+
+<span class="sd">            If you have your own model trained with ARTMO (https://artmotoolbox.com), you need to</span>
+<span class="sd">            insert the directory of the model, for example: r&quot;C:/User/Models/My_custom_model.py&quot;</span>
+<span class="sd">            These models need to be in &quot;.py&quot; format, in order to achieve it, please consult:</span>
+<span class="sd">            https://github.com/SentiFLEXinel/ARTMOtoGEE/</span>
+
+<span class="sd">        bounding_box : list, ee.assetpath</span>
+<span class="sd">            Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/</span>
+<span class="sd">            (e.g.: [-4.55, 42.73,-4.48, 42.77]).</span>
+<span class="sd">            Alternatively, you can insert shapefiles, that are already uploaded to your GEE assets.</span>
+<span class="sd">            Just copy the ee.assetpath which stores your SHP shapefile that you already uploaded to GEE.</span>
+
+<span class="sd">        temporal_extent : list</span>
+<span class="sd">            Your temporal extent to be processed. (e.g.: [&quot;2021-01-01&quot;, &quot;2021-12-31&quot;])</span>
+
+<span class="sd">        spatial_resolution : int</span>
+<span class="sd">            Spatial resolution of the exported data. Value in meters.</span>
+
+<span class="sd">        cloudmask : Boolean</span>
+<span class="sd">            If set to &quot;True&quot;, cloud masking will be done for Sentinel 2 and 3 sensors. Defaults to False.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">projectID</span><span class="p">,</span>
+        <span class="n">sensor</span><span class="p">,</span>
+        <span class="n">biovar</span><span class="p">,</span>
+        <span class="n">bounding_box</span><span class="p">,</span>
+        <span class="n">temporal_extent</span><span class="p">,</span>
+        <span class="n">spatial_resolution</span><span class="p">,</span>
+        <span class="n">cloudmask</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projectID</span> <span class="o">=</span> <span class="n">projectID</span>
+        <span class="c1"># EE Auth</span>
+        <span class="n">ee</span><span class="o">.</span><span class="n">Authenticate</span><span class="p">()</span>
+        <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">projectID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="n">sensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">==</span> <span class="s2">&quot;SENTINEL2_L1C&quot;</span> <span class="ow">or</span> <span class="s2">&quot;COPERNICUS/S2_HARMONIZED&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="s2">&quot;COPERNICUS/S2_HARMONIZED&quot;</span>
+            <span class="n">search_sensor</span> <span class="o">=</span> <span class="s2">&quot;SENTINEL2_L1C&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">==</span> <span class="s2">&quot;SENTINEL2_L2A&quot;</span> <span class="ow">or</span> <span class="s2">&quot;COPERNICUS/S2_SR_HARMONIZED&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="s2">&quot;COPERNICUS/S2_SR_HARMONIZED&quot;</span>
+            <span class="n">search_sensor</span> <span class="o">=</span> <span class="s2">&quot;SENTINEL2_L2A&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">==</span> <span class="s2">&quot;SENTINEL3_L1B&quot;</span> <span class="ow">or</span> <span class="s2">&quot;COPERNICUS/S3/OLCI&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="s2">&quot;COPERNICUS/S3/OLCI&quot;</span>
+            <span class="n">search_sensor</span> <span class="o">=</span> <span class="s2">&quot;SENTINEL3_L1B&quot;</span>
+
+        <span class="k">if</span> <span class="n">biovar</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">custom_model</span> <span class="o">=</span> <span class="n">biovar</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">=</span> <span class="n">biovar</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">=</span> <span class="n">biovar</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">bounding_box</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>  <span class="c1"># To accept GeoJSON bbox</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">BBox</span><span class="p">(</span>
+                <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bounding_box</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bounding_box</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;projects/ee-&quot;</span> <span class="ow">in</span> <span class="n">bounding_box</span><span class="p">:</span>  <span class="c1"># So it accepts shps too!</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">bounding_box</span><span class="p">)</span>
+            <span class="c1"># self.bbox_fc2geo = ee.FeatureCollection(bounding_box).geometry()</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span> <span class="o">=</span> <span class="n">temporal_extent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_resolution</span> <span class="o">=</span> <span class="n">spatial_resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">=</span> <span class="n">cloudmask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assetpath</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gpr_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reducer</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># User defined or default models import</span>
+        <span class="k">if</span> <span class="n">biovar</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">custom_model</span> <span class="o">=</span> <span class="n">biovar</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">biovar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_model</span><span class="p">)</span>
+            <span class="n">user_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;user_module&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_module</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">user_module</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span> <span class="o">=</span> <span class="n">user_module</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span><span class="o">.</span><span class="n">hyp_sig0_GREEN</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://raw.githubusercontent.com/daviddkovacs/pyeogpr/refs/heads/main/models/</span><span class="si">{</span><span class="n">search_sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">_GEE.py&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;model_imported.py&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s2">&quot;model_imported&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;model_imported&quot;</span><span class="p">]</span>  <span class="c1"># We do this to flush existing modules</span>
+            <span class="kn">import</span> <span class="nn">model_imported</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span> <span class="o">=</span> <span class="n">model_imported</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">model_imported</span><span class="o">.</span><span class="n">hyp_sig0_GREEN</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">imcol</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">)</span><span class="o">.</span><span class="n">filterDate</span><span class="p">(</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="EarthEngine.construct_datacube">
+<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.EarthEngine.construct_datacube">[docs]</a>
+    <span class="k">def</span> <span class="nf">construct_datacube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composite</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        composite :  Defaults to None</span>
+<span class="sd">            The algorithm creates temporal composites, according to the number of days you assign.</span>
+<span class="sd">            The temporal composites need to be 1 day smaller than the defined temporal_extent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span> <span class="o">=</span> <span class="n">composite</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temporal composites: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span><span class="si">}</span><span class="s2"> days&quot;</span><span class="p">)</span>
+
+        <span class="n">dif</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toordinal</span><span class="p">()</span>
+            <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">toordinal</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dif</span> <span class="o">&lt;=</span> <span class="n">composite</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Temporal composite (</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">composite</span><span class="p">)</span><span class="si">}</span><span class="s2"> days)  has to be shorter than defined temporal_extent&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EarthEngine.process_map">
+<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.EarthEngine.process_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assetpath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        assetpath: str</span>
+<span class="sd">            You need to define, which GEE asset (ImageCollection) you would want the maps to be exported to.</span>
+<span class="sd">            To create your asset, go to top left corner on: https://code.earthengine.google.com/</span>
+<span class="sd">            You will find three tabs: Scripts, Docs and Assets. Go to Assets and create a new ImageCollection.</span>
+<span class="sd">            When you created your ImageCollection, copy its ID as a string and assign it to assetpath. If left blank, the script will automatically generate you a default asset.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">assetpath</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">assetpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;projects/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">projectID</span><span class="si">}</span><span class="s2">/assets/PyEOGPR_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">createAsset</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ImageCollection&quot;</span><span class="p">},</span> <span class="n">assetpath</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Assetpath NOT DEFINED:</span><span class="se">\n</span><span class="s2">Exporting to default EE asset: </span><span class="si">{</span><span class="n">assetpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exporting to </span><span class="si">{</span><span class="n">assetpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assetpath</span> <span class="o">=</span> <span class="n">assetpath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maploop</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="nf">sequence_GREEN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">):</span>
+        <span class="c1"># print(variable)  # Later this probably needs to be changed to select model</span>
+        <span class="n">sequence_GREEN</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">XTrain_dim_GREEN</span><span class="p">):</span>
+            <span class="n">sequence_GREEN</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">sequence_GREEN</span>
+
+    <span class="k">def</span> <span class="nf">getInputDates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span><span class="p">),</span> <span class="s2">&quot;day&quot;</span>
+        <span class="p">)</span>
+        <span class="n">fecha_fin</span> <span class="o">=</span> <span class="n">fecha_inicio</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">)</span>
+        <span class="c1"># fecha_fin = endDateGEE()</span>
+        <span class="n">fecha_str</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span>
+            <span class="n">fecha_inicio</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;fecha_inicio&quot;</span><span class="p">:</span> <span class="n">fecha_inicio</span><span class="p">,</span>
+            <span class="s2">&quot;fecha_fin&quot;</span><span class="p">:</span> <span class="n">fecha_fin</span><span class="p">,</span>
+            <span class="s2">&quot;fecha_str&quot;</span><span class="p">:</span> <span class="n">fecha_str</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">maskS3badPixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="n">qa</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;quality_flags&quot;</span><span class="p">))</span>
+        <span class="n">coastLine</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span>
+        <span class="n">inLandWater</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">29</span>
+        <span class="n">bright</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">27</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">25</span>
+        <span class="n">Oa12Sat</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">9</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">qa</span><span class="o">.</span><span class="n">bitwiseAnd</span><span class="p">(</span><span class="n">coastLine</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">qa</span><span class="o">.</span><span class="n">bitwiseAnd</span><span class="p">(</span><span class="n">inLandWater</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">qa</span><span class="o">.</span><span class="n">bitwiseAnd</span><span class="p">(</span><span class="n">bright</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">updateMask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">addVariables</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;system:time_start&quot;</span><span class="p">))</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">),</span> <span class="s2">&quot;days&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">years</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">int</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">calculate_GREEN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="p">,</span> <span class="n">variable</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imcol</span><span class="o">.</span><span class="n">filterDate</span><span class="p">(</span><span class="n">fecha_inicio</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filterBounds</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskS3badPixels</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">bands</span><span class="p">)</span>  <span class="c1"># .cast(model.bands_dict, model.bands)</span>
+            <span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">clipToCollection</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="c1"># .clip(fc));</span>
+        <span class="c1"># TODO: I should play around with this .clip() here..</span>
+        <span class="n">im_norm_ell2D_hypell</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">mx_GREEN</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">sx_GREEN</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">hyp_ell_GREEN</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">im_norm_ell2D</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">mx_GREEN</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">sx_GREEN</span><span class="p">)</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">PtTPt</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">im_norm_ell2D_hypell</span><span class="o">.</span><span class="n">matrixTranspose</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">matrixMultiply</span><span class="p">(</span><span class="n">im_norm_ell2D</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">PtTDX</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">X_train_GREEN</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">matrixMultiply</span><span class="p">(</span><span class="n">im_norm_ell2D_hypell</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_GREEN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">)])</span>
+        <span class="p">)</span>
+        <span class="n">arg1</span> <span class="o">=</span> <span class="n">PtTPt</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">hyp_sig0_GREEN</span><span class="p">)</span>
+
+        <span class="n">k_star</span> <span class="o">=</span> <span class="n">PtTDX</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">XDX_pre_calc_GREEN</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+        <span class="n">mean_pred</span> <span class="o">=</span> <span class="n">k_star</span><span class="o">.</span><span class="n">arrayDotProduct</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">alpha_coefficients_GREEN</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+        <span class="n">mean_pred</span> <span class="o">=</span> <span class="n">mean_pred</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">]])</span>
+        <span class="n">mean_pred</span> <span class="o">=</span> <span class="n">mean_pred</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">mean_model_GREEN</span><span class="p">)</span>
+        <span class="n">filterDown</span> <span class="o">=</span> <span class="n">mean_pred</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">mean_pred</span> <span class="o">=</span> <span class="n">mean_pred</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">filterDown</span><span class="p">)</span>
+
+        <span class="n">k_star_uncert</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">PtTDX</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">XDX_pre_calc_GREEN</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">exp</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">Vvector</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">LMatrixInverse</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">matrixMultiply</span><span class="p">(</span><span class="n">k_star_uncert</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">Variance</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">hyp_sig_GREEN</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">Vvector</span><span class="o">.</span><span class="n">arrayDotProduct</span><span class="p">(</span><span class="n">Vvector</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">Variance</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Variance</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">+</span> <span class="s2">&quot;_UNCERTAINTY&quot;</span><span class="p">]])</span>
+        <span class="p">)</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">mean_pred</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">Variance</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">+</span> <span class="s2">&quot;_UNCERTAINTY&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">maploop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="n">daysIterations</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">startDate</span>
+                <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">days</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">daysIterations</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getInputDates</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="s2">&quot;fecha_str&quot;</span><span class="p">])</span>
+
+            <span class="n">imageHolder</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+                <span class="s2">&quot;system:time_start&quot;</span><span class="p">,</span>
+                <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span><span class="p">),</span> <span class="s2">&quot;days&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">millis</span><span class="p">(),</span>
+            <span class="p">)</span>
+
+            <span class="n">imagen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_GREEN</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getInputDates</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="s2">&quot;fecha_inicio&quot;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getInputDates</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="s2">&quot;fecha_fin&quot;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">,</span>
+            <span class="p">)</span>  <span class="c1"># .multiply(10000).toInt32()</span>
+            <span class="n">imageHolder</span> <span class="o">=</span> <span class="n">imageHolder</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">imagen</span><span class="p">)</span>
+            <span class="n">image_export</span> <span class="o">=</span> <span class="n">imageHolder</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">+</span> <span class="s2">&quot;_UNCERTAINTY&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Optional masking</span>
+            <span class="n">bare_cover</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;bare-coverfraction&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">lte</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">lakes</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;discrete_classification&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">lakemask</span> <span class="o">=</span> <span class="n">lakes</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">image_export</span> <span class="o">=</span> <span class="n">image_export</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">lakemask</span><span class="p">)</span>
+            <span class="n">image_export</span> <span class="o">=</span> <span class="n">image_export</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">bare_cover</span><span class="p">)</span>
+
+            <span class="c1"># Convert to uint8 for lower memory usage</span>
+            <span class="c1"># image_export = image_export.multiply(255 / data_range).uint8()</span>
+            <span class="n">image_export</span> <span class="o">=</span> <span class="n">image_export</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+                <span class="s2">&quot;system:time_start&quot;</span><span class="p">,</span>
+                <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span><span class="p">),</span> <span class="s2">&quot;days&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">millis</span><span class="p">(),</span>
+            <span class="p">)</span>
+
+            <span class="c1"># SHP-bbox misery</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">):</span>
+                <span class="n">region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+                
+            <span class="c1"># Export the image to an asset</span>
+            <span class="n">exportar</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">Export</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">toAsset</span><span class="p">(</span>
+                <span class="n">assetId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assetpath</span>
+                <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInputDates</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="s2">&quot;fecha_str&quot;</span><span class="p">]</span>
+                <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">,</span>
+                <span class="n">image</span><span class="o">=</span><span class="n">image_export</span><span class="p">,</span>
+                <span class="n">maxPixels</span><span class="o">=</span><span class="mi">17210617060</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getInputDates</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="s2">&quot;fecha_str&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">,</span>
+                <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_resolution</span><span class="p">,</span>
+                <span class="n">region</span> <span class="o">=</span> <span class="n">region</span><span class="p">,</span>  <span class="c1"># .bounds().getInfo()[&#39;coordinates&#39;]</span>
+            <span class="p">)</span>
+            <span class="n">exportar</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="n">exportar</span><span class="o">.</span><span class="n">status</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dávid D.Kovács.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

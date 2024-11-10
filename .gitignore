@@ -8,3 +8,4 @@ build/
 myenv/
 *.pyo
 *.toml
+user_pyeogpr.py

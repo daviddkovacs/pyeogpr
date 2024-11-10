@@ -43,7 +43,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../pyeogpr.html">Main mapping functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pyeogpr.html">pyeogpr package</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
 <ul>
@@ -80,73 +80,93 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy</span>
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
+<span class="kn">import</span> <span class="nn">ee</span>
+
+<span class="kn">import</span> <span class="nn">importlib.util</span>
 <span class="kn">from</span> <span class="nn">pyeogpr.sensors</span> <span class="kn">import</span> <span class="n">sensors_dict</span>
-<span class="kn">from</span> <span class="nn">pyeogpr.udfgpr</span> <span class="kn">import</span> <span class="n">udf_gpr</span>
+<span class="kn">from</span> <span class="nn">pyeogpr.udfgpr</span> <span class="kn">import</span> <span class="n">udf_gpr</span><span class="p">,</span> <span class="n">custom_model_import</span>
 <span class="kn">from</span> <span class="nn">pyeogpr.udfsgolay</span> <span class="kn">import</span> <span class="n">udf_sgolay</span>
+<span class="kn">from</span> <span class="nn">pyeogpr.udf_L8_qa</span> <span class="kn">import</span> <span class="n">L8_cloud_qa</span>
+<span class="kn">import</span> <span class="nn">pyeogpr.udfgpr</span>
 
 <div class="viewcode-block" id="Datacube">
 <a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.main.Datacube">[docs]</a>
 <span class="k">class</span> <span class="nc">Datacube</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    </span>
+
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+
 <span class="sd">        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B</span>
-<span class="sd">            Satellite&#39;s sensor to process the data with.</span>
-<span class="sd">                    </span>
+<span class="sd">            Satellite sensor to process the data with.</span>
+
 <span class="sd">        biovar : Biophysical variable to process. The selected variable&#39;s map will be retrieved.</span>
-<span class="sd">    </span>
+
 <span class="sd">            Currently &quot;built-in&quot; variables available for each sensor:</span>
-<span class="sd">            </span>
+
 <span class="sd">            - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw</span>
 <span class="sd">            - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot</span>
 <span class="sd">            - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC</span>
-<span class="sd">            </span>
+
 <span class="sd">        bounding_box : list</span>
 <span class="sd">            Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/</span>
 <span class="sd">            (e.g.: [-4.55, 42.73,-4.48, 42.77])</span>
-<span class="sd">    </span>
+
 <span class="sd">        temporal_extent : list</span>
 <span class="sd">            Your temporal extent to be processed. (e.g.: [&quot;2021-01-01&quot;, &quot;2021-12-31&quot;])</span>
-<span class="sd">    </span>
+
 <span class="sd">        cloudmask : Boolean</span>
 <span class="sd">            If &quot;True&quot; the Sentinel 2 cloud mask will be applied (only to S2 data), with Gaussian convolution to have</span>
 <span class="sd">            smoother edges when masking.</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sensor</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">biovar</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bounding_box</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">temporal_extent</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">cloudmask</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">openeo</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;https://openeo.dataspace.copernicus.eu&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">authenticate_oidc</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sensor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">biovar</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">bounding_box</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">temporal_extent</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">cloudmask</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">openeo</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="s2">&quot;https://openeo.dataspace.copernicus.eu&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">authenticate_oidc</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="n">sensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">=</span> <span class="n">biovar</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span> <span class="o">=</span> <span class="n">bounding_box</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span> <span class="o">=</span> <span class="n">temporal_extent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">=</span> <span class="n">cloudmask</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;west&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;south&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;east&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;north&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">3</span><span class="p">]}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span> <span class="o">=</span> <span class="n">sensors_dict</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;west&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;south&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">&quot;east&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="s2">&quot;north&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span> <span class="o">=</span> <span class="n">sensors_dict</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bands</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">models_url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv&quot;</span>
 
-        
 <div class="viewcode-block" id="Datacube.construct_datacube">
 <a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.main.Datacube.construct_datacube">[docs]</a>
     <span class="k">def</span> <span class="nf">construct_datacube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composite</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        </span>
+
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        composite : &quot;hour&quot;,&quot;day&quot;,&quot;dekad&quot;,&quot;week&quot;,&quot;season&quot;,&quot;month&quot;,&quot;year&quot;</span>
-<span class="sd">            Compositing temporal interval. The resulting maps will have the following temporal steps. </span>
+<span class="sd">            Compositing temporal interval. The resulting maps will have the following temporal steps.</span>
 <span class="sd">            For more information: https://processes.openeo.org/#aggregate_temporal_period</span>
-<span class="sd">        </span>
+
 
 
 <span class="sd">        Returns</span>
@@ -154,22 +174,29 @@
 <span class="sd">        Datacube object containing user defined parameters and temporal compositing. This will be processed into an openEO datacube.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Sensor/satellite not available.&quot;</span><span class="p">)</span>
-                
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">,</span>
-                                               <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span><span class="p">,</span>
-                                               <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">,</span>
-                                               <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;bandlist&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">]</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;bandlist&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="s2">&quot;SENTINEL2&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">:</span>
-
-            <span class="n">s2_cloudmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span><span class="s2">&quot;SENTINEL2_L2A&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;SCL&quot;</span><span class="p">])</span>
+            <span class="n">s2_cloudmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
+                <span class="s2">&quot;SENTINEL2_L2A&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;SCL&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
             <span class="n">scl</span> <span class="o">=</span> <span class="n">s2_cloudmask</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="s2">&quot;SCL&quot;</span><span class="p">)</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="p">((</span><span class="n">scl</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">scl</span> <span class="o">==</span> <span class="mi">5</span><span class="p">))</span>
-            
-            <span class="c1">#Gaussian convolution to have a smooth edged cloud mask</span>
+
+            <span class="c1"># Gaussian convolution to have a smooth edged cloud mask</span>
             <span class="n">g</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1.6</span><span class="p">)</span>
             <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
             <span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span> <span class="o">/</span> <span class="n">kernel</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -177,40 +204,81 @@
             <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.1</span>
 
             <span class="k">if</span> <span class="n">composite</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-                
-                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span><span class="n">composite</span><span class="p">,</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cloud masked, temporally composited datacube constructed: </span><span class="si">{</span><span class="n">composite</span><span class="si">}</span><span class="s2"> by mean values.&quot;</span><span class="p">)</span>
-                
+                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span>
+                    <span class="n">composite</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Cloud masked, temporally composited datacube constructed: </span><span class="si">{</span><span class="n">composite</span><span class="si">}</span><span class="s2"> by mean values.&quot;</span>
+                <span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">composite</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-                
                 <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cloud masked, datacube constructed&quot;</span><span class="p">)</span>
-                
+
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="s2">&quot;SENTINEL2&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">:</span>
-            
             <span class="k">if</span> <span class="n">composite</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-                
-                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span><span class="n">composite</span><span class="p">,</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temporally composited datacube constructed: </span><span class="si">{</span><span class="n">composite</span><span class="si">}</span><span class="s2"> by mean values. &quot;</span><span class="p">)</span>
-                
+                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span>
+                    <span class="n">composite</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Temporally composited datacube constructed: </span><span class="si">{</span><span class="n">composite</span><span class="si">}</span><span class="s2"> by mean values. &quot;</span>
+                <span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">composite</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-                
+                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Datacube constructed&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="s2">&quot;LANDSAT8_L2&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">:</span>
+            <span class="n">l8_qa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
+                <span class="s2">&quot;LANDSAT8_L2&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;BQA&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">l8_cloudmask</span> <span class="o">=</span> <span class="n">l8_qa</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">process</span><span class="o">=</span><span class="n">L8_cloud_qa</span><span class="p">)</span>
+
+            <span class="n">bqa</span> <span class="o">=</span> <span class="n">l8_cloudmask</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="s2">&quot;BQA&quot;</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="p">((</span><span class="n">bqa</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="c1"># apply kernel to mask without smoothing</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.1</span>
+
+            <span class="k">if</span> <span class="n">composite</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span>
+                    <span class="n">composite</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Cloud masked, temporally composited datacube constructed: </span><span class="si">{</span><span class="n">composite</span><span class="si">}</span><span class="s2"> by mean values.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">composite</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cloud masked, datacube constructed&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="s2">&quot;LANDSAT8_L2&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">composite</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span>
+                    <span class="n">composite</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Temporally composited datacube constructed: </span><span class="si">{</span><span class="n">composite</span><span class="si">}</span><span class="s2"> by mean values. &quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">composite</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Datacube constructed&quot;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2"> can&#39;t be masked&quot;</span><span class="p">)</span></div>
 
-    
+
 <div class="viewcode-block" id="Datacube.process_map">
 <a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.main.Datacube.process_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">process_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gapfill</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">process_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gapfill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fileformat</span><span class="o">=</span><span class="s2">&quot;nc&quot;</span><span class="p">,</span> <span class="n">own_model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        </span>
+
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">       </span>
+
 <span class="sd">        gapfill : type, e.g. &quot;Sgolay&quot;</span>
 <span class="sd">            To apply Savitzy Golay interpolator for cloud-induced gap filling</span>
 
@@ -221,36 +289,106 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;sensor_biovar&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&#39; not available for this satellite/sensor. Please select from: &quot;</span> <span class="o">+</span>  <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;sensor_biovar&quot;</span><span class="p">]))</span>
-        
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2"> based </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sensor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">,</span><span class="s2">&quot;biovar&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">}</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span><span class="n">process</span><span class="o">=</span><span class="n">udf_gpr</span><span class="p">,</span>
-                                                         <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;bands&quot;</span><span class="p">,</span>
-                                                         <span class="n">context</span> <span class="o">=</span><span class="n">context</span><span class="p">)</span><span class="o">.</span><span class="n">filter_bands</span><span class="p">(</span><span class="n">bands</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;B02&quot;</span><span class="p">])</span>
-                   
-        <span class="k">if</span> <span class="n">gapfill</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;----</span><span class="se">\n</span><span class="s2">To check the progress login to your openEO editor:</span><span class="se">\n</span><span class="s2">https://openeo.dataspace.copernicus.eu/</span><span class="se">\n</span><span class="s2">----&quot;&quot;&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">.nc&quot;</span><span class="p">,</span>
-                                        <span class="n">job_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;executor-memory&#39;</span><span class="p">:</span> <span class="s1">&#39;10g&#39;</span><span class="p">,</span><span class="s1">&#39;udf-dependency-archives&#39;</span><span class="p">:</span> 
-                                                       <span class="p">[</span><span class="s1">&#39;https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv&#39;</span><span class="p">]})</span>
-        <span class="c1">#TODO: implement Whittaker smoother</span>
-        <span class="k">elif</span> <span class="n">gapfill</span> <span class="o">==</span> <span class="s2">&quot;Sgolay&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smoother: Savitzky-Golay&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span><span class="n">process</span><span class="o">=</span><span class="n">udf_sgolay</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&#39; not available for this satellite/sensor. Please select from: &quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;sensor_biovar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gapfill</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">_GF.nc&quot;</span><span class="p">,</span>
-                                                  <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;executor-memory&#39;</span><span class="p">:</span> <span class="s1">&#39;10g&#39;</span><span class="p">,</span> <span class="s1">&#39;udf-dependency-archives&#39;</span><span class="p">:</span> 
-                                                                <span class="p">[</span><span class="s1">&#39;https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv&#39;</span><span class="p">]})</span>
+        <span class="k">if</span> <span class="n">gapfill</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gapfill-&gt; </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">gapfill</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">own_model</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;own_model </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">own_model</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sensor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">,</span> <span class="s2">&quot;biovar&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="n">udf_gpr</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;bands&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">filter_bands</span><span class="p">(</span><span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B02&quot;</span><span class="p">])</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;udf-dependency-archives&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">models_url</span><span class="p">],</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">if</span> <span class="n">own_model</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;own_model </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">own_model</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;user_module&quot;</span><span class="p">,</span> <span class="n">own_model</span><span class="p">)</span>
+                <span class="n">user_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+                <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">user_module</span><span class="p">)</span>
+                <span class="c1"># user_module = load_user_module(user_module_path)</span>
+                <span class="n">custom_udf</span> <span class="o">=</span> <span class="n">pyeogpr</span><span class="o">.</span><span class="n">udfgpr</span><span class="o">.</span><span class="n">custom_model_import</span><span class="p">(</span><span class="n">user_module</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="n">custom_udf</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;bands&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">filter_bands</span><span class="p">(</span><span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B02&quot;</span><span class="p">])</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;User defined product&quot;</span><span class="p">,</span>
+                    <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;user_defined_product.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">},</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="k">elif</span> <span class="n">gapfill</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gapfill-&gt; </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">gapfill</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">own_model</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;own_model </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">own_model</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sensor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">,</span> <span class="s2">&quot;biovar&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="n">udf_gpr</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;bands&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">filter_bands</span><span class="p">(</span><span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B02&quot;</span><span class="p">])</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="n">udf_sgolay</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;t&quot;</span>
+                <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2"> gapfill-&gt;</span><span class="si">{</span><span class="n">gapfill</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">_GF.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;udf-dependency-archives&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">models_url</span><span class="p">],</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">if</span> <span class="n">own_model</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;own_model </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">own_model</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;user_module&quot;</span><span class="p">,</span> <span class="n">own_model</span><span class="p">)</span>
+                <span class="n">user_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+                <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">user_module</span><span class="p">)</span>
+                <span class="c1"># user_module = load_user_module(user_module_path)</span>
+                <span class="n">custom_udf</span> <span class="o">=</span> <span class="n">pyeogpr</span><span class="o">.</span><span class="n">udfgpr</span><span class="o">.</span><span class="n">custom_model_import</span><span class="p">(</span><span class="n">user_module</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_data</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="n">custom_udf</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;bands&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">filter_bands</span><span class="p">(</span><span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B02&quot;</span><span class="p">])</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">apply_dimension</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="n">udf_sgolay</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="s2">&quot;t&quot;</span>
+                <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;User defined product&quot;</span><span class="p">,</span>
+                    <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;user_defined_product.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">},</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">gapfill</span><span class="si">}</span><span class="s2">&#39; is not a valid smoother&quot;</span><span class="p">)</span></div>
 </div>
 
-   
-        <span class="c1">#TODO: Download local. currently giving error 403</span>
 </pre></div>
 
            </div>

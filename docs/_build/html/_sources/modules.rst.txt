@@ -4,4 +4,6 @@ pyeogpr
 .. toctree::
    :maxdepth: 4
 
-   pyeogpr.main
+   model_imported
+   pyeogpr
+   setup
