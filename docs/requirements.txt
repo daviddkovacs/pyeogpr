@@ -3,3 +3,4 @@ myst_parser
 openeo
 numpy
 scipy
+numpydoc
