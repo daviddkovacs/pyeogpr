@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="350"/>
+  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="2s50"/>
   <div style="display: flex; justify-content: center; margin-top: 10px;">
     <img src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" alt="logo" width="200"/>
     <img src="https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82" alt="logo" width="200"/>
