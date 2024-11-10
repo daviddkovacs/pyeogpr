@@ -1,8 +1,5 @@
-<div style="display: flex; justify-content: center;">
+<div style="display: flex; justify-content: center; align-items: center;">
   <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
-</div>
-
-<div style="display: flex; justify-content: center;">
   <img src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" alt="logo" width="200"/>
 </div>
 
