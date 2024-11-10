@@ -1,9 +1,9 @@
-
 <div style="display: flex; justify-content: center;">
   <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
 </div>
+
 <div style="display: flex; justify-content: center;">
-  <img src="[https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d](https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577)" alt="logo" width="200"/>
+  <img src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" alt="logo" width="200"/>
 </div>
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html) [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-green)](https://doi.org/10.5281/zenodo.13373838)
