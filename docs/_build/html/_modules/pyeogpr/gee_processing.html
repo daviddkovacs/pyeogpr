@@ -15,7 +15,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=6f037312"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9bcbadda"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -43,7 +43,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../pyeogpr.html">PyEOGPR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pyeogpr.html">Cloud back-ends</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
 <ul>
@@ -82,10 +82,10 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 
 <div class="viewcode-block" id="EarthEngine">
-<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.EarthEngine">[docs]</a>
+<a class="viewcode-back" href="../../earthengine.html#pyeogpr.EarthEngine">[docs]</a>
 <span class="k">class</span> <span class="nc">EarthEngine</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -217,7 +217,7 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="EarthEngine.construct_datacube">
-<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.EarthEngine.construct_datacube">[docs]</a>
+<a class="viewcode-back" href="../../earthengine.html#pyeogpr.EarthEngine.construct_datacube">[docs]</a>
     <span class="k">def</span> <span class="nf">construct_datacube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composite</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -241,7 +241,7 @@
 
 
 <div class="viewcode-block" id="EarthEngine.process_map">
-<a class="viewcode-back" href="../../pyeogpr.html#pyeogpr.EarthEngine.process_map">[docs]</a>
+<a class="viewcode-back" href="../../earthengine.html#pyeogpr.EarthEngine.process_map">[docs]</a>
     <span class="k">def</span> <span class="nf">process_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assetpath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 

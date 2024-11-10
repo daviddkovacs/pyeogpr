@@ -3,6 +3,7 @@ import numpy as np
 import scipy
 import scipy.signal
 import ee
+from io import StringIO
 
 import importlib.util
 from pyeogpr.sensors import sensors_dict
