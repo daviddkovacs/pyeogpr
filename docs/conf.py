@@ -36,7 +36,7 @@ source_suffix = {
     '.md': 'markdown',
 }
 
-
+autodoc_mock_imports = ["ee"] 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
