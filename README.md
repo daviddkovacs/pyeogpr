@@ -1,20 +1,25 @@
-
-<div style="display: flex; justify-content: center;">
-  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="250"/>
+  <div style="display: flex; justify-content: center; margin-top: 10px;">
+    <img src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" alt="logo" width="200"/>
+    <img src="https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82" alt="logo" width="200"/>
+  </div>
 </div>
+
+
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html) [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-green)](https://doi.org/10.5281/zenodo.13373838)
 
 
 
-Python based machine learning library to use Earth Observation data to map biophysical traits using Gaussian Process Regression (GPR) models.
+Python based machine learning library to use Earth Observation data to map biophysical traits using Gaussian Process Regression (GPR) models. Works with Google Earth Engine and openEO cloud back-ends.
 
 # Features
 
-- Access to openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://documentation.dataspace.copernicus.eu/Registration.html) or [here](https://docs.openeo.cloud/join/free_trial.html)
+- Access to GEE/openEO is required. Works best with the Copernicus Data Space Ecosystem. Register [here](https://code.earthengine.google.com/register) or [here](https://docs.openeo.cloud/join/free_trial.html)
  - Hybrid retrieval methods were used: the Gaussian Process Regression retrieval algorithms were trained on biophysical trait specific radiative transfer model (RTM) simulations
 - Built-in gap-filling to avoid cloud covers
-- Runs "in the cloud" with the openEO API. No local processing is needed.
+- Runs "in the cloud" with the GEE/openEO Python API. No local processing is needed.
 - Resulting maps in .tiff or netCDF format
 
 # Get started
@@ -26,30 +31,26 @@ pip install pyeogpr
 ```
 Basic example:
 ```shell
-import pyeogpr
+ from pyeogpr import EarthEngine
 
-# Your region of interest
-bounding_box = [
-         -73.98605881463239,
-          40.763066527718536,
-          -73.94617017216025,
-          40.80083669627726
-        ]
+ bounding_box = [
+     17.83670163256923,
+     46.55399091975397,
+     18.368529333383833,
+     46.935776495476205
+   ]
 
-# Time window for processing Satellite observations
-time_window = ["2022-07-01", "2022-07-07"]
+ dc = EarthEngine(projectID  = "ee-dkvcsdvd",
+                      sensor ="SENTINEL3_L1B", 
+                       biovar = "FVC",        
+                       bounding_box = bounding_box,
+                       temporal_extent =  ["2021-07-01", "2021-07-08"],
+                       spatial_resolution  = 300,
+                       cloudmask =True)
 
-dc = pyeogpr.Datacube(
-    "SENTINEL2_L2A",  # Satellite sensor
-    "FVC",            # Fractional Vegetation Cover
-    bounding_box,
-    time_window,
-    cloudmask=True
-)
+ dc.construct_datacube(composite = 4)
 
-dc.construct_datacube("dekad")  # Initiates openEO datacube
-
-dc.process_map()  # Starts GPR processing
+ dc.process_map(assetpath = "projects/ee-dkvcsdvd/assets/MyImageCollection") 
 ```
 To download the GPR processed map go to the [openEO portal](https://openeo.dataspace.copernicus.eu/):
 
