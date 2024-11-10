@@ -1,8 +1,11 @@
-<div style="display: flex; justify-content: center; align-items: center;">
-  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="200"/>
-  <img src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" alt="logo" width="200"/>
-  <img src="https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82" alt="logo" width="200"/>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  <img src="https://github.com/user-attachments/assets/a3ede50e-acbb-4375-bcfd-a3892f8c3c7d" alt="logo" width="500"/>
+  <div style="display: flex; justify-content: center; margin-top: 10px;">
+    <img src="https://github.com/user-attachments/assets/9e748a0f-6594-4ed8-bb55-1e0ce53a1577" alt="logo" width="200"/>
+    <img src="https://github.com/user-attachments/assets/37f31ff8-b4da-42a6-8497-ed0566555f82" alt="logo" width="200"/>
+  </div>
 </div>
+
 
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html) [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-green)](https://doi.org/10.5281/zenodo.13373838)
