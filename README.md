@@ -41,9 +41,11 @@ You can select from a list of trained variables developed for the following sate
 
 # Cite as
 
-Kovács DD, Reyes-Muñoz P, Salinero-Delgado M, Mészáros VI, Berger K, Verrelst J. Cloud-Free Global Maps of Essential Vegetation Traits Processed from the TOA Sentinel-3 Catalogue in Google Earth Engine. Remote Sensing. 2023; 15(13):3404. https://doi.org/10.3390/rs15133404
+- Kovács DD, Reyes-Muñoz P, Salinero-Delgado M, Mészáros VI, Berger K, Verrelst J. Cloud-Free Global Maps of Essential Vegetation Traits Processed from the TOA Sentinel-3 Catalogue in Google Earth Engine. Remote Sensing. 2023; 15(13):3404. https://doi.org/10.3390/rs15133404
+  
 or
-Dávid D.Kovács. (2024). pyeogpr (zenodo). Zenodo. https://doi.org/10.5281/zenodo.13373838
+
+- Dávid D.Kovács. (2024). pyeogpr (zenodo). Zenodo. https://doi.org/10.5281/zenodo.13373838
 
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
