@@ -51,3 +51,7 @@ This package currently features the following satellite sensors and biophysical 
 	 - _FVC_ Fractional Vegetation Cover
 	 - _LAI_: Leaf Area Index
 	 - _LCC_ Leaf Chlorophyll Content
+
+## **- Landsat 8**
+ - **Top of canopy: Level 2** 
+	-LAI: Leaf Area Index
