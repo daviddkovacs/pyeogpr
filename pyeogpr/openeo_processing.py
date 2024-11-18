@@ -58,7 +58,9 @@ class Datacube:
         self.sensor = sensor
         if biovar[-3:] == ".py":
             self.own_model = biovar
+            self.biovar = "Own_variable"
         else:
+            self.own_model = None
             self.biovar = biovar
         self.bounding_box = bounding_box
         self.temporal_extent = temporal_extent
