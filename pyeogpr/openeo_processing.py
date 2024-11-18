@@ -260,7 +260,7 @@ class Datacube:
 
                 self.gpr_cube = self.masked_data.apply_dimension(
                     process=custom_udf, dimension="bands"
-                ).filter_bands(bands=["B02"])
+                ).filter_bands(bands=[self.bands[0]])
 
                 self.gpr_cube.execute_batch(
                     title="User defined product",
