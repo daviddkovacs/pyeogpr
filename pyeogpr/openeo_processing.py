@@ -260,7 +260,7 @@ class Datacube:
 
                 self.gpr_cube = self.masked_data.apply_dimension(
                     process=custom_udf, dimension="bands"
-                ).filter_bands(bands=[self.bands[0]])
+                )#.filter_bands(bands=[self.bands[0]])
 
                 self.gpr_cube.execute_batch(
                     title="User defined product",
@@ -306,7 +306,7 @@ class Datacube:
 
                 self.gpr_cube = self.masked_data.apply_dimension(
                     process=custom_udf, dimension="bands"
-                ).filter_bands(bands=[self.bands[0]])
+                )#.filter_bands(bands=[self.bands[0]])
 
                 self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(
                     process=udf_sgolay, dimension="t"
