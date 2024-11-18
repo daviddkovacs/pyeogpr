@@ -93,8 +93,8 @@ class Datacube:
         """
 
         if self.sensor not in self.sensors_dict.keys():
-            raise Exception("Sensor/satellite not available.")
-
+            print("Sensor/satellite not available as default. Using user-defined sensor.")
+            
         data = (
             self.connection.load_collection(
                 self.sensor,
