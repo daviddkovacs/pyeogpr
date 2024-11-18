@@ -49,6 +49,7 @@ class Datacube:
         bounding_box: list,
         temporal_extent: list,
         cloudmask=False,
+        bands= None,
     ):
         self.connection = openeo.connect(
             "https://openeo.dataspace.copernicus.eu"
@@ -66,7 +67,10 @@ class Datacube:
             "north": self.bounding_box[3],
         }
         self.sensors_dict = sensors_dict
-        self.bands = None
+        if bands == None:
+            self.bands = self.sensors_dict[self.sensor]["bandlist"]
+        if bands != None:
+            self.bands = bands
         self.scale_factor = None
         self.data = None
         self.masked_data = None
@@ -100,7 +104,7 @@ class Datacube:
                 self.sensor,
                 self.spatial_extent,
                 self.temporal_extent,
-                self.sensors_dict[self.sensor]["bandlist"],
+                self.bands,
             )
             * self.sensors_dict[self.sensor]["scale_factor"]
         )
