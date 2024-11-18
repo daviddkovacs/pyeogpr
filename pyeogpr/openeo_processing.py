@@ -56,7 +56,10 @@ class Datacube:
         ).authenticate_oidc()
         print("""\n\n""")
         self.sensor = sensor
-        self.biovar = biovar
+        if biovar[-3:] == ".py":
+            self.own_model = biovar
+        else:
+            self.biovar = biovar
         self.bounding_box = bounding_box
         self.temporal_extent = temporal_extent
         self.cloudmask = cloudmask
@@ -98,7 +101,9 @@ class Datacube:
 
         if self.sensor not in self.sensors_dict.keys():
             print("Sensor/satellite not available as default. Using user-defined sensor.")
-            
+            scale = 1           
+        else:
+            scale = self.sensors_dict[self.sensor]["scale_factor"]
         data = (
             self.connection.load_collection(
                 self.sensor,
@@ -190,7 +195,7 @@ class Datacube:
         else:
             print(f"{self.sensor} can't be masked")
 
-    def process_map(self, gapfill=False, fileformat="nc", own_model=None):
+    def process_map(self, gapfill=False, fileformat="nc"):
         """
 
 
@@ -203,7 +208,6 @@ class Datacube:
         fileformat : string
                 For netCDF4: "nc", for tiff: "tiff".
         
-        own_model : dir
                 Insert the dir of the model you developed with ARTMO. Just simply put the directory.
             
 
@@ -217,8 +221,8 @@ class Datacube:
         if gapfill == False:
             print(f"gapfill-> {str(gapfill)}")
 
-            if own_model == None:
-                print(f"own_model {str(own_model)}")
+            if self.own_model == None:
+                print(f"self.own_model {str(self.own_model)}")
 
                 context = {"sensor": self.sensor, "biovar": self.biovar}
                 self.gpr_cube = self.masked_data.apply_dimension(
@@ -235,10 +239,10 @@ class Datacube:
                 )
                 return
 
-            if own_model != None:
-                print(f"own_model {str(own_model)}")
+            if self.own_model != None:
+                print(f"self.own_model {str(self.own_model)}")
 
-                spec = importlib.util.spec_from_file_location("user_module", own_model)
+                spec = importlib.util.spec_from_file_location("user_module", self.own_model)
                 user_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(user_module)
                 # user_module = load_user_module(user_module_path)
@@ -258,8 +262,8 @@ class Datacube:
         elif gapfill == True:
             print(f"gapfill-> {str(gapfill)}")
 
-            if own_model == None:
-                print(f"own_model {str(own_model)}")
+            if self.own_model == None:
+                print(f"self.own_model {str(self.own_model)}")
 
                 context = {"sensor": self.sensor, "biovar": self.biovar}
 
@@ -281,10 +285,10 @@ class Datacube:
                 )
                 return
 
-            if own_model != None:
-                print(f"own_model {str(own_model)}")
+            if self.own_model != None:
+                print(f"self.own_model {str(self.own_model)}")
 
-                spec = importlib.util.spec_from_file_location("user_module", own_model)
+                spec = importlib.util.spec_from_file_location("user_module", self.own_model)
                 user_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(user_module)
                 # user_module = load_user_module(user_module_path)
