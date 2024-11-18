@@ -59,9 +59,11 @@ class Datacube:
         if biovar[-3:] == ".py":
             self.own_model = biovar
             self.biovar = "Own_variable"
+            print("own")
         else:
             self.own_model = None
             self.biovar = biovar
+            print("Default")
         self.bounding_box = bounding_box
         self.temporal_extent = temporal_extent
         self.cloudmask = cloudmask
@@ -215,10 +217,10 @@ class Datacube:
             
 
         """
-        if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
-            print(
-                f"'{self.biovar}' not available for this satellite/sensor"
-            )
+        # if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
+        #     print(
+        #         f"'{self.biovar}' not available for this satellite/sensor"
+        #     )
 
         if gapfill == False:
             print(f"gapfill-> {str(gapfill)}")
