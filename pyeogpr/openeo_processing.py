@@ -105,7 +105,7 @@ class Datacube:
 
         if self.sensor not in self.sensors_dict.keys():
             print("Sensor/satellite not available as default. Using user-defined sensor.")
-            scale = 1
+            scale = 0.0001
         if self.sensor in self.sensors_dict.keys():
             scale = self.sensors_dict[self.sensor]["scale_factor"]
         print(scale)
