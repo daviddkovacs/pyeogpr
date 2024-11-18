@@ -101,9 +101,10 @@ class Datacube:
 
         if self.sensor not in self.sensors_dict.keys():
             print("Sensor/satellite not available as default. Using user-defined sensor.")
-            scale = 1           
-        else:
+            scale = 1
+        if self.sensor in self.sensors_dict.keys():
             scale = self.sensors_dict[self.sensor]["scale_factor"]
+        print(scale)
         data = (
             self.connection.load_collection(
                 self.sensor,
@@ -111,7 +112,7 @@ class Datacube:
                 self.temporal_extent,
                 self.bands,
             )
-            * self.sensors_dict[self.sensor]["scale_factor"]
+            * scale
         )
         self.data = data
         print(self.data)
