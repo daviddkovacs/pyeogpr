@@ -216,9 +216,8 @@ class Datacube:
 
         """
         if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
-            raise Exception(
-                f"'{self.biovar}' not available for this satellite/sensor. Please select from: "
-                + str(self.sensors_dict[self.sensor]["sensor_biovar"])
+            print(
+                f"'{self.biovar}' not available for this satellite/sensor"
             )
 
         if gapfill == False:
