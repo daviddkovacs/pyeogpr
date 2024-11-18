@@ -199,6 +199,12 @@ class Datacube:
 
         else:
             print(f"{self.sensor} can't be masked")
+            self.masked_data = self.data.aggregate_temporal_period(
+                composite, "mean"
+            )
+            print(
+                f"Temporally composited datacube constructed: {composite} by mean values."
+            )
 
     def process_map(self, gapfill=False, fileformat="nc"):
         """
