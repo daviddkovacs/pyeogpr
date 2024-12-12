@@ -10,4 +10,4 @@ setup(name="pyeogpr",
       author = "Dávid D.Kovács",
       author_email = "daviddkovacs@gmail.com",
       packages = find_packages(),
-      install_requires = ["numpy","openeo","scipy","ee","earthengine-api"])
+      install_requires = ["numpy","openeo","scipy","earthengine-api"])
