@@ -4,7 +4,7 @@ import ee
 import os
 import importlib
 import sys
-from io import StringIO
+# from io import StringIO
 
 class EarthEngine:
     """
