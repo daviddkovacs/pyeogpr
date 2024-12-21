@@ -338,8 +338,8 @@ class EarthEngine:
                 .eq(80)
             )
             lakemask = lakes.eq(0)
-            image_export = image_export.mask(lakemask)
-            image_export = image_export.mask(bare_cover)
+            # image_export = image_export.mask(lakemask)
+            # image_export = image_export.mask(bare_cover)
             
             # SHP-bbox misery
             region = None
