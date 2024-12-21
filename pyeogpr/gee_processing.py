@@ -357,6 +357,7 @@ class EarthEngine:
             elif isinstance(self.bbox, ee.FeatureCollection):
                 region = self.bbox.geometry()
                 
+            image_export = image_export.clip(region)
             # Export the image to an asset
             exportar = ee.batch.Export.image.toAsset(
                 assetId=self.assetpath
