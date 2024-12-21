@@ -340,9 +340,16 @@ class EarthEngine:
             lakemask = lakes.eq(0)
             image_export = image_export.mask(lakemask)
             image_export = image_export.mask(bare_cover)
-
-            # Convert to uint8 for lower memory usage
-            # image_export = image_export.multiply(255 / data_range).uint8()
+            
+            # SHP-bbox misery
+            region = None
+            if type(self.bbox) is list:
+                region=self.bbox
+                image_export = image_export.clip(region)
+            elif isinstance(self.bbox, ee.FeatureCollection):
+                region = self.bbox.geometry()
+                image_export = image_export.clip(region)
+            
             image_export = image_export.set(
                 "system:time_start",
                 ee.Date(self.temporal_extent[0])
@@ -350,14 +357,6 @@ class EarthEngine:
                 .millis(),
             )
 
-            # SHP-bbox misery
-            region = None
-            if type(self.bbox) is list:
-                region=self.bbox
-            elif isinstance(self.bbox, ee.FeatureCollection):
-                region = self.bbox.geometry()
-                
-            image_export = image_export.clip(region)
             # Export the image to an asset
             exportar = ee.batch.Export.image.toAsset(
                 assetId=self.assetpath
