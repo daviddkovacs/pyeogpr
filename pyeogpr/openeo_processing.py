@@ -27,7 +27,8 @@ class Datacube:
             - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
             - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot
             - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC
-
+            - for own model, simply put the directory of your model
+            
         bounding_box : list
             Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
             (e.g.: [-4.55, 42.73,-4.48, 42.77])
@@ -219,7 +220,6 @@ class Datacube:
         fileformat : string
                 For netCDF4: "nc", for tiff: "tiff".
         
-                Insert the dir of the model you developed with ARTMO. Just simply put the directory.
             
 
         """

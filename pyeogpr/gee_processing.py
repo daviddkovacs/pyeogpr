@@ -95,7 +95,7 @@ class EarthEngine:
                 bounding_box[0], bounding_box[1], bounding_box[2], bounding_box[3]
             )
         if "projects/ee-" in bounding_box:  # So it accepts shps too!
-            self.bbox = ee.FeatureCollection(bounding_box)
+            self.bbox = ee.FeatureCollection(bounding_box).geometry()
             # self.bbox_fc2geo = ee.FeatureCollection(bounding_box).geometry()
             
         self.temporal_extent = temporal_extent
@@ -115,11 +115,9 @@ class EarthEngine:
             spec.loader.exec_module(user_module)
 
             self.model_imported = user_module
-            print(self.model_imported.hyp_sig0_GREEN)
 
         else:
             url = f"https://raw.githubusercontent.com/daviddkovacs/pyeogpr/refs/heads/main/models/{search_sensor}_{self.biovar}_GEE.py"
-            print(url)
             response = requests.get(url)
 
             with open("model_imported.py", "w") as f:
@@ -130,7 +128,7 @@ class EarthEngine:
             import model_imported
 
             self.model_imported = model_imported
-            print(model_imported.hyp_sig0_GREEN)
+            
 
         self.imcol = ee.ImageCollection(self.sensor).filterDate(
             ee.Date(self.temporal_extent[0]), ee.Date(self.temporal_extent[1])
@@ -224,11 +222,11 @@ class EarthEngine:
         model = self.model_imported
         image = ee.Image(
             self.imcol.filterDate(fecha_inicio, fecha_fin)
-            .filterBounds(ee.FeatureCollection(self.bbox))
+            .filterBounds(self.bbox)
             .map(self.maskS3badPixels)
             .select(model.bands)  # .cast(model.bands_dict, model.bands)
             .max()
-            .clipToCollection(ee.FeatureCollection(self.bbox))
+            .clip(self.bbox)
         )
         # .clip(fc));
         # TODO: I should play around with this .clip() here..
@@ -338,17 +336,9 @@ class EarthEngine:
                 .eq(80)
             )
             lakemask = lakes.eq(0)
-            # image_export = image_export.mask(lakemask)
-            # image_export = image_export.mask(bare_cover)
+            image_export = image_export.mask(lakemask)
+            image_export = image_export.mask(bare_cover)
             
-            # SHP-bbox misery
-            region = None
-            if type(self.bbox) is list:
-                region=self.bbox
-                image_export = image_export.clip(region)
-            elif isinstance(self.bbox, ee.FeatureCollection):
-                region = self.bbox.geometry()
-                image_export = image_export.clip(region)
             
             image_export = image_export.set(
                 "system:time_start",
@@ -356,6 +346,7 @@ class EarthEngine:
                 .advance(ee.Number(i).multiply(self.timeWindows), "days")
                 .millis(),
             )
+            image_export = image_export.clip(self.bbox)
 
             # Export the image to an asset
             exportar = ee.batch.Export.image.toAsset(
@@ -368,7 +359,7 @@ class EarthEngine:
                 maxPixels=17210617060,
                 description=self.getInputDates(i)["fecha_str"] + "_" + self.biovar,
                 scale=self.spatial_resolution,
-                region = region,  # .bounds().getInfo()['coordinates']
+                region = self.bbox,  # .bounds().getInfo()['coordinates']
             )
             exportar.start()
             exportar.status()
