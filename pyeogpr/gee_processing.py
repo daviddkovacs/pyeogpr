@@ -74,15 +74,18 @@ class EarthEngine:
         if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED":
             self.sensor = "COPERNICUS/S2_HARMONIZED"
             search_sensor = "SENTINEL2_L1C"
-        
+            self.quality_mask = self.quality_mask_sentinel2
+
         if self.sensor == "SENTINEL2_L2A" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
             self.sensor = "COPERNICUS/S2_SR_HARMONIZED"
             search_sensor = "SENTINEL2_L2A"
-        
+            self.quality_mask = self.quality_mask_sentinel2
+
         if self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
             self.sensor = "COPERNICUS/S3/OLCI"
             search_sensor = "SENTINEL3_L1B"
-
+            self.quality_mask = self.quality_mask_olci
+            
         if biovar[-3:] == ".py":
             self.custom_model = biovar
             self.biovar = biovar.split("\\")[-1].split(".")[0]
@@ -198,7 +201,22 @@ class EarthEngine:
             "fecha_str": fecha_str,
         }
 
-    def maskS3badPixels(self, image):
+    # def maskS3badPixels(self, image):
+    #     qa = ee.Image(image.select("quality_flags"))
+    #     coastLine = 1 << 30
+    #     inLandWater = 1 << 29
+    #     bright = 1 << 27
+    #     invalid = 1 << 25
+    #     Oa12Sat = 1 << 9
+    #     mask = (
+    #         qa.bitwiseAnd(coastLine)
+    #         .eq(0)
+    #         .And(qa.bitwiseAnd(inLandWater).eq(0))
+    #         .And(qa.bitwiseAnd(bright).eq(0))
+    #     )
+    #     return image.updateMask(mask)
+    
+    def quality_mask_olci(self, image):
         qa = ee.Image(image.select("quality_flags"))
         coastLine = 1 << 30
         inLandWater = 1 << 29
@@ -213,6 +231,15 @@ class EarthEngine:
         )
         return image.updateMask(mask)
 
+    def quality_mask_sentinel2(self, image):
+        qa = image.select('QA60')
+        cloudBitMask = 1 << 10
+        cirrusBitMask = 1 << 11
+        mask = qa.bitwiseAnd(cloudBitMask).eq(0) \
+            .And(qa.bitwiseAnd(cirrusBitMask).eq(0))
+        return image.updateMask(mask)
+   
+
     def addVariables(image):
         date = ee.Date(image.get("system:time_start"))
         years = date.difference(ee.Date("1970-01-01"), "days")
@@ -223,7 +250,7 @@ class EarthEngine:
         image = ee.Image(
             self.imcol.filterDate(fecha_inicio, fecha_fin)
             .filterBounds(self.bbox)
-            .map(self.maskS3badPixels)
+            # .map(self.quality_mask)
             .select(model.bands)  # .cast(model.bands_dict, model.bands)
             .max()
             .clip(self.bbox)
@@ -253,7 +280,7 @@ class EarthEngine:
             .arrayProject([0])
             .arrayFlatten([self.sequence_GREEN(self.biovar)])
         )
-        arg1 = PtTPt.exp().multiply(model.hyp_sig0_GREEN)
+        arg1 = PtTPt.exp().multiply(model.hyp_sig_GREEN)
 
         k_star = PtTDX.subtract(model.XDX_pre_calc_GREEN.multiply(0.5)).exp().toArray()
         mean_pred = k_star.arrayDotProduct(
@@ -272,12 +299,12 @@ class EarthEngine:
             .toArray()
         )
         Vvector = (
-            ee.Image(model.LMatrixInverse)
+            ee.Image(model.Linv_pre_calc_GREEN)
             .matrixMultiply(k_star_uncert.toArray(0).toArray(1))
             .arrayProject([0])
         )
         Variance = (
-            ee.Image(model.hyp_sig_GREEN)
+            ee.Image(model.hyp_sig_unc_GREEN)
             .toArray()
             .subtract(Vvector.arrayDotProduct(Vvector))
             .abs()
