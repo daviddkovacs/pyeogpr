@@ -74,17 +74,14 @@ class EarthEngine:
         if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED":
             self.sensor = "COPERNICUS/S2_HARMONIZED"
             search_sensor = "SENTINEL2_L1C"
-            self.quality_mask = self.quality_mask_sentinel2
 
         if self.sensor == "SENTINEL2_L2A" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
             self.sensor = "COPERNICUS/S2_SR_HARMONIZED"
             search_sensor = "SENTINEL2_L2A"
-            self.quality_mask = self.quality_mask_sentinel2
 
         if self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
             self.sensor = "COPERNICUS/S3/OLCI"
             search_sensor = "SENTINEL3_L1B"
-            self.quality_mask = self.quality_mask_olci
             
         if biovar[-3:] == ".py":
             self.custom_model = biovar
@@ -247,16 +244,29 @@ class EarthEngine:
 
     def calculate_GREEN(self, fecha_inicio, fecha_fin, variable):
         model = self.model_imported
-        image = ee.Image(
-            self.imcol.filterDate(fecha_inicio, fecha_fin)
-            .filterBounds(self.bbox)
-            # .map(self.quality_mask)
-            .select(model.bands)  # .cast(model.bands_dict, model.bands)
-            .max()
-            .clip(self.bbox)
-        )
-        # .clip(fc));
-        # TODO: I should play around with this .clip() here..
+
+        if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "SENTINEL2_L2A" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
+
+            image = ee.Image(
+                self.imcol.filterDate(fecha_inicio, fecha_fin)
+                .filterBounds(self.bbox)
+                .filterMetadata('CLOUDY_PIXEL_PERCENTAGE', 'less_than', 40)
+                .map(self.quality_mask_sentinel2)
+                .select(model.bands)  
+                .max()
+                .clip(self.bbox)
+            ).divide(10000)
+            
+        if self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
+            image = ee.Image(
+                self.imcol.filterDate(fecha_inicio, fecha_fin)
+                .filterBounds(self.bbox)
+                .map(self.quality_mask_olci)
+                .select(model.bands)  # .cast(model.bands_dict, model.bands)
+                .max()
+                .clip(self.bbox)
+            )
+
         im_norm_ell2D_hypell = (
             image.subtract(model.mx_GREEN)
             .divide(model.sx_GREEN)
@@ -347,7 +357,10 @@ class EarthEngine:
                 self.getInputDates(i)["fecha_inicio"],
                 self.getInputDates(i)["fecha_fin"],
                 self.biovar,
-            )  # .multiply(10000).toInt32()
+            )  # .toInt32()
+            
+
+                
             imageHolder = imageHolder.addBands(imagen)
             image_export = imageHolder.select(self.biovar, self.biovar + "_UNCERTAINTY")
 
