@@ -38,7 +38,7 @@ XDX_pre_calc_GREEN =  ee.Array([[0.0457751988192008],[0.754126023042303],[0.0317
 veg_index = 'LAI' ;
 
 scaleFactor_GREEN= 10000;
-
+XTrain_dim_GREEN = X_train_GREEN.length().toList().get(0).getInfo();
 bands = ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12']
 
 bands_dict = {"B2": ee.PixelType.float(),

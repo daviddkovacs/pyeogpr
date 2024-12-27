@@ -71,15 +71,15 @@ class EarthEngine:
         ee.Initialize(project=self.projectID)
 
         self.sensor = sensor
-        if self.sensor == "SENTINEL2_L1C" or "COPERNICUS/S2_HARMONIZED":
+        if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED":
             self.sensor = "COPERNICUS/S2_HARMONIZED"
             search_sensor = "SENTINEL2_L1C"
-
-        if self.sensor == "SENTINEL2_L2A" or "COPERNICUS/S2_SR_HARMONIZED":
+        
+        if self.sensor == "SENTINEL2_L2A" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
             self.sensor = "COPERNICUS/S2_SR_HARMONIZED"
             search_sensor = "SENTINEL2_L2A"
-
-        if self.sensor == "SENTINEL3_L1B" or "COPERNICUS/S3/OLCI":
+        
+        if self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
             self.sensor = "COPERNICUS/S3/OLCI"
             search_sensor = "SENTINEL3_L1B"
 

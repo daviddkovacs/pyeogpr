@@ -31,7 +31,7 @@ Linv_pre_calc_GREEN =  ee.Array([[88.5053309403201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 veg_index_GREEN = 'GREEN'
 model_GREEN = 'GREEN_CBD_GPR'
-
+XTrain_dim_GREEN = X_train_GREEN.length().toList().get(0).getInfo();
 GREEN_model = {
   
   'X_train': X_train_GREEN,

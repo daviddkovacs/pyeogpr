@@ -44,7 +44,7 @@ veg_index = 'laiCab' ;
 scaleFactor_GREEN= 10000;
 
 bands = ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12']
-
+XTrain_dim_GREEN = X_train_GREEN.length().toList().get(0).getInfo();
 bands_dict = {"B2": ee.PixelType.float(),
   "B3": ee.PixelType.float(),
   "B4": ee.PixelType.float(),

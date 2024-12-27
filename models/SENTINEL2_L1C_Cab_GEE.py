@@ -780,7 +780,7 @@ Linv_pre_calc_GREEN =  ee.Array([[0.0237706992086666,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 veg_index_GREEN = 'GREEN' ;
 model_GREEN = 'MLRAmodel_GREEN_TOA_ref_GPR_EBD_246samples_S2_10B_MNI' ;
-
+XTrain_dim_GREEN = X_train_GREEN.length().toList().get(0).getInfo();
 GREEN_model = {
   'X_train': X_train_GREEN,
   'alpha_coefficients' : alpha_coefficients_GREEN,
