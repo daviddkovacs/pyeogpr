@@ -357,7 +357,8 @@ class EarthEngine:
 
                 
             imageHolder = imageHolder.addBands(imagen)
-            image_export = imageHolder.select(self.biovar, self.biovar + "_UNCERTAINTY")
+            image_export = imageHolder
+            #image_export = imageHolder.select(self.biovar, self.biovar + "_UNCERTAINTY")
 
             # Optional masking
             bare_cover = (
