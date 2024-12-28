@@ -197,21 +197,6 @@ class EarthEngine:
             "fecha_fin": fecha_fin,
             "fecha_str": fecha_str,
         }
-
-    # def maskS3badPixels(self, image):
-    #     qa = ee.Image(image.select("quality_flags"))
-    #     coastLine = 1 << 30
-    #     inLandWater = 1 << 29
-    #     bright = 1 << 27
-    #     invalid = 1 << 25
-    #     Oa12Sat = 1 << 9
-    #     mask = (
-    #         qa.bitwiseAnd(coastLine)
-    #         .eq(0)
-    #         .And(qa.bitwiseAnd(inLandWater).eq(0))
-    #         .And(qa.bitwiseAnd(bright).eq(0))
-    #     )
-    #     return image.updateMask(mask)
     
     def quality_mask_olci(self, image):
         qa = ee.Image(image.select("quality_flags"))
@@ -245,7 +230,7 @@ class EarthEngine:
     def calculate_GREEN(self, fecha_inicio, fecha_fin, variable):
         model = self.model_imported
 
-        if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "SENTINEL2_L2A" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
+        if self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
 
             image = ee.Image(
                 self.imcol.filterDate(fecha_inicio, fecha_fin)
@@ -257,7 +242,7 @@ class EarthEngine:
                 .clip(self.bbox)
             ).divide(10000)
             
-        if self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
+        if self.sensor == "COPERNICUS/S3/OLCI":
             image = ee.Image(
                 self.imcol.filterDate(fecha_inicio, fecha_fin)
                 .filterBounds(self.bbox)
@@ -302,10 +287,16 @@ class EarthEngine:
 
         mean_pred = mean_pred.multiply(filterDown)
         
-        if self.sensor == "SENTINEL2_L2A" or (self.sensor == "SENTINEL2_L2A" and "CNC" not in self.biovar or "mangrove" not in self.biovar):
+        if self.sensor == "COPERNICUS/S2_SR_HARMONIZED" and (self.biovar == "LAI"
+                                                             or self.biovar == "Cm"
+                                                             or self.biovar == "Cw"
+                                                             or self.biovar =="Cab"
+                                                             or self.biovar == "FVC"
+                                                             or self.biovar == "laiCab"):
+            print(image)
             image = image.addBands(mean_pred)
             return image.select(self.biovar)
-        
+
         else:
             k_star_uncert = (
                 PtTDX.subtract(model.XDX_pre_calc_GREEN.multiply(0.5))
