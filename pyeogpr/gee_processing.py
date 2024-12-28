@@ -301,35 +301,41 @@ class EarthEngine:
         filterDown = mean_pred.gt(0)
 
         mean_pred = mean_pred.multiply(filterDown)
+        
+        if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
+            k_star_uncert = (
+                PtTDX.subtract(model.XDX_pre_calc_GREEN.multiply(0.5))
+                .exp()
+                .multiply(arg1)
+                .toArray()
+            )
+            Vvector = (
+                ee.Image(model.Linv_pre_calc_GREEN)
+                .matrixMultiply(k_star_uncert.toArray(0).toArray(1))
+                .arrayProject([0])
+            )
+            Variance = (
+                ee.Image(model.hyp_sig_unc_GREEN)
+                .toArray()
+                .subtract(Vvector.arrayDotProduct(Vvector))
+                .abs()
+                .sqrt()
+            )
+            Variance = (
+                Variance.toArray(1)
+                .arrayProject([0])
+                .arrayFlatten([[self.biovar + "_UNCERTAINTY"]])
+            )
+            
+            image = image.addBands(mean_pred)
+            image = image.addBands(Variance)
+            return image.select(self.biovar, self.biovar + "_UNCERTAINTY")
+        
+        else:
+            image = image.addBands(mean_pred)
+            return image.select(self.biovar)
 
-        k_star_uncert = (
-            PtTDX.subtract(model.XDX_pre_calc_GREEN.multiply(0.5))
-            .exp()
-            .multiply(arg1)
-            .toArray()
-        )
-        Vvector = (
-            ee.Image(model.Linv_pre_calc_GREEN)
-            .matrixMultiply(k_star_uncert.toArray(0).toArray(1))
-            .arrayProject([0])
-        )
-        Variance = (
-            ee.Image(model.hyp_sig_unc_GREEN)
-            .toArray()
-            .subtract(Vvector.arrayDotProduct(Vvector))
-            .abs()
-            .sqrt()
-        )
-        Variance = (
-            Variance.toArray(1)
-            .arrayProject([0])
-            .arrayFlatten([[self.biovar + "_UNCERTAINTY"]])
-        )
 
-        image = image.addBands(mean_pred)
-        image = image.addBands(Variance)
-
-        return image.select(self.biovar, self.biovar + "_UNCERTAINTY")
 
     def maploop(self):
         startDate = datetime.datetime.strptime(
