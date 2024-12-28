@@ -119,7 +119,7 @@ class EarthEngine:
         else:
             url = f"https://raw.githubusercontent.com/daviddkovacs/pyeogpr/refs/heads/main/models/{search_sensor}_{self.biovar}_GEE.py"
             response = requests.get(url)
-
+            print(url)
             with open("model_imported.py", "w") as f:
                 f.write(response.text)
 
@@ -302,7 +302,11 @@ class EarthEngine:
 
         mean_pred = mean_pred.multiply(filterDown)
         
-        if self.sensor == "SENTINEL2_L1C" or self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "SENTINEL3_L1B" or self.sensor == "COPERNICUS/S3/OLCI":
+        if self.sensor == "SENTINEL2_L2A" or (self.sensor == "SENTINEL2_L2A" and "CNC" not in self.biovar or "mangrove" not in self.biovar):
+            image = image.addBands(mean_pred)
+            return image.select(self.biovar)
+        
+        else:
             k_star_uncert = (
                 PtTDX.subtract(model.XDX_pre_calc_GREEN.multiply(0.5))
                 .exp()
@@ -330,11 +334,6 @@ class EarthEngine:
             image = image.addBands(mean_pred)
             image = image.addBands(Variance)
             return image.select(self.biovar, self.biovar + "_UNCERTAINTY")
-        
-        else:
-            image = image.addBands(mean_pred)
-            return image.select(self.biovar)
-
 
 
     def maploop(self):
