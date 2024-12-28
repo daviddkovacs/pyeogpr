@@ -4,7 +4,6 @@ import ee
 import os
 import importlib
 import sys
-# from io import StringIO
 
 class EarthEngine:
     """
@@ -293,7 +292,7 @@ class EarthEngine:
                                                              or self.biovar =="Cab"
                                                              or self.biovar == "FVC"
                                                              or self.biovar == "laiCab"):
-            print(image)
+
             image = image.addBands(mean_pred)
             return image.select(self.biovar)
 
@@ -395,7 +394,7 @@ class EarthEngine:
                 maxPixels=17210617060,
                 description=self.getInputDates(i)["fecha_str"] + "_" + self.biovar,
                 scale=self.spatial_resolution,
-                region = self.bbox,  # .bounds().getInfo()['coordinates']
+                region = self.bbox,
             )
             exportar.start()
             exportar.status()
