@@ -29,12 +29,14 @@ Python based library to use Earth Observation data to retrieve biophysical maps 
 Features
 --------
 
-- `Access`_ to **openEO** or **Google Earth Engine** is required.
-- The package uses satellite observations and machine learning to infer biophyiscal maps.
-- Get your maps in a few lines of code: select your region, temporal domain and satellite sensor to get the maps you are looking for!
+- Access to `openEO <https://documentation.dataspace.copernicus.eu/Registration.html>`_ or `Google Earth Engine <https://earthengine.google.com/>`_ is required.
+- Advantages of **openEO**: Download locally netcdf or tiff format. no uncertainty estimates, smaller areas
+- Advantages of **Google Earth Engine**: Export to ee.Assets with Uncertainty estimates, and up to global scale processing. 
+- The package uses satellite observations and machine learning to create vegetation trait maps
+- Get your maps in a few lines of code: no Machine Learning, coding or remote sensing knowledge needed!
 - Built in gap filling to avoid cloud cover
 - Runs "in the cloud" with the GEE/openEO API. No local processing needed.
-- Resulting maps in .tiff or netCDF format
+
 
 Installation
 ------------
@@ -71,5 +73,3 @@ Dávid D.Kovács - `daviddkovacs@gmail.com <mailto:daviddkovacs@gmail.com>`_
 
 .. image:: flexinel.png
 
-
-.. _Access: https://documentation.dataspace.copernicus.eu/Registration.html

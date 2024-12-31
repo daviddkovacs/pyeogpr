@@ -24,9 +24,15 @@ class Datacube:
         biovar : Biophysical variable to process. The selected variable's map will be retrieved.
             Currently "built-in" variables available for each sensor:
 
-            - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
-            - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot
-            - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC
+            ======================  =====================================================
+            Satellite Level         Available Products
+            ======================  =====================================================
+            SENTINEL2_L1C           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
+            SENTINEL2_L2A           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,
+                                    mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab
+            SENTINEL3_OLCI_L1B      FAPAR, FVC, LAI, LCC
+            ======================  =====================================================
+            
             - for own model, simply put the directory of your model
             
         bounding_box : list

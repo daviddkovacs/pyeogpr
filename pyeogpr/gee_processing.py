@@ -27,14 +27,19 @@ class EarthEngine:
 
             Currently "built-in" variables available for each sensor:
 
-            - SENTINEL2_L1C: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
-            - SENTINEL2_L2A: Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot
-            - SENTINEL3_OLCI_L1B: FAPAR, FVC, LAI, LCC
+                ======================  =====================================================
+                Satellite Level         Available Products
+                ======================  =====================================================
+                SENTINEL2_L1C           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
+                SENTINEL2_L2A           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,
+                                        mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab
+                SENTINEL3_OLCI_L1B      FAPAR, FVC, LAI, LCC
+                ======================  =====================================================
 
             If you have your own model trained with ARTMO (https://artmotoolbox.com), you need to
             insert the directory of the model, for example: r"C:/User/Models/My_custom_model.py"
             These models need to be in ".py" format, in order to achieve it, please consult:
-            https://github.com/SentiFLEXinel/ARTMOtoGEE/
+            `ARTMO to GEE <https://github.com/SentiFLEXinel/ARTMOtoGEE/>`_ and `ARTMO <https://artmotoolbox.com/>`_
 
         bounding_box : list, ee.assetpath
             Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/

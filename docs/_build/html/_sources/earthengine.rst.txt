@@ -15,7 +15,21 @@ This section covers the usage of the Google Earth Engine (GEE) back-end for Gaus
    :undoc-members:
    :show-inheritance:
    :exclude-members: maploop,getInputDates,calculate_GREEN,addVariables,maskS3badPixels,sequence_GREEN
-   :special-members: __init__  # This explicitly shows the constructor (__init__)
+   :special-members: __init__  # This explicitly shows the constructor 3(__init__)
+
+Step-by-Step tutorial
+---------------------
+
+1. Go to `Google Earth Engine <https://earthengine.google.com/>`_ and register your account.
+2. Open the GEE `Code Editor <https://code.earthengine.google.com/>`_ . We will connect the pyeogpr client to GEE now.
+3. On the top right corner you should see the projectID of your account starting with "ee-..." This, you should copy in the projectID parameter (see Example below).
+4. Top left corner go to "Assets" tab. Go to red "New" button, and create an ImageCollection. When created, copy its ImageCollection ID, and use it as your assetpath for mapping.
+   (See process_map function in the Example below).
+5. Now you are ready to go, Open up the command line, type "pip install pyeogpr". This will install the package.
+6. Run pyeogpr as per your needs, you can test with the Example script.
+7. Check the status of the process on: `Task manager <https://code.earthengine.google.com/tasks>`_
+
+
 
 Example Usage
 -------------
