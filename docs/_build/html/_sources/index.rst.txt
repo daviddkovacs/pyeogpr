@@ -41,7 +41,7 @@ Features
 Installation
 ------------
 
-You can install pyeogpr using pip:
+You can install pyeogpr using pip via the command line:
 
 .. code-block:: shell
 
