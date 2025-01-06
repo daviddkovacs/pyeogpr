@@ -68,6 +68,7 @@ class EarthEngine:
         temporal_extent,
         spatial_resolution,
         cloudmask=False,
+        bands = None
     ):
         self.projectID = projectID
         # EE Auth
@@ -105,6 +106,7 @@ class EarthEngine:
         self.temporal_extent = temporal_extent
         self.spatial_resolution = spatial_resolution
         self.cloudmask = cloudmask
+        self.bands = bands
         self.timeWindows = None
         self.assetpath = None
         self.gpr_model = None
@@ -233,7 +235,11 @@ class EarthEngine:
 
     def calculate_GREEN(self, fecha_inicio, fecha_fin, variable):
         model = self.model_imported
-
+        if self.bands == None:
+            self.bands = model.bands
+        if self.bands =! None:
+            self.bands = bands
+        
         if self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
 
             image = ee.Image(
@@ -241,7 +247,7 @@ class EarthEngine:
                 .filterBounds(self.bbox)
                 .filterMetadata('CLOUDY_PIXEL_PERCENTAGE', 'less_than', 40)
                 .map(self.quality_mask_sentinel2)
-                .select(model.bands)  
+                .select(self.bands)  
                 .max()
                 .clip(self.bbox)
             ).divide(10000)
@@ -251,7 +257,7 @@ class EarthEngine:
                 self.imcol.filterDate(fecha_inicio, fecha_fin)
                 .filterBounds(self.bbox)
                 .map(self.quality_mask_olci)
-                .select(model.bands)  # .cast(model.bands_dict, model.bands)
+                .select(self.bands)  # .cast(model.bands_dict, model.bands)
                 .max()
                 .clip(self.bbox)
             )
