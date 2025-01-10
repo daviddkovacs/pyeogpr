@@ -3,7 +3,7 @@ import os
 readme_path = os.path.join(os.path.dirname(__file__), 'README.md')
 
 setup(name="pyeogpr",
-      version ="2.3.1",
+      version ="2.3.3",
       description="Python based library to use Earth Observation data to retrieve biophysical maps using Gaussian Process Regression",
       long_description=open(readme_path, 'r').read(),
       long_description_content_type='text/markdown',

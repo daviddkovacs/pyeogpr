@@ -235,10 +235,9 @@ class EarthEngine:
 
     def calculate_GREEN(self, fecha_inicio, fecha_fin, variable):
         model = self.model_imported
-        if self.bands == None:
+        
+        if self.bands is None:
             self.bands = model.bands
-        if self.bands =! None:
-            self.bands = bands
         
         if self.sensor == "COPERNICUS/S2_HARMONIZED" or self.sensor == "COPERNICUS/S2_SR_HARMONIZED":
 
@@ -296,7 +295,7 @@ class EarthEngine:
         filterDown = mean_pred.gt(0)
 
         mean_pred = mean_pred.multiply(filterDown)
-        
+
         if self.sensor == "COPERNICUS/S2_SR_HARMONIZED" and (self.biovar == "LAI"
                                                              or self.biovar == "Cm"
                                                              or self.biovar == "Cw"
