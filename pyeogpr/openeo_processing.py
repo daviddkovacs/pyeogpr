@@ -2,7 +2,7 @@ import openeo
 import numpy as np
 import scipy
 import scipy.signal
-import ee
+
 
 import importlib.util
 from pyeogpr.sensors import sensors_dict
