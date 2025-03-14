@@ -20,7 +20,7 @@ Example Usage
 
 .. code-block:: python
 
-   from pyeogpr import Datacube
+   import pyeogpr
 
    bounding_box = [
               -0.305543150556133,
@@ -41,7 +41,7 @@ Example Usage
 
    dc.construct_datacube("dekad") 
 
-   dc.process_map(gapfill=True, fileformat="nc", own_model=None)
+   dc.process_map(gapfill=True, fileformat="nc")
    
 To download the GPR processed map go to the `openEO portal <https://openeo.dataspace.copernicus.eu/>`_:
 

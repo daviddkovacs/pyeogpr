@@ -148,6 +148,7 @@
         <span class="n">temporal_extent</span><span class="p">,</span>
         <span class="n">spatial_resolution</span><span class="p">,</span>
         <span class="n">cloudmask</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">bands</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projectID</span> <span class="o">=</span> <span class="n">projectID</span>
         <span class="c1"># EE Auth</span>
@@ -185,6 +186,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span> <span class="o">=</span> <span class="n">temporal_extent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spatial_resolution</span> <span class="o">=</span> <span class="n">spatial_resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">=</span> <span class="n">cloudmask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bands</span> <span class="o">=</span> <span class="n">bands</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeWindows</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assetpath</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gpr_model</span> <span class="o">=</span> <span class="kc">None</span>
@@ -325,7 +327,10 @@
 
     <span class="k">def</span> <span class="nf">calculate_GREEN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="p">,</span> <span class="n">variable</span><span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span>
-
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bands</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bands</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bands</span>
+        
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">==</span> <span class="s2">&quot;COPERNICUS/S2_HARMONIZED&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">==</span> <span class="s2">&quot;COPERNICUS/S2_SR_HARMONIZED&quot;</span><span class="p">:</span>
 
             <span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span>
@@ -333,7 +338,7 @@
                 <span class="o">.</span><span class="n">filterBounds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">filterMetadata</span><span class="p">(</span><span class="s1">&#39;CLOUDY_PIXEL_PERCENTAGE&#39;</span><span class="p">,</span> <span class="s1">&#39;less_than&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quality_mask_sentinel2</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">bands</span><span class="p">)</span>  
+                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bands</span><span class="p">)</span>  
                 <span class="o">.</span><span class="n">max</span><span class="p">()</span>
                 <span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
             <span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
@@ -343,7 +348,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">imcol</span><span class="o">.</span><span class="n">filterDate</span><span class="p">(</span><span class="n">fecha_inicio</span><span class="p">,</span> <span class="n">fecha_fin</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">filterBounds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quality_mask_olci</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">bands</span><span class="p">)</span>  <span class="c1"># .cast(model.bands_dict, model.bands)</span>
+                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bands</span><span class="p">)</span>  <span class="c1"># .cast(model.bands_dict, model.bands)</span>
                 <span class="o">.</span><span class="n">max</span><span class="p">()</span>
                 <span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
             <span class="p">)</span>
@@ -382,7 +387,7 @@
         <span class="n">filterDown</span> <span class="o">=</span> <span class="n">mean_pred</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">mean_pred</span> <span class="o">=</span> <span class="n">mean_pred</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">filterDown</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">==</span> <span class="s2">&quot;COPERNICUS/S2_SR_HARMONIZED&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">==</span> <span class="s2">&quot;LAI&quot;</span>
                                                              <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">==</span> <span class="s2">&quot;Cm&quot;</span>
                                                              <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">biovar</span> <span class="o">==</span> <span class="s2">&quot;Cw&quot;</span>
