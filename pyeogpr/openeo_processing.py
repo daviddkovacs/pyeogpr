@@ -91,7 +91,7 @@ class Datacube:
         self.gpr_cube = None
         self.gpr_cube_gapfilled = None
         self.models_url = "https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv"
-
+        self.memory = "8g"
     def construct_datacube(self, composite=None):
         """
 
@@ -115,7 +115,7 @@ class Datacube:
             scale = 0.0001
         if self.sensor in self.sensors_dict.keys():
             scale = self.sensors_dict[self.sensor]["scale_factor"]
-        print(scale)
+
         data = (
             self.connection.load_collection(
                 self.sensor,
@@ -126,7 +126,7 @@ class Datacube:
             * scale
         )
         self.data = data
-        print(self.data)
+
         if self.cloudmask == True and "SENTINEL2" in self.sensor:
             s2_cloudmask = self.connection.load_collection(
                 "SENTINEL2_L2A", self.spatial_extent, self.temporal_extent, ["SCL"]
@@ -229,10 +229,6 @@ class Datacube:
             
 
         """
-        # if self.biovar not in self.sensors_dict[self.sensor]["sensor_biovar"]:
-        #     print(
-        #         f"'{self.biovar}' not available for this satellite/sensor"
-        #     )
 
         if gapfill == False:
             print(f"gapfill-> {str(gapfill)}")
@@ -249,7 +245,7 @@ class Datacube:
                     title=f"{self.sensor}_{self.biovar}",
                     outputfile=f"{self.sensor}_{self.biovar}.{fileformat}",
                     job_options={
-                        "executor-memory": "10g",
+                        "executor-memory": self.memory,
                         "udf-dependency-archives": [self.models_url],
                     },
                 )
@@ -271,7 +267,7 @@ class Datacube:
                 self.gpr_cube.execute_batch(
                     title="User defined product",
                     outputfile=f"user_defined_product.{fileformat}",
-                    job_options={"executor-memory": "10g"},
+                    job_options={"executor-memory": self.memory},
                 )
                 return
 
@@ -295,7 +291,7 @@ class Datacube:
                     title=f"{self.sensor} {self.biovar} gapfill->{gapfill}",
                     outputfile=f"{self.sensor}_{self.biovar}_GF.{fileformat}",
                     job_options={
-                        "executor-memory": "10g",
+                        "executor-memory": self.memory,
                         "udf-dependency-archives": [self.models_url],
                     },
                 )
@@ -321,7 +317,7 @@ class Datacube:
                 self.gpr_cube.execute_batch(
                     title="User defined product",
                     outputfile=f"user_defined_product.{fileformat}",
-                    job_options={"executor-memory": "10g"},
+                    job_options={"executor-memory": self.memory},
                 )
                 return
 
