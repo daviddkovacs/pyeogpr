@@ -48,7 +48,7 @@
 <p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../sensors.html"><strong>- Sentinel 2 MultiSpectral Instrument (MSI)</strong></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci"><strong>- Sentinel 3 Ocean and Land Colour Instrument (OLCI)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sensors.html#sentinel-3"><strong>- Sentinel 3</strong></a></li>
 </ul>
 
         </div>
@@ -80,7 +80,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy</span>
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
-<span class="kn">import</span> <span class="nn">ee</span>
+
 
 <span class="kn">import</span> <span class="nn">importlib.util</span>
 <span class="kn">from</span> <span class="nn">pyeogpr.sensors</span> <span class="kn">import</span> <span class="n">sensors_dict</span>
@@ -98,7 +98,7 @@
 <span class="sd">    pyeogpr.Datacube</span>
 <span class="sd">    ----------------</span>
 
-<span class="sd">        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B</span>
+<span class="sd">        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B, SENTINEL3_SYN_L2_SYN</span>
 <span class="sd">            Satellite sensor to process the data with.</span>
 
 <span class="sd">        biovar : Biophysical variable to process. The selected variable&#39;s map will be retrieved.</span>
@@ -111,6 +111,7 @@
 <span class="sd">            SENTINEL2_L2A           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,</span>
 <span class="sd">                                    mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab</span>
 <span class="sd">            SENTINEL3_OLCI_L1B      FAPAR, FVC, LAI, LCC</span>
+<span class="sd">            SENTINEL3_SYN_L2_SYN    FAPAR, FVC</span>
 <span class="sd">            ======================  =====================================================</span>
 <span class="sd">            </span>
 <span class="sd">            - for own model, simply put the directory of your model</span>
@@ -171,7 +172,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube_gapfilled</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">models_url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv&quot;</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="s2">&quot;8g&quot;</span>
 <div class="viewcode-block" id="Datacube.construct_datacube">
 <a class="viewcode-back" href="../../openeo.html#pyeogpr.Datacube.construct_datacube">[docs]</a>
     <span class="k">def</span> <span class="nf">construct_datacube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composite</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -197,7 +198,7 @@
             <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.0001</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">][</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">,</span>
@@ -208,7 +209,7 @@
             <span class="o">*</span> <span class="n">scale</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="s2">&quot;SENTINEL2&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="p">:</span>
             <span class="n">s2_cloudmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
                 <span class="s2">&quot;SENTINEL2_L2A&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_extent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_extent</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;SCL&quot;</span><span class="p">]</span>
@@ -314,10 +315,6 @@
 <span class="sd">            </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># if self.biovar not in self.sensors_dict[self.sensor][&quot;sensor_biovar&quot;]:</span>
-        <span class="c1">#     print(</span>
-        <span class="c1">#         f&quot;&#39;{self.biovar}&#39; not available for this satellite/sensor&quot;</span>
-        <span class="c1">#     )</span>
 
         <span class="k">if</span> <span class="n">gapfill</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gapfill-&gt; </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">gapfill</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -334,7 +331,7 @@
                     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                     <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                     <span class="n">job_options</span><span class="o">=</span><span class="p">{</span>
-                        <span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span>
                         <span class="s2">&quot;udf-dependency-archives&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">models_url</span><span class="p">],</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
@@ -356,7 +353,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span>
                     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;User defined product&quot;</span><span class="p">,</span>
                     <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;user_defined_product.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">},</span>
+                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">},</span>
                 <span class="p">)</span>
                 <span class="k">return</span>
 
@@ -380,7 +377,7 @@
                     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2"> gapfill-&gt;</span><span class="si">{</span><span class="n">gapfill</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                     <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">_GF.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                     <span class="n">job_options</span><span class="o">=</span><span class="p">{</span>
-                        <span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span>
                         <span class="s2">&quot;udf-dependency-archives&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">models_url</span><span class="p">],</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
@@ -406,7 +403,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">gpr_cube</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span>
                     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;User defined product&quot;</span><span class="p">,</span>
                     <span class="n">outputfile</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;user_defined_product.</span><span class="si">{</span><span class="n">fileformat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="s2">&quot;10g&quot;</span><span class="p">},</span>
+                    <span class="n">job_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">},</span>
                 <span class="p">)</span>
                 <span class="k">return</span>
 

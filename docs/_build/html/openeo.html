@@ -63,7 +63,7 @@
 <p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sensors.html"><strong>- Sentinel 2 MultiSpectral Instrument (MSI)</strong></a></li>
-<li class="toctree-l1"><a class="reference internal" href="sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci"><strong>- Sentinel 3 Ocean and Land Colour Instrument (OLCI)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensors.html#sentinel-3"><strong>- Sentinel 3</strong></a></li>
 </ul>
 
         </div>
@@ -101,7 +101,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <hr class="docutils" />
 <dl>
-<dt>sensor<span class="classifier">SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B</span></dt><dd><p>Satellite sensor to process the data with.</p>
+<dt>sensor<span class="classifier">SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B, SENTINEL3_SYN_L2_SYN</span></dt><dd><p>Satellite sensor to process the data with.</p>
 </dd>
 <dt>biovar<span class="classifier">Biophysical variable to process. The selected variable’s map will be retrieved.</span></dt><dd><p>Currently “built-in” variables available for each sensor:</p>
 <table class="docutils align-default">
@@ -120,6 +120,9 @@ mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab</p></td>
 </tr>
 <tr class="row-even"><td><p>SENTINEL3_OLCI_L1B</p></td>
 <td><p>FAPAR, FVC, LAI, LCC</p></td>
+</tr>
+<tr class="row-odd"><td><p>SENTINEL3_SYN_L2_SYN</p></td>
+<td><p>FAPAR, FVC</p></td>
 </tr>
 </tbody>
 </table>

@@ -42,14 +42,20 @@ This package currently features the following satellite sensors and biophysical 
 	 - _mangrove_Cab_: Leaf Chlorophyll Content
 
 
-## **- Sentinel 3 Ocean and Land Colour Instrument (OLCI)**
- - **Top of atmosphere: Level 1B**
- [![DOI](https://img.shields.io/badge/DOI-rs14061347/ReyesMuñoz_et_al_2022-doi.svg)]([https://doi.org/10.3390/rs14061347](https://doi.org/10.3390/rs14061347))
-  [![DOI](https://img.shields.io/badge/DOI-rs15133404/D.Kovács_et_al_2023-doi.svg)]([https://doi.org/10.3390/rs15133404](https://doi.org/10.3390/rs15133404))
- 
+## **- Sentinel 3**
+ - **Top of atmosphere (OLCI): Level 1B**
+    [![DOI](https://img.shields.io/badge/DOI-rs15133404/D.Kovács_et_al_2023-doi.svg)]([https://doi.org/10.3390/rs15133404](https://doi.org/10.3390/rs15133404))
+    [![DOI](https://img.shields.io/badge/DOI-rs14061347/ReyesMuñoz_et_al_2022-doi.svg)]([https://doi.org/10.3390/rs14061347](https://doi.org/10.3390/rs14061347))
+
 	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
 	 - _FVC_ Fractional Vegetation Cover
 	 - _LAI_: Leaf Area Index
 	 - _LCC_ Leaf Chlorophyll Content
+	 
+ - **SYNERGY (OLCI and SLSTR): Level 2A**
+ 
+    Currently only on openEO back-ends!
+	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
+	 - _FVC_ Fractional Vegetation Cover
 
 

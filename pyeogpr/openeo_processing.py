@@ -18,7 +18,7 @@ class Datacube:
     pyeogpr.Datacube
     ----------------
 
-        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B
+        sensor : SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B, SENTINEL3_SYN_L2_SYN
             Satellite sensor to process the data with.
 
         biovar : Biophysical variable to process. The selected variable's map will be retrieved.
@@ -31,6 +31,7 @@ class Datacube:
             SENTINEL2_L2A           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,
                                     mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab
             SENTINEL3_OLCI_L1B      FAPAR, FVC, LAI, LCC
+            SENTINEL3_SYN_L2_SYN    FAPAR, FVC
             ======================  =====================================================
             
             - for own model, simply put the directory of your model
