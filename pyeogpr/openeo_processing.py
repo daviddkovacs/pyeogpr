@@ -127,7 +127,7 @@ class Datacube:
             * scale
         )
         self.data = data
-
+        
         if self.cloudmask == True and "SENTINEL2" in self.sensor:
             s2_cloudmask = self.connection.load_collection(
                 "SENTINEL2_L2A", self.spatial_extent, self.temporal_extent, ["SCL"]
@@ -240,7 +240,7 @@ class Datacube:
                 context = {"sensor": self.sensor, "biovar": self.biovar}
                 self.gpr_cube = self.masked_data.apply_dimension(
                     process=udf_gpr, dimension="bands", context=context
-                ).filter_bands(bands=["B02"])
+                ).filter_bands(bands=[self.sensors_dict[self.sensor]["bandlist"][0]])
 
                 self.gpr_cube.execute_batch(
                     title=f"{self.sensor}_{self.biovar}",
@@ -282,7 +282,7 @@ class Datacube:
 
                 self.gpr_cube = self.masked_data.apply_dimension(
                     process=udf_gpr, dimension="bands", context=context
-                ).filter_bands(bands=["B02"])
+                ).filter_bands(bands=[self.sensors_dict[self.sensor]["bandlist"][0]])
 
                 self.gpr_cube_gapfilled = self.gpr_cube.apply_dimension(
                     process=udf_sgolay, dimension="t"
