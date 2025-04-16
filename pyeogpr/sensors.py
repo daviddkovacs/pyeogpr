@@ -1,3 +1,4 @@
+#Sensor fix
 sensors_dict = {
     "SENTINEL2_L1C": {
         "sensor_biovar": ["Cab", "Cm", "Cw", "FVC", "LAI", "laiCab", "laiCm", "laiCw"],
