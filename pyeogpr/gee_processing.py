@@ -128,6 +128,7 @@ class EarthEngine:
 
             with open("model_imported.py", "w") as f:
                 f.write("import ee\n")
+                f.write(f"ee.Initialize(project = '{self.projectID}')\n")
                 f.write(response.text)
 
             if "model_imported" in sys.modules:
