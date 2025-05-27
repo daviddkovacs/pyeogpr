@@ -125,8 +125,10 @@ class EarthEngine:
         else:
             url = f"https://raw.githubusercontent.com/daviddkovacs/pyeogpr/refs/heads/main/models/{search_sensor}_{self.biovar}_GEE.py"
             response = requests.get(url)
-            print(url)
+
             with open("model_imported.py", "w") as f:
+                f.write("import ee\n")
+                f.write(f"ee.Initialize(project = '{self.projectID}')\n")
                 f.write(response.text)
 
             if "model_imported" in sys.modules:
@@ -182,7 +184,7 @@ class EarthEngine:
         self.maploop()
 
     def sequence_GREEN(self, variable):
-        # print(variable)  # Later this probably needs to be changed to select model
+
         sequence_GREEN = []
         model = self.model_imported
         for i in range(0, model.XTrain_dim_GREEN):
