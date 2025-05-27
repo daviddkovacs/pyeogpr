@@ -1,6 +1,5 @@
 import openeo
 
-# TODO: This UDF could be redifined to work with the Landsat 8 QA band
 # right now it checks only the 6th bit of the QA band
 # for example, cloud shadow is not considered
 
