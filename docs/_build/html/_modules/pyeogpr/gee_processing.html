@@ -48,7 +48,7 @@
 <p class="caption" role="heading"><span class="caption-text">Satellites and variables</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../sensors.html"><strong>- Sentinel 2 MultiSpectral Instrument (MSI)</strong></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../sensors.html#sentinel-3-ocean-and-land-colour-instrument-olci"><strong>- Sentinel 3 Ocean and Land Colour Instrument (OLCI)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sensors.html#sentinel-3"><strong>- Sentinel 3</strong></a></li>
 </ul>
 
         </div>
@@ -205,8 +205,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://raw.githubusercontent.com/daviddkovacs/pyeogpr/refs/heads/main/models/</span><span class="si">{</span><span class="n">search_sensor</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">biovar</span><span class="si">}</span><span class="s2">_GEE.py&quot;</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;model_imported.py&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;import ee</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ee.Initialize(project = &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">projectID</span><span class="si">}</span><span class="s2">&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="s2">&quot;model_imported&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
@@ -268,7 +270,7 @@
 
 
     <span class="k">def</span> <span class="nf">sequence_GREEN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">):</span>
-        <span class="c1"># print(variable)  # Later this probably needs to be changed to select model</span>
+
         <span class="n">sequence_GREEN</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_imported</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">XTrain_dim_GREEN</span><span class="p">):</span>

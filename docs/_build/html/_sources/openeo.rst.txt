@@ -41,7 +41,7 @@ Example Usage
 
    dc.construct_datacube("dekad") 
 
-   dc.process_map(gapfill=True, fileformat="nc")
+   dc.process_map(gapfill=False, fileformat="nc")
    
 To download the GPR processed map go to the `openEO portal <https://openeo.dataspace.copernicus.eu/>`_:
 
