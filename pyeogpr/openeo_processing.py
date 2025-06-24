@@ -167,43 +167,43 @@ class Datacube:
                 self.masked_data = self.data
                 print("Datacube constructed")
 
-        elif self.cloudmask == True and "LANDSAT8_L2" in self.sensor:
-            l8_qa = self.connection.load_collection(
-                "LANDSAT8_L2", self.spatial_extent, self.temporal_extent, ["BQA"]
-            )
+        # elif self.cloudmask == True and "LANDSAT8_L2" in self.sensor:
+        #     l8_qa = self.connection.load_collection(
+        #         "LANDSAT8_L2", self.spatial_extent, self.temporal_extent, ["BQA"]
+        #     )
+        #
+        #     l8_cloudmask = l8_qa.apply(process=L8_cloud_qa)
+        #
+        #     bqa = l8_cloudmask.band("BQA")
+        #     mask = ~((bqa == 0))
+        #
+        #     # apply kernel to mask without smoothing
+        #     mask = mask > 0.1
+        #
+        #     if composite != None:
+        #         self.masked_data = self.data.aggregate_temporal_period(
+        #             composite, "mean"
+        #         ).mask(mask)
+        #         print(
+        #             f"Cloud masked, temporally composited datacube constructed: {composite} by mean values."
+        #         )
+        #
+        #     elif composite == None:
+        #         self.masked_data = self.data.mask(mask)
+        #         print("Cloud masked, datacube constructed")
 
-            l8_cloudmask = l8_qa.apply(process=L8_cloud_qa)
-
-            bqa = l8_cloudmask.band("BQA")
-            mask = ~((bqa == 0))
-
-            # apply kernel to mask without smoothing
-            mask = mask > 0.1
-
-            if composite != None:
-                self.masked_data = self.data.aggregate_temporal_period(
-                    composite, "mean"
-                ).mask(mask)
-                print(
-                    f"Cloud masked, temporally composited datacube constructed: {composite} by mean values."
-                )
-
-            elif composite == None:
-                self.masked_data = self.data.mask(mask)
-                print("Cloud masked, datacube constructed")
-
-        elif self.cloudmask == False and "LANDSAT8_L2" in self.sensor:
-            if composite != None:
-                self.masked_data = self.data.aggregate_temporal_period(
-                    composite, "mean"
-                )
-                print(
-                    f"Temporally composited datacube constructed: {composite} by mean values. "
-                )
-
-            elif composite == None:
-                self.masked_data = self.data
-                print("Datacube constructed")
+        # elif self.cloudmask == False and "LANDSAT8_L2" in self.sensor:
+        #     if composite != None:
+        #         self.masked_data = self.data.aggregate_temporal_period(
+        #             composite, "mean"
+        #         )
+        #         print(
+        #             f"Temporally composited datacube constructed: {composite} by mean values. "
+        #         )
+        #
+        #     elif composite == None:
+        #         self.masked_data = self.data
+        #         print("Datacube constructed")
 
         else:
             print(f"{self.sensor} can't be masked")
