@@ -175,7 +175,6 @@ class Datacube:
             outputfile=outputfile,
             job_options=job_options,
         )
-        print(f"Processing complete: {outputfile}")
 
         self.gpr_cube = gpr_cube
         if gapfill:
