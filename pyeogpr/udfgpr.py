@@ -28,12 +28,9 @@ import xarray as xr
 from pathlib import Path
 from openeo.udf.debug import inspect
 
-
-
 chunks = 128
 def broadcaster(array,bands_from_model):
     return np.broadcast_to(array[:, np.newaxis, np.newaxis], (bands_from_model, chunks, chunks))
-
 
 init_xr = xr.DataArray()
 def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
@@ -49,11 +46,19 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
 
     XDX_pre_calc_GREEN_broadcast = np.broadcast_to(model.XDX_pre_calc_GREEN.ravel()[:,np.newaxis,np.newaxis],(model.XDX_pre_calc_GREEN.shape[0],chunks,chunks))
 
+    inspect(data=XDX_pre_calc_GREEN_broadcast, message="XDX_pre_calc_GREEN_broadcast")
 
-    pixel_spectra = (cube.values)
-
+    if model.sensor in ["SYN"]:
+        pixel_spectra = (cube.values/1000)
+    else:
+        pixel_spectra = (cube.values)
+        
+    inspect(data=pixel_spectra, message="pixel_spectra")
+    
     im_norm_ell2D_hypell  = ((pixel_spectra - mx_GREEN) / sx_GREEN) * hyp_ell_GREEN
+    inspect(data=im_norm_ell2D_hypell, message="im_norm_ell2D_hypell")
     im_norm_ell2D  = ((pixel_spectra - mx_GREEN) / sx_GREEN)
+    inspect(data=im_norm_ell2D, message="im_norm_ell2D")
 
     PtTPt = np.einsum('ijk,ijk->ijk', im_norm_ell2D_hypell, im_norm_ell2D) * (-0.5)
     PtTDX = np.einsum('ij,jkl->ikl', model.X_train_GREEN,im_norm_ell2D_hypell)
