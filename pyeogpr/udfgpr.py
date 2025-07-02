@@ -49,7 +49,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     inspect(data=XDX_pre_calc_GREEN_broadcast, message="XDX_pre_calc_GREEN_broadcast")
 
     if model.sensor in ["SYN"]:
-        pixel_spectra = (cube.values/1000)
+        pixel_spectra = (cube.values/10000)
     else:
         pixel_spectra = (cube.values)
         
