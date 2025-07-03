@@ -44,7 +44,7 @@ You can select from a list of trained variables developed for the following sate
 or
 
 - Dávid D.Kovács. (2024). pyeogpr (zenodo). Zenodo. https://doi.org/10.5281/zenodo.13373838
-- david.kovacs@uv.es
+- david.kovacs@tuwien.ac.at
 
 ## 
 Supported by the European Union (European Research Council, FLEXINEL, 101086622) project.
