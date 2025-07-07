@@ -115,7 +115,7 @@ class Datacube:
             context = {"sensor": self.sensor, "biovar": self.biovar}
             return self.masked_data.apply_dimension(
                 process=udf_gpr, dimension="bands", context=context
-            ).filter_bands(bands=[self.bands[0]])
+            ).filter_bands(bands=[self.bands[0],self.bands[1]])
 
     def construct_datacube(self, composite=None):
         """
