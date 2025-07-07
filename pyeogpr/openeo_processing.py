@@ -62,7 +62,8 @@ class Datacube:
         self.gpr_cube = None
         self.gpr_cube_gapfilled = None
         self.models_url = "https://github.com/daviddkovacs/pyeogpr/raw/main/models/GPR_models_bulk.zip#tmp/venv"
-        self.memory = "8g"
+        self.ex_memory = "2g"
+        self.py_memory = "12g"
         self.spatial_extent = {
             "west": bounding_box[0],
             "south": bounding_box[1],
@@ -166,7 +167,8 @@ class Datacube:
             title = f"{self.sensor}_{self.biovar}" if not self.own_model else "User defined product"
             cube_to_execute = gpr_cube
 
-        job_options = {"executor-memory": self.memory}
+        job_options = {"executor-memory": self.ex_memory,
+                       "python-memory": self.py_memory}
         if not self.own_model:
             job_options["udf-dependency-archives"] = [self.models_url]
 

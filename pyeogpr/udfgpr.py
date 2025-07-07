@@ -62,9 +62,30 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     k_star_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5)))
     mean_pred = (np.einsum('ijk,i->jk',k_star_im, model.alpha_coefficients_GREEN.ravel()) * arg1) + model.mean_model_GREEN
 
-    init_xr = np.clip(mean_pred, a_min=0, a_max=None)
-    returned = xr.DataArray(init_xr)
+    # Uncertainty calculation
+    k_star_uncert = np.expand_dims(k_star_uncert_im, axis=0)
+    Vvector =  np.matmul(Linv_pre_calc_GREEN, k_star_uncert.reshape(-1, 1)).ravel()
+    
+    diff = np.expand_dims(hyp_sig_GREEN, axis=0) - np.dot(Vvector, Vvector)
+    Variance = math.sqrt(abs(diff).item())
+
+    Variance = math.sqrt(abs(np.expand_dims(hyp_sig_GREEN, axis=0) - np.dot(Vvector,Vvector)))
+    #     
+    
+    variance_band = np.full_like(mean_pred, Variance)
+    
+    stacked = np.stack([mean_pred, variance_band], axis=0)
+    
+    returned = xr.DataArray(
+        stacked,
+        dims=("band", "y", "x"), 
+        coords={"band": ["mean", "variance"]}
+    )
     return returned
+    
+    # init_xr = np.clip(mean_pred, a_min=0, a_max=None)
+    # returned = xr.DataArray(init_xr)
+    # return returned
 """,
     context={"from_parameter": "context"},
 )
