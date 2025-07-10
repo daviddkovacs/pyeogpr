@@ -43,9 +43,9 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     hyp_ell_GREEN = broadcaster(model.hyp_ell_GREEN,bands)
     mx_GREEN = broadcaster(model.mx_GREEN.ravel(),bands)
     sx_GREEN = broadcaster(model.sx_GREEN.ravel(),bands)
+    inspect(data=[sx_GREEN], message="sx_GREEN")
 
     XDX_pre_calc_GREEN_broadcast = np.broadcast_to(model.XDX_pre_calc_GREEN.ravel()[:,np.newaxis,np.newaxis],(model.XDX_pre_calc_GREEN.shape[0],chunks,chunks))
-
 
     if sensor == "SENTINEL3_SYN_L2_SYN":
         pixel_spectra = (cube.values/10000)
@@ -63,24 +63,28 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     mean_pred = (np.einsum('ijk,i->jk',k_star_im, model.alpha_coefficients_GREEN.ravel()) * arg1) + model.mean_model_GREEN
 
     # Uncertainty calculation
-    k_star_uncert_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5))) * arg1    
-    k_star_uncert = np.expand_dims(k_star_uncert_im, axis=0)
-    
-    k_star_uncert_flat = k_star_uncert_im.reshape(514, -1) 
-    Vvector = np.matmul(model.Linv_pre_calc_GREEN, k_star_uncert_flat)  
-    
-    V_norm2 = np.sum(Vvector*Vvector, axis=0)  
-    
-    diff = model.hyp_sig_GREEN - V_norm2
-    Variance = np.sqrt(np.abs(diff)) 
-    
-    variance_band = Variance.reshape(128,128)
-    stacked = np.stack([mean_pred, variance_band], axis=0)
-    
+    if hasattr(model,"Linv_pre_calc_GREEN"):
+        k_star_uncert_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5))) * arg1    
+        k_star_uncert = np.expand_dims(k_star_uncert_im, axis=0)
+        
+        k_star_uncert_flat = k_star_uncert_im.reshape(k_star_uncert_im.shape[0], -1) 
+        Vvector = np.matmul(model.Linv_pre_calc_GREEN, k_star_uncert_flat)  
+        
+        V_norm2 = np.sum(Vvector*Vvector, axis=0)  
+        
+        diff = model.hyp_sig_GREEN - V_norm2
+        Variance = np.sqrt(np.abs(diff)) 
+        
+        variance_band = Variance.reshape(chunks,chunks)    
+        stacked_array = np.stack([mean_pred, variance_band], axis=0)
+        band_stack = ["mean", "variance"]
+    else:
+        stacked_array = mean_pred
+        band_stack = ["mean"]
     returned = xr.DataArray(
-        stacked,
+        stacked_array,
         dims=("band", "y", "x"), 
-        coords={"band": ["mean", "variance"]}
+        coords={"band": band_stack}
     )
     return returned
 """,
