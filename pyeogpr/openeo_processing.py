@@ -20,16 +20,16 @@ class Datacube:
             Currently "built-in" variables available for each sensor:
 
             ======================  =====================================================
-            Satellite Level         Available Products
+            Satellite sensor        Available vegetation traits
             ======================  =====================================================
             SENTINEL2_L1C           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw
-            SENTINEL2_L2A           Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,
+            SENTINEL2_L2A (no unc.) Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,
                                     mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab
             SENTINEL3_OLCI_L1B      FAPAR, FVC, LAI, LCC
             SENTINEL3_SYN_L2_SYN    FAPAR, FVC
             ======================  =====================================================
 
-            - for own model, simply put the directory of your model
+            - for own model, simply put the directory of your model on your machine.
 
         bounding_box : list
             Your region of interest. Insert bbox as list. Can be selected from https://geojson.io/
@@ -113,9 +113,16 @@ class Datacube:
         else:
             print(f"Applying default GPR model: {self.biovar}")
             context = {"sensor": self.sensor, "biovar": self.biovar}
-            return self.masked_data.apply_dimension(
-                process=udf_gpr, dimension="bands", context=context
-            ).filter_bands(bands=[self.bands[0],self.bands[1]])
+            result = (
+                self.masked_data
+                .apply_dimension(process=udf_gpr, dimension="bands", context=context)
+                .filter_bands(bands=[self.bands[0], self.bands[1]])
+                .rename_labels(
+                    dimension="bands",
+                    target=[f"{self.biovar}",f"{self.biovar}_unc"]
+                )
+            )
+            return result
 
     def construct_datacube(self, composite=None):
         """

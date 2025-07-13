@@ -1,6 +1,5 @@
 import openeo
 
-test_udf = "Udf test passed"
 
 udf_gpr = openeo.UDF(
     """
@@ -47,10 +46,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
 
     XDX_pre_calc_GREEN_broadcast = np.broadcast_to(model.XDX_pre_calc_GREEN.ravel()[:,np.newaxis,np.newaxis],(model.XDX_pre_calc_GREEN.shape[0],chunks,chunks))
 
-    if sensor == "SENTINEL3_SYN_L2_SYN":
-        pixel_spectra = (cube.values/10000)
-    else:
-        pixel_spectra = (cube.values)
+    pixel_spectra = (cube.values)
 
     im_norm_ell2D_hypell  = ((pixel_spectra - mx_GREEN) / sx_GREEN) * hyp_ell_GREEN
     im_norm_ell2D  = ((pixel_spectra - mx_GREEN) / sx_GREEN)
@@ -61,6 +57,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
 
     k_star_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5)))
     mean_pred = (np.einsum('ijk,i->jk',k_star_im, model.alpha_coefficients_GREEN.ravel()) * arg1) + model.mean_model_GREEN
+    mean_pred = np.clip(mean_pred, a_min=0, a_max=None)
 
     # Uncertainty calculation
     if hasattr(model,"Linv_pre_calc_GREEN"):
@@ -76,16 +73,23 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
         Variance = np.sqrt(np.abs(diff)) 
         
         variance_band = Variance.reshape(chunks,chunks)    
+        variance_band = np.clip(variance_band, a_min=0, a_max=None)
         stacked_array = np.stack([mean_pred, variance_band], axis=0)
-        band_stack = ["mean", "variance"]
+        returned = xr.DataArray(
+            stacked_array,
+            dims= ("band", "y", "x"), 
+            coords={"band": ["mean", "variance"]}
+        )
+        
     else:
-        stacked_array = mean_pred
-        band_stack = ["mean"]
-    returned = xr.DataArray(
-        stacked_array,
-        dims=("band", "y", "x"), 
-        coords={"band": band_stack}
-    )
+        variance_band = np.zeros_like(mean_pred)
+        stacked_array = np.stack([mean_pred, variance_band], axis=0)
+        returned = xr.DataArray(
+            stacked_array,
+            dims= ("band", "y", "x"), 
+            coords={"band": ["mean", "variance"]}
+        )
+    
     return returned
 """,
     context={"from_parameter": "context"},
@@ -138,14 +142,6 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
     im_norm_ell2D_hypell  = ((pixel_spectra - mx_GREEN) / sx_GREEN) * hyp_ell_GREEN
     im_norm_ell2D  = ((pixel_spectra - mx_GREEN) / sx_GREEN)
     
-    inspect(data=[im_norm_ell2D_hypell.dtype], message="im_norm_ell2D_hypell.dtype")
-    inspect(data=[im_norm_ell2D.dtype], message="im_norm_ell2D.dtype")
-    inspect(data=[hyp_ell_GREEN.dtype], message="hyp_ell_GREEN.dtype")
-    
-    inspect(data=[im_norm_ell2D_hypell.shape], message="im_norm_ell2D_hypell.shape")
-    inspect(data=[im_norm_ell2D.shape], message="im_norm_ell2D.shape")
-    inspect(data=[hyp_ell_GREEN.shape], message="hyp_ell_GREEN.shape")
-    
     PtTPt = np.einsum('ijk,ijk->ijk', im_norm_ell2D_hypell.astype(np.float16), im_norm_ell2D.astype(np.float16)) * (-0.5)
     inspect(data=[PtTPt.shape], message="PtTPt.shape")
     PtTDX = np.einsum('ij,jkl->ikl', X_train_GREEN.astype(np.float16),im_norm_ell2D_hypell.astype(np.float16))
@@ -156,6 +152,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
 
     init_xr = np.clip(mean_pred, a_min=0, a_max=None)
     returned = xr.DataArray(init_xr)
+    
     return returned
 """
 
@@ -177,6 +174,3 @@ def custom_model_import(user_module):
     custom_udf = openeo.UDF(custom_gpr)
 
     return custom_udf
-
-
-# %%

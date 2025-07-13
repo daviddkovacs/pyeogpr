@@ -21,7 +21,7 @@ This package currently features the following satellite sensors and biophysical 
 
 
 
-	 Leaf variables
+	 Leaf variables (no uncertainties)
 	 - _Cab_: Leaf chlorophyll content
 	 - _Cm_: Leaf dry matter content
 	 - _Cw_: Leaf water content

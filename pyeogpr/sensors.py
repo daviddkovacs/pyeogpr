@@ -76,7 +76,7 @@ sensors_dict = {
     },
     "SENTINEL3_SYN_L2_SYN": {
         "sensor_biovar": ["FAPAR", "FVC"],
-        "scale_factor": 1,
+        "scale_factor": 0.0001,
         "bandlist": [
           "Syn_Oa01_reflectance",
           "Syn_Oa02_reflectance",
