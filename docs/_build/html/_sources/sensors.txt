@@ -1,45 +1,45 @@
 This package currently features the following satellite sensors and biophysical variables for mapping:
 
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
- - **Top of atmosphere: Level 1C** 
+ - **Top of atmosphere: Level 1C (SENTINEL2_L1C)**
  [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958/Estévez_et_al_2022-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
  
 	 Leaf variables:
-	 - _Cab_: Leaf chlorophyll content
-	 - _Cm_: Leaf dry matter content
-	 - _Cw_: Leaf water content
+	 - _Cab_: Leaf chlorophyll content [μg/cm]
+	 - _Cm_: Leaf dry matter content [g/cm$^2$]
+	 - _Cw_: Leaf water content [g/cm$^2$]
 	 	 
 	Canopy variables
-	 - 	 _FVC_: Fractional Vegetation Cover
-	 - _LAI_: Leaf Area Index
-	 - _laiCab_ Canopy chlorophyll content
-	 - _laiCm_: Leaf dry matter content
-	 - _laiCw_ Canopy water content
+	 - _FVC_: Fractional Vegetation Cover [-]
+	 - _LAI_: Leaf Area Index [m$^2$/m$^2$]
+	 - _laiCab_ Canopy chlorophyll content [g/m$^2$]
+	 - _laiCm_: Leaf dry matter content [g/m$^2$]
+	 - _laiCw_ Canopy water content [g/m$^2$]
 
 - **Bottom of atmosphere: Level 2A** 
 [![DOI](https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.11.005)    [![DOI](https://img.shields.io/badge/DOI-rs14010146/Salinero_et_al_2021-doi.svg)](https://doi.org/10.3390/rs14010146)
 
 
 
-	 Leaf variables
-	 - _Cab_: Leaf chlorophyll content
-	 - _Cm_: Leaf dry matter content
-	 - _Cw_: Leaf water content
+	 Leaf variables (no uncertainties)
+	 - _Cab_: Leaf chlorophyll content [μg/cm]
+	 - _Cm_: Leaf dry matter content [g/cm$^2$]
+	 - _Cw_: Leaf water content [g/cm$^2$]
 
 	Canopy variables
-	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship)
-	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content
-	 - _FVC_: Fractional Vegetation Cover
-	 - _LAI_: Leaf Area Index
-	 - _laiCab_ Canopy chlorophyll content
-	 - _laiCm_: Leaf dry matter content
-	 - _laiCw_ Canopy water content
+	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship) [g/m$^2$]
+	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content relationship) [g/m$^2$]
+	 - _FVC_: Fractional Vegetation Cover [-]
+	 - _LAI_: Leaf Area Index [m$^2$/m$^2$]
+	 - _laiCab_ Canopy chlorophyll content [g/m$^2$]
+	 - _laiCm_: Leaf dry matter content [g/m$^2$]
+	 - _laiCw_ Canopy water content [g/m$^2$]
 
 	 Mangrove traits [![DOI](https://img.shields.io/badge/DOI-j.isprsjprs.2024.06.007/An_Binh_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.06.007)
-	 - _mangrove_LAI_: Leaf Area Index
-	 - _mangrove_Cm_: Leaf Dry Matter
-	 - _mangrove_Cw_: Leaf Water thickness
-	 - _mangrove_Cab_: Leaf Chlorophyll Content
+	 - _mangrove_LAI_: Leaf Area Index [m$^2$/m$^2$]
+	 - _mangrove_Cm_: Leaf Dry Matter [g/cm$^2$]
+	 - _mangrove_Cw_: Leaf Water thickness [g/cm$^2$]
+	 - _mangrove_Cab_: Leaf Chlorophyll Content [g/μm$^2$]
 
 
 ## **- Sentinel 3**

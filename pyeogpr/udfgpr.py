@@ -57,7 +57,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
 
     k_star_im = np.exp(PtTDX - (XDX_pre_calc_GREEN_broadcast * (0.5)))
     mean_pred = (np.einsum('ijk,i->jk',k_star_im, model.alpha_coefficients_GREEN.ravel()) * arg1) + model.mean_model_GREEN
-    mean_pred = np.clip(mean_pred, a_min=0, a_max=None)
+    mean_pred = np.clip(mean_pred, a_min=0, a_max=model.max_variable)
 
     # Uncertainty calculation
     if hasattr(model,"Linv_pre_calc_GREEN"):
@@ -73,7 +73,7 @@ def apply_datacube(cube: xarray.DataArray, context: dict) -> xarray.DataArray:
         Variance = np.sqrt(np.abs(diff)) 
         
         variance_band = Variance.reshape(chunks,chunks)    
-        variance_band = np.clip(variance_band, a_min=0, a_max=None)
+        variance_band = np.clip(variance_band, a_min=0, a_max=model.max_variable)
         stacked_array = np.stack([mean_pred, variance_band], axis=0)
         returned = xr.DataArray(
             stacked_array,

@@ -100,34 +100,12 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyeogpr.</span></span><span class="sig-name descname"><span class="pre">Datacube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biovar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporal_extent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloudmask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/openeo_processing.html#Datacube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.Datacube" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <hr class="docutils" />
-<dl>
+<dl class="simple">
 <dt>sensor<span class="classifier">SENTINEL2_L1C, SENTINEL2_L2A, SENTINEL3_OLCI_L1B, SENTINEL3_SYN_L2_SYN</span></dt><dd><p>Satellite sensor to process the data with.</p>
 </dd>
 <dt>biovar<span class="classifier">Biophysical variable to process. The selected variable’s map will be retrieved.</span></dt><dd><p>Currently “built-in” variables available for each sensor:</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Satellite Level</p></th>
-<th class="head"><p>Available Products</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>SENTINEL2_L1C</p></td>
-<td><p>Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw</p></td>
-</tr>
-<tr class="row-odd"><td><p>SENTINEL2_L2A</p></td>
-<td><p>Cab, Cm, Cw, FVC, LAI, laiCab, laiCm, laiCw, CNC_Cab, CNC_Cprot,
-mangrove_LAI, mangrove_Cm, mangrove_Cw, mangrove_Cab</p></td>
-</tr>
-<tr class="row-even"><td><p>SENTINEL3_OLCI_L1B</p></td>
-<td><p>FAPAR, FVC, LAI, LCC</p></td>
-</tr>
-<tr class="row-odd"><td><p>SENTINEL3_SYN_L2_SYN</p></td>
-<td><p>FAPAR, FVC</p></td>
-</tr>
-</tbody>
-</table>
 <ul class="simple">
-<li><p>for own model, simply put the directory of your model</p></li>
+<li><p>for own model, simply put the directory of your model on your machine.</p></li>
 </ul>
 </dd>
 <dt>bounding_box<span class="classifier">list</span></dt><dd><p>Your region of interest. Insert bbox as list. Can be selected from <a class="reference external" href="https://geojson.io/">https://geojson.io/</a>
@@ -143,27 +121,22 @@ smoother edges when masking.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyeogpr.Datacube.construct_datacube" title="pyeogpr.Datacube.construct_datacube"><code class="xref py py-obj docutils literal notranslate"><span class="pre">construct_datacube</span></code></a>([composite])</p></td>
-<td><p></p></td>
+<td><p>Build the datacube with optional temporal compositing and cloud masking.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pyeogpr.Datacube.process_map" title="pyeogpr.Datacube.process_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_map</span></code></a>([gapfill, fileformat])</p></td>
-<td><p></p></td>
+<td><p>Process the datacube into maps, by applying GPR algorithm on the spectral image stack.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyeogpr.Datacube.construct_datacube">
 <span class="sig-name descname"><span class="pre">construct_datacube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/openeo_processing.html#Datacube.construct_datacube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.Datacube.construct_datacube" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Build the datacube with optional temporal compositing and cloud masking.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>composite</strong><span class="classifier">“hour”,”day”,”dekad”,”week”,”season”,”month”,”year”</span></dt><dd><p>Compositing temporal interval. The resulting maps will have the following temporal steps.
-For more information: <a class="reference external" href="https://processes.openeo.org/#aggregate_temporal_period">https://processes.openeo.org/#aggregate_temporal_period</a></p>
+<dt><strong>composite</strong><span class="classifier">str, optional</span></dt><dd><p>Temporal compositing interval (e.g., ‘month’, ‘dekad’).</p>
 </dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>Datacube object containing user defined parameters and temporal compositing. This will be processed into an openEO datacube.</dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -171,13 +144,14 @@ For more information: <a class="reference external" href="https://processes.open
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyeogpr.Datacube.process_map">
-<span class="sig-name descname"><span class="pre">process_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gapfill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileformat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nc'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/openeo_processing.html#Datacube.process_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.Datacube.process_map" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">process_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gapfill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileformat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tiff'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyeogpr/openeo_processing.html#Datacube.process_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyeogpr.Datacube.process_map" title="Link to this definition"></a></dt>
+<dd><p>Process the datacube into maps, by applying GPR algorithm on the spectral image stack.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>gapfill</strong><span class="classifier">type, e.g. “Sgolay”</span></dt><dd><p>To apply Savitzy Golay interpolator for cloud-induced gap</p>
+<dt><strong>gapfill</strong><span class="classifier">bool, default=False</span></dt><dd><p>Apply Savitzky-Golay interpolator for gap filling.</p>
 </dd>
-<dt><strong>fileformat</strong><span class="classifier">string</span></dt><dd><p>For netCDF4: “nc”, for tiff: “tiff”.</p>
+<dt><strong>fileformat</strong><span class="classifier">str, default=’tiff’</span></dt><dd><p>Output file format (‘nc’ or ‘tiff’).</p>
 </dd>
 </dl>
 </dd>
