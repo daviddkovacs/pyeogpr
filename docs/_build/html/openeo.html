@@ -165,25 +165,24 @@ smoother edges when masking.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyeogpr</span>
 
 <span class="n">bounding_box</span> <span class="o">=</span> <span class="p">[</span>
-           <span class="o">-</span><span class="mf">0.305543150556133</span><span class="p">,</span>
-           <span class="mf">39.29253033906926</span><span class="p">,</span>
-           <span class="o">-</span><span class="mf">0.28169853763617425</span><span class="p">,</span>
-           <span class="mf">39.303338211248104</span>
-         <span class="p">]</span>
+    <span class="mf">17.897539591074604</span><span class="p">,</span>
+    <span class="mf">46.59810244496674</span><span class="p">,</span>
+    <span class="mf">17.96594608650338</span><span class="p">,</span>
+    <span class="mf">46.639078751019014</span>
+  <span class="p">]</span>
 
-<span class="n">time_window</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2022-05-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2022-06-01&quot;</span><span class="p">]</span>
+<span class="n">time_window</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2020-07-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2020-07-10&quot;</span><span class="p">]</span>
 
 <span class="n">dc</span> <span class="o">=</span> <span class="n">pyeogpr</span><span class="o">.</span><span class="n">Datacube</span><span class="p">(</span>
-    <span class="s2">&quot;SENTINEL2_L2A&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FVC&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SENTINEL2_L1C&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Cm&quot;</span><span class="p">,</span>
     <span class="n">bounding_box</span><span class="p">,</span>
     <span class="n">time_window</span><span class="p">,</span>
-    <span class="n">cloudmask</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+    <span class="n">cloudmask</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">dc</span><span class="o">.</span><span class="n">construct_datacube</span><span class="p">(</span><span class="s2">&quot;dekad&quot;</span><span class="p">)</span>
 
-<span class="n">dc</span><span class="o">.</span><span class="n">process_map</span><span class="p">(</span><span class="n">gapfill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fileformat</span><span class="o">=</span><span class="s2">&quot;nc&quot;</span><span class="p">)</span>
+<span class="n">dc</span><span class="o">.</span><span class="n">process_map</span><span class="p">(</span><span class="n">gapfill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fileformat</span><span class="o">=</span><span class="s2">&quot;tiff&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To download the GPR processed map go to the <a class="reference external" href="https://openeo.dataspace.copernicus.eu/">openEO portal</a>:</p>

@@ -20,28 +20,27 @@ Example Usage
 
 .. code-block:: python
 
-   import pyeogpr
+    import pyeogpr
 
-   bounding_box = [
-              -0.305543150556133,
-              39.29253033906926,
-              -0.28169853763617425,
-              39.303338211248104
-            ]
+    bounding_box = [
+        17.897539591074604,
+        46.59810244496674,
+        17.96594608650338,
+        46.639078751019014
+      ]
 
-   time_window = ["2022-05-01", "2022-06-01"]
+    time_window = ["2020-07-01", "2020-07-10"]
 
-   dc = pyeogpr.Datacube(
-       "SENTINEL2_L2A",  
-       "FVC",            
-       bounding_box,
-       time_window,
-       cloudmask=True
-   )
+    dc = pyeogpr.Datacube(
+        "SENTINEL2_L1C",
+        "Cm",
+        bounding_box,
+        time_window,
+        cloudmask=False)
 
-   dc.construct_datacube("dekad") 
+    dc.construct_datacube("dekad")
 
-   dc.process_map(gapfill=False, fileformat="nc")
+    dc.process_map(gapfill=False, fileformat="tiff")
    
 To download the GPR processed map go to the `openEO portal <https://openeo.dataspace.copernicus.eu/>`_:
 
