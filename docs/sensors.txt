@@ -3,59 +3,59 @@ This package currently features the following satellite sensors and biophysical 
 ## **- Sentinel 2 MultiSpectral Instrument (MSI)**
  - **Top of atmosphere: Level 1C (SENTINEL2_L1C)**
  [![DOI](https://img.shields.io/badge/DOI-j.rse.2022.112958/Estévez_et_al_2022-doi.svg)](https://doi.org/10.1016/j.rse.2022.112958)
- 
+
 	 Leaf variables:
-	 - _Cab_: Leaf chlorophyll content [μg/cm]
-	 - _Cm_: Leaf dry matter content [g/cm$^2$]
-	 - _Cw_: Leaf water content [g/cm$^2$]
-	 	 
+	 - _Cab_: Leaf chlorophyll content [μg/cm²]
+	 - _Cm_: Leaf dry matter content [g/cm²]
+	 - _Cw_: Leaf water content [g/cm²]
+
 	Canopy variables
 	 - _FVC_: Fractional Vegetation Cover [-]
-	 - _LAI_: Leaf Area Index [m$^2$/m$^2$]
-	 - _laiCab_ Canopy chlorophyll content [g/m$^2$]
-	 - _laiCm_: Leaf dry matter content [g/m$^2$]
-	 - _laiCw_ Canopy water content [g/m$^2$]
+	 - _LAI_: Leaf Area Index [m²/m²]
+	 - _laiCab_ Canopy chlorophyll content [g/m²]
+	 - _laiCm_: Leaf dry matter content [g/m²]
+	 - _laiCw_ Canopy water content [g/m²]
 
-- **Bottom of atmosphere: Level 2A** 
+- **Bottom of atmosphere: Level 2A (SENTINEL2_L2A)**
 [![DOI](https://img.shields.io/badge/DOI-/De_Clerck_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.11.005)    [![DOI](https://img.shields.io/badge/DOI-rs14010146/Salinero_et_al_2021-doi.svg)](https://doi.org/10.3390/rs14010146)
 
 
 
 	 Leaf variables (no uncertainties)
 	 - _Cab_: Leaf chlorophyll content [μg/cm]
-	 - _Cm_: Leaf dry matter content [g/cm$^2$]
-	 - _Cw_: Leaf water content [g/cm$^2$]
+	 - _Cm_: Leaf dry matter content [g/cm²]
+	 - _Cw_: Leaf water content [g/cm²]
 
 	Canopy variables
-	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship) [g/m$^2$]
-	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content relationship) [g/m$^2$]
+	 - 	 _CNC_Cab_: Canopy Nitrogen Content (via chlorophyl-nitrogen relationship) [g/m²]
+	 - 	 _CNC_Cprot_: Canopy Nitrogen Content (via protein content relationship) [g/m²]
 	 - _FVC_: Fractional Vegetation Cover [-]
-	 - _LAI_: Leaf Area Index [m$^2$/m$^2$]
-	 - _laiCab_ Canopy chlorophyll content [g/m$^2$]
-	 - _laiCm_: Leaf dry matter content [g/m$^2$]
-	 - _laiCw_ Canopy water content [g/m$^2$]
+	 - _LAI_: Leaf Area Index [m²/m²]
+	 - _laiCab_ Canopy chlorophyll content [g/m²]
+	 - _laiCm_: Leaf dry matter content [g/m²]
+	 - _laiCw_ Canopy water content [g/m²]
 
 	 Mangrove traits [![DOI](https://img.shields.io/badge/DOI-j.isprsjprs.2024.06.007/An_Binh_et_al_2024-doi.svg)](https://doi.org/10.1016/j.isprsjprs.2024.06.007)
-	 - _mangrove_LAI_: Leaf Area Index [m$^2$/m$^2$]
-	 - _mangrove_Cm_: Leaf Dry Matter [g/cm$^2$]
-	 - _mangrove_Cw_: Leaf Water thickness [g/cm$^2$]
-	 - _mangrove_Cab_: Leaf Chlorophyll Content [g/μm$^2$]
+	 - _mangrove_LAI_: Leaf Area Index [m²/m²]
+	 - _mangrove_Cm_: Leaf Dry Matter [g/cm²]
+	 - _mangrove_Cw_: Leaf Water thickness [g/cm²]
+	 - _mangrove_Cab_: Leaf Chlorophyll Content [g/μm²]
 
 
 ## **- Sentinel 3**
- - **Top of atmosphere (OLCI): Level 1B**
+ - **Top of atmosphere (OLCI): Level 1B (SENTINEL3_OLCI_L1B)**
     [![DOI](https://img.shields.io/badge/DOI-rs15133404/D.Kovács_et_al_2023-doi.svg)]([https://doi.org/10.3390/rs15133404](https://doi.org/10.3390/rs15133404))
     [![DOI](https://img.shields.io/badge/DOI-rs14061347/ReyesMuñoz_et_al_2022-doi.svg)]([https://doi.org/10.3390/rs14061347](https://doi.org/10.3390/rs14061347))
 
-	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
-	 - _FVC_ Fractional Vegetation Cover
-	 - _LAI_: Leaf Area Index
-	 - _LCC_ Leaf Chlorophyll Content
-	 
- - **SYNERGY (OLCI and SLSTR): Level 2A**
- 
+	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation [-]
+	 - _FVC_ Fractional Vegetation Cover [-]
+	 - _LAI_: Leaf Area Index [m²/m²]
+	 - _LCC_ Leaf Chlorophyll Content [μg/cm²]
+
+ - **SYNERGY Level 2A (SENTINEL3_SYN_L2_SYN)**
+
     Currently only on openEO back-ends!
-	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation
-	 - _FVC_ Fractional Vegetation Cover
+	 - _FAPAR_: Fraction of Absorbed Photosynthetically Active Radiation  [-]
+	 - _FVC_ Fractional Vegetation Cover  [-]
 
 
