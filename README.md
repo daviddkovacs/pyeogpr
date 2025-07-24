@@ -1,5 +1,5 @@
 
-![main_logo.png](docs/main_logo.png)
+<img src="docs/main_logo.png" alt="main_logo" width="300"/>
 
 # pyeogpr [![GitHub](https://img.shields.io/badge/GitHub-pyeogpr-purple.svg)](https://github.com/daviddkovacs/pyeogpr)   [![Documentation](https://img.shields.io/badge/docs-pyeogpr-blue.svg)](https://pyeogpr.readthedocs.io/en/latest/pyeogpr.html) [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.13373838-green)](https://doi.org/10.5281/zenodo.13373838)
 
