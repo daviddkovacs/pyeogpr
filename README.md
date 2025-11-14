@@ -32,7 +32,7 @@ You can select from a list of trained variables developed for the following sate
 
 # Cite as / Contact
 
-- Kovács DD, Reyes-Muñoz P, Salinero-Delgado M, Mészáros VI, Berger K, Verrelst J. Cloud-Free Global Maps of Essential Vegetation Traits Processed from the TOA Sentinel-3 Catalogue in Google Earth Engine. Remote Sensing. 2023; 15(13):3404. https://doi.org/10.3390/rs15133404
+- Kovács, Dávid D., Emma De Clerck, and Jochem Verrelst. "PyEOGPR: A Python package for vegetation trait mapping with Gaussian Process Regression on Earth observation cloud platforms." Ecological Informatics 92, no. 10349 (2025): 7.
   
 or
 
