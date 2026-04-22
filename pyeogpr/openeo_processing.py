@@ -170,7 +170,7 @@ class Datacube:
             title = f"{self.sensor} {self.biovar} gapfilled"
             cube_to_execute = gpr_cube_gapfilled
         else:
-            outputfile = f"{self.sensor}_{self.biovar}.{fileformat}" if not self.own_model else "user_defined_product.{fileformat}"
+            outputfile = f"{self.sensor}_{self.biovar}.{fileformat}" if not self.own_model else f"user_defined_product.{fileformat}"
             title = f"{self.sensor}_{self.biovar}" if not self.own_model else "User defined product"
             cube_to_execute = gpr_cube
 
